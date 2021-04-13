@@ -1,62 +1,88 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Thor (WebApp client)
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This web application is used by Jerome (pressing)
 
-## About Laravel
+## Getting Started
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Prerequisites
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Php 7.4
+- Mysql
+- Composer
+- Completed data base
 
-## Learning Laravel
+### Installing
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+**Step 1:** Download the folder Edgar
+```
+git clone https://gitlab.com/fidensio/Thor.git
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Step 2 [Optional]:** Change branch
+```
+git checkout dev
+```
 
-## Laravel Sponsors
+**Step 3:** Create a .env file
+<br />
+*You can copy the ".env.example" and rename it to ".env" but be careful not to forget to replace the data*
+```
+cp .env.example .env
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+**Step 4:** install npm dependencies
+```
+npm i
+```
 
-### Premium Partners
+**Step 5:** Generate an app encryption key
+```
+php artisan key:generate
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/)**
-- **[OP.GG](https://op.gg)**
+<br />
 
-## Contributing
+**Launch the server**
+```
+php artisan serv
+```
+*or*
+```
+sudo php artisan serv --port=80
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Deployment
 
-## Code of Conduct
+**Warning:** Npm production mode
+```
+npm run prod
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+**Step 1:** Change APP_ENV in .env to production
 
-## Security Vulnerabilities
+    APP_ENV=production
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+**Step 2:** Change APP_DEBUG in .env by false
 
-## License
+    APP_DEBUG=false
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**Step 3:** Redirect the subdomain "xxx.fidensio.com" to the server (look at the following link) :
+
+https://www.notion.so/fidensio/Cr-e-une-nouvelle-entreprise-dans-Edgar-6b2472b2bba74455b4189b775c50c87e
+
+
+**The application is now deploy**
+
+## Built With
+
+* [Laravel](https://laravel.com/docs/5.8) - The web framework used
+* [Stripe Stripe-php](https://stripe.com/docs) - Use for payments
+* [Mailjet Mailjet-apiv3-php](https://dev.mailjet.com/email/guides/?php#getting-started) - Use send transactional email and sms
+
+## Authors
+
+Project done by the develop team of Fidensio
+
+* **[Developer Full-Stack] Miguel Molano** (miguel@fidensio.com) - *Initial Work*
