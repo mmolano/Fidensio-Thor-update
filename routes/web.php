@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PressingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+/*TODO: mettre une route de login, un middleware et la route pour l'affichage du tableau */
+
+Route::get('/', [PressingController::class, 'index']);
