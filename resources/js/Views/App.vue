@@ -1,10 +1,15 @@
 <template>
-    <div>
-        <div class="content-parent">
-            <div class="content card z-depth-0 table-parent">
-                <div class="card-content">
-                    <TableRows></TableRows>
-                    <!-- TODO: mettre la popup ici -->
+    <div class="container-global">
+        <Header></Header>
+        <div class="container-fluid">
+            <NavBarPanel></NavBarPanel>
+            <!--            TODO: mettre la search bar en version mobile        -->
+            <div class="content-parent">
+                <div class="content card z-depth-0 table-parent">
+                    <div class="card-content">
+                        <TableRows></TableRows>
+                        <Popup v-if="isDisplay"></Popup>
+                    </div>
                 </div>
             </div>
         </div>
@@ -12,15 +17,20 @@
 </template>
 <script>
 import TableRows from "../Components/TableRows.vue";
+import NavBarPanel from "../Components/NavBarPanel";
+import Popup from "../Components/Popup";
+import Header from "../Components/Header";
 
 export default {
     components: {
+        Header,
+        Popup,
+        NavBarPanel,
         TableRows,
     },
-    computed: {},
     data() {
         return {
-            message: 'Hello World'
+            isDisplay: false
         }
     }
 };
@@ -35,6 +45,22 @@ export default {
     & .table-parent {
         background-color: #FCFCFC;
     }
+}
+
+html, body, .container-global {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-flow: column;
+    background-color: #FCFCFC;
+}
+
+.container-fluid {
+    margin-left: 1%;
+    margin-right: 1%;
+    flex: 1 1 auto;
+    display: flex;
+    overflow: auto;
 }
 
 @media screen and (min-width: 1440px) {
@@ -56,6 +82,11 @@ export default {
 @media screen and (max-width: 900px) {
     .content-parent {
         flex: 1;
+    }
+
+    .container-fluid {
+        display: flex;
+        flex-direction: column;
     }
 }
 </style>

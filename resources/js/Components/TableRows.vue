@@ -2,30 +2,28 @@
     <table id="main-table">
         <thead>
         <tr>
-            <th class="Prestataire">Prestataire (si admin)</th>
             <th class="Infos">Infos</th>
             <th class="Debut">Début</th>
             <th class="Retour">Retour</th>
             <th class="Emplacement">Emplacement</th>
             <th class="Nom">Nom / Prénom</th>
-            <th class="Consigne">N consigne (si pas admin)</th>
+            <th class="Consigne">N consigne</th>
             <th class="Service">Service(s)</th>
             <th class="Commande">Commande</th>
         </tr>
         </thead>
         <tbody>
         <tr id="refSearch">
-            <td data-label="Nom/Prénom" class="Prestataire">Nom du préstataire si admin</td>
             <td data-label="Infos" class="Infos">
-                <a href="#" class="btn waves-effect waves-light teal lighten-3 infos-buttons">
-                    <span style="font-size: 24px">+</span>
-                </a>
+                <button v-on:click="showPopup" class="btn waves-effect waves-light teal lighten-3 infos-buttons">
+                    +
+                </button>
             </td>
             <td data-label="Début" class="Debut">2020/12/08</td>
             <td data-label="Retour" class="Retour">2021/12/09</td>
             <td data-label="Emplacement" class="Emplacement">Total la défense</td>
             <td data-label="Nom/Prénom" class="Nom">Miguel Molano</td>
-            <td data-label="N consigne" class="Consigne">Bring me or not (if not admin show)</td>
+            <td data-label="N consigne" class="Consigne">Bring me or not</td>
             <td data-label="Service(s)" class="Service">Pressing</td>
             <td data-label="Commande" class="Commande">
                 <a href="/taken/new" class="btn waves-effect waves-light">Recupéré</a>
@@ -38,7 +36,12 @@
 
 <script>
 export default {
-    name: "Table"
+    name: "Table",
+    methods: {
+        showPopup: function () {
+            this.$parent.$data.isDisplay = true;
+        }
+    }
 }
 </script>
 
@@ -76,6 +79,10 @@ thead tr {
 .btn {
     margin-top: 0;
     margin-bottom: 0;
+}
+
+.infos-buttons {
+    font-size: 24px;
 }
 
 @media screen and (max-width: 900px) {
