@@ -1,19 +1,21 @@
 <template>
-    <div class="container-global">
-        <Header></Header>
-        <div class="container-fluid">
-            <NavBarPanel></NavBarPanel>
-            <!--            TODO: mettre la search bar en version mobile        -->
-            <div class="content-parent">
-                <div class="content card z-depth-0 table-parent">
-                    <div class="card-content">
-                        <TableRows></TableRows>
-                        <Popup v-if="isDisplay"></Popup>
+    <section>
+        <Popup v-if="isDisplay"></Popup>
+        <div class="container-global">
+            <Header></Header>
+            <div class="container-fluid">
+                <NavBarPanel></NavBarPanel>
+                <!--            TODO: mettre la search bar en version mobile + tranfor le app.js en login qui redirige ici       -->
+                <div class="content-parent">
+                    <div class="content card z-depth-0 table-parent">
+                        <div class="card-content">
+                            <TableRows v-bind:orders="orders"></TableRows>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </template>
 <script>
 import TableRows from "../Components/TableRows.vue";
@@ -28,11 +30,14 @@ export default {
         NavBarPanel,
         TableRows,
     },
+    props: {
+        orders: Array
+    },
     data() {
         return {
-            isDisplay: false
+            isDisplay: false,
         }
-    }
+    },
 };
 </script>
 

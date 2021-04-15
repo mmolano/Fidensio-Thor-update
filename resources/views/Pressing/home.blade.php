@@ -8,14 +8,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://www.google.com/recaptcha/api.js?onload=vueRecaptchaApiLoaded&render=explicit" async defer>
     </script>
-    <link rel="stylesheet" href="{{ mix('css/app.css') }}" />
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}"/>
 
     <title>{{env('APP_NAME')}}</title>
 </head>
 <body>
 
 <div id="app">
-    <app></app>
+    <app v-bind:orders="{{ json_encode($orders) }}"></app>
 </div>
 
 <script src="{{ mix('js/app.js') }}"></script>

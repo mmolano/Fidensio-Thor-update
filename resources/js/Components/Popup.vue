@@ -1,56 +1,57 @@
 <template>
-    <div id="popup-container">
-        <div id="popup" class="card z-depth-4">
-            <div class="card-content">
-                <div class="popup-tables-container">
-                    <div id="popup-div-one">
-                        <div class="popup-row">
-                            <div>N de téléphone :</div>
-                            <div class="popup-contenu" id="popup-tel"></div>
-                        </div>
-                        <div class="popup-row">
-                            <div>Email :</div>
-                            <div class="popup-contenu" id="popup-email"></div>
-                        </div>
-                        <div class="popup-row">
-                            <div>N de commande :</div>
-                            <div class="popup-contenu" id="popup-n_commande"></div>
-                        </div>
-                        <div class="popup-row">
-                            <div>Service :</div>
-                            <div class="popup-contenu" id="popup-service"></div>
-                        </div>
-                        <div class="popup-row">
-                            <div>Emplacement aller :</div>
-                            <div class="popup-contenu" id="popup-emplacement_aller"></div>
-                        </div>
-                    </div>
-                    <div id="popup-div-two">
-                        <div class="popup-row">
-                            <div>Emplacement retour :</div>
-                            <div class="popup-contenu" id="popup-emplacement_retour"></div>
-                        </div>
-                        <div class="popup-row">
-                            <div>N de consigne :</div>
-                            <div class="popup-contenu" id="popup-consigne"></div>
-                        </div>
-                        <div class="popup-commentaire-title" style="text-align:center">Commentaire :</div>
-                        <div class="popup-row" style="margin-top: 0;">
-                            <div id="popup-commentaire-div">
-                                <div class="popup-contenu-comment" id="popup-commentaire">
-                                </div>
+    <section>
+        <div id="popup-container">
+            <div id="popup" class="card z-depth-4">
+                <div class="card-content">
+                    <div class="popup-tables-container">
+                        <div id="popup-div-one">
+                            <div class="popup-row">
+                                <div>N de téléphone :</div>
+                                <div class="popup-contenu" id="popup-tel"></div>
+                            </div>
+                            <div class="popup-row">
+                                <div>Email :</div>
+                                <div class="popup-contenu" id="popup-email"></div>
+                            </div>
+                            <div class="popup-row">
+                                <div>N de commande :</div>
+                                <div class="popup-contenu" id="popup-n_commande"></div>
+                            </div>
+                            <div class="popup-row">
+                                <div>Service :</div>
+                                <div class="popup-contenu" id="popup-service"></div>
+                            </div>
+                            <div class="popup-row">
+                                <div>Emplacement aller :</div>
+                                <div class="popup-contenu" id="popup-emplacement_aller"></div>
                             </div>
                         </div>
-                        <div id="popup-commande-div" v-on:click="hidePopup">
-                            <div id="popup-commande">
-                                <button class="btn waves-effect waves-light red lighten-1 center-align">Fermer</button>
+                        <div id="popup-div-two">
+                            <div class="popup-row">
+                                <div>Emplacement retour :</div>
+                                <div class="popup-contenu" id="popup-emplacement_retour"></div>
+                            </div>
+                            <div class="popup-row">
+                                <div>N de consigne :</div>
+                                <div class="popup-contenu" id="popup-consigne"></div>
+                            </div>
+                            <div class="popup-commentaire-title" style="text-align:center">Commentaire :</div>
+                            <div class="popup-row" style="margin-top: 0;">
+                                <div id="popup-commentaire-div">
+                                    <div class="popup-contenu-comment" id="popup-commentaire"></div>
+                                </div>
+                            </div>
+                            <div id="popup-commande-div" v-on:click="hidePopup">
+                                <div id="popup-commande">
+                                    <button class="btn waves-effect waves-light red lighten-1 center-align">Fermer</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </template>
 
 <script>
@@ -66,6 +67,7 @@ export default {
 
 <style scoped lang="scss">
 #popup-container {
+    z-index: 2;
     display: flex;
     position: absolute;
     height: 100%;
@@ -73,6 +75,7 @@ export default {
     flex-flow: column;
     align-items: center;
     justify-content: center;
+    background-color: #80808047;
 
     & .card {
         border-radius: 30px;
@@ -83,14 +86,15 @@ export default {
     position: fixed;
     margin: 0 auto;
     z-index: 1000;
-    max-width: 50%;
+    width: 100%;
+    max-width: 340px;
     max-height: 80%;
 }
 
 #popup-commande {
     width: 100%;
 
-    & a {
+    & button {
         width: 100%;
         border-radius: 15px;
     }
@@ -113,6 +117,7 @@ export default {
     padding-left: 10px;
     border-radius: 5px;
     background-color: #F6F6F6;
+    font-size: 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;

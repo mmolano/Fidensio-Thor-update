@@ -13,18 +13,18 @@
         </tr>
         </thead>
         <tbody>
-        <tr id="refSearch">
+        <tr id="refSearch" v-for="order in orders" v-bind:style="{'background-color': getDateDiff(order.deliveryDate)}">
             <td data-label="Infos" class="Infos">
                 <button v-on:click="showPopup" class="btn waves-effect waves-light teal lighten-3 infos-buttons">
                     +
                 </button>
             </td>
-            <td data-label="Début" class="Debut">2020/12/08</td>
-            <td data-label="Retour" class="Retour">2021/12/09</td>
-            <td data-label="Emplacement" class="Emplacement">Total la défense</td>
-            <td data-label="Nom/Prénom" class="Nom">Miguel Molano</td>
-            <td data-label="N consigne" class="Consigne">Bring me or not</td>
-            <td data-label="Service(s)" class="Service">Pressing</td>
+            <td data-label="Début" class="Debut">{{ dateFormat(order.createdAt) }}</td>
+            <td data-label="Retour" class="Retour">{{ dateFormat(order.deliveryDate) }}</td>
+            <td data-label="Emplacement" class="Emplacement">{{ order.company.name }}</td>
+            <td data-label="Nom/Prénom" class="Nom">{{ order.userData.firstName + ' ' + order.userData.lastName }}</td>
+            <td data-label="N consigne" class="Consigne">{{ order.locker.length === 0 ? 'Bring me' : 'Classic' }}</td>
+            <td data-label="Service(s)" class="Service">{{ order.service.name }}</td>
             <td data-label="Commande" class="Commande">
                 <a href="/taken/new" class="btn waves-effect waves-light">Recupéré</a>
             </td>
@@ -35,11 +35,34 @@
 </template>
 
 <script>
+
+import moment from "moment";
+
 export default {
     name: "Table",
+    props: {
+        orders: Array
+    },
+    data() {
+        return {
+            color: '',
+        }
+    },
     methods: {
         showPopup: function () {
             this.$parent.$data.isDisplay = true;
+        },
+        dateFormat: function (date) {
+            return moment(date, 'YYYY-MM-DD').format('DD-MM-YYYY');
+        },
+        getDateDiff: function (date) {
+            if (moment(date).isSame(moment().startOf('day'), 'd')) {
+                return this.color = '#eaea55'
+            } else if(moment(date).isSame(moment().subtract(1, 'days').startOf('day'), 'd')) {
+                return this.color = '#ef5353'
+            } else {
+                return this.color = '#4cbbff'
+            }
         }
     }
 }
