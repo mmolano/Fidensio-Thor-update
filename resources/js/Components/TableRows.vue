@@ -1,41 +1,52 @@
 <template>
-    <table id="main-table">
-        <thead>
-        <tr>
-            <th class="Infos">Infos</th>
-            <th class="Debut">Début</th>
-            <th class="Retour">Retour</th>
-            <th class="Emplacement">Emplacement</th>
-            <th class="Nom">Nom / Prénom</th>
-            <th class="Consigne">N consigne</th>
-            <th class="Service">Service(s)</th>
-            <th class="Commande">Commande</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr id="refSearch" v-for="order in orders" v-bind:style="{'background-color': getDateDiff(order.deliveryDate)}">
-            <td data-label="Infos" class="Infos">
-                <button v-on:click="showPopup" class="btn waves-effect waves-light teal lighten-3 infos-buttons">
-                    +
-                </button>
-            </td>
-            <td data-label="Début" class="Debut">{{ dateFormat(order.createdAt) }}</td>
-            <td data-label="Retour" class="Retour">{{ dateFormat(order.deliveryDate) }}</td>
-            <td data-label="Emplacement" class="Emplacement">{{ order.company.name }}</td>
-            <td data-label="Nom/Prénom" class="Nom">{{ order.userData.firstName + ' ' + order.userData.lastName }}</td>
-            <td data-label="N consigne" class="Consigne">{{ order.locker.length === 0 ? 'Bring me' : 'Classic' }}</td>
-            <td data-label="Service(s)" class="Service">{{ order.service.name }}</td>
-            <td data-label="Commande" class="Commande">
-                <a href="/taken/new" class="btn waves-effect waves-light">Recupéré</a>
-            </td>
-            <td class="orderStatus" style="display: none">En Attente</td>
-        </tr>
-        </tbody>
-    </table>
+    <section>
+        <table id="main-table">
+            <thead>
+            <tr>
+                <th class="Infos">Infos</th>
+                <th class="Debut">Début</th>
+                <th class="Retour">Retour</th>
+                <th class="Emplacement">Emplacement</th>
+                <th class="Nom">Nom / Prénom</th>
+                <th class="Consigne">N consigne</th>
+                <th class="Service">Service(s)</th>
+                <th class="Commande">Commande</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="refSearch" v-for="order in pagination"
+                v-bind:style="{'background-color': getDateDiff(order.deliveryDate)}">
+                <td data-label="Infos" class="Infos">
+                    <button v-on:click="showPopup" class="btn waves-effect waves-light teal lighten-3 infos-buttons">
+                        +
+                    </button>
+                </td>
+                <td data-label="Début" class="Debut">{{ dateFormat(order.createdAt) }}</td>
+                <td data-label="Retour" class="Retour">{{ dateFormat(order.deliveryDate) }}</td>
+                <td data-label="Emplacement" class="Emplacement">{{ order.company.name }}</td>
+                <td data-label="Nom/Prénom" class="Nom">{{
+                        order.userData.firstName + ' ' + order.userData.lastName
+                    }}
+                </td>
+                <td data-label="N consigne" class="Consigne">{{
+                        order.locker.length === 0 ? 'Bring me' : 'Classic'
+                    }}
+                </td>
+                <td data-label="Service(s)" class="Service">{{ order.service.name }}</td>
+                <td data-label="Commande" class="Commande">
+                    <a href="/taken/new" class="btn waves-effect waves-light">Recupéré</a>
+                </td>
+                <td class="orderStatus" style="display: none">En Attente</td>
+            </tr>
+            </tbody>
+        </table>
+        <jw-pagination :pageSize="15" :items="orders" @changePage="onChangePage"></jw-pagination>
+    </section>
+
 </template>
 
 <script>
-
+import JwPagination from 'jw-vue-pagination';
 import moment from "moment";
 
 export default {
@@ -43,9 +54,13 @@ export default {
     props: {
         orders: Array
     },
+    components: {
+      JwPagination
+    },
     data() {
         return {
             color: '',
+            pagination: []
         }
     },
     methods: {
@@ -58,11 +73,14 @@ export default {
         getDateDiff: function (date) {
             if (moment(date).isSame(moment().startOf('day'), 'd')) {
                 return this.color = '#eaea55'
-            } else if(moment(date).isSame(moment().subtract(1, 'days').startOf('day'), 'd')) {
-                return this.color = '#ef5353'
+            } else if (moment(date).isSame(moment().subtract(1, 'days').startOf('day'), 'd')) {
+                return this.color = '#fb8989'
             } else {
-                return this.color = '#4cbbff'
+                return this.color = '#8ECDF8'
             }
+        },
+        onChangePage(pageOfItems) {
+            this.pagination = pageOfItems;
         }
     }
 }
@@ -79,8 +97,7 @@ body {
 }
 
 tbody tr td {
-    padding-bottom: 8px;
-    padding-top: 8px;
+    padding: 8px 15px;
     border-bottom: none;
 }
 
@@ -97,6 +114,11 @@ thead tr {
         width: 100%;
         border-radius: 4px;
     }
+}
+
+.refSearch {
+    height: 70px;
+    min-height: 100%;
 }
 
 .btn {
