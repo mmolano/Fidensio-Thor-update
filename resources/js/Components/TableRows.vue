@@ -1,38 +1,46 @@
 <template>
     <section>
-        <table id="main-table">
+        <div class="search-wrapper">
+            <div class="search-input-contain">
+                <label for="search"><span class="las la-search"></span></label>
+                <input id="search" v-model="search" type="search" placeholder="Faire une recherche"/>
+            </div>
+        </div>
+        <table id="main-table" v-if="filteredOrder.length !== 0">
             <thead>
             <tr>
                 <th class="Infos">Infos</th>
                 <th class="Debut">Début</th>
                 <th class="Retour">Retour</th>
                 <th class="Emplacement">Emplacement</th>
-                <th class="Nom">Nom / Prénom</th>
+                <th class="Nom">Prénom / Nom</th>
                 <th class="Consigne">N consigne</th>
                 <th class="Service">Service(s)</th>
                 <th class="Commande">Commande</th>
             </tr>
             </thead>
             <tbody>
-            <tr class="refSearch" v-for="order in pagination"
-                v-bind:style="{'background-color': getDateDiff(order.deliveryDate)}">
+            <tr class="refSearch" v-for="order in filteredOrder">
                 <td data-label="Infos" class="Infos">
                     <button v-on:click="showPopup" class="btn waves-effect waves-light teal lighten-3 infos-buttons">
                         +
                     </button>
                 </td>
-                <td data-label="Début" class="Debut">{{ dateFormat(order.createdAt) }}</td>
-                <td data-label="Retour" class="Retour">{{ dateFormat(order.deliveryDate) }}</td>
-                <td data-label="Emplacement" class="Emplacement">{{ order.company.name }}</td>
-                <td data-label="Nom/Prénom" class="Nom">{{
-                        order.userData.firstName + ' ' + order.userData.lastName
-                    }}
+                <td data-label="Début" class="Debut"><span
+                    v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"
+                    :inner-html.prop="dateFormat(order.createdAt) | highlight(search)"></span>
                 </td>
-                <td data-label="N consigne" class="Consigne">{{
-                        order.locker.length === 0 ? 'Bring me' : 'Classic'
-                    }}
+                <td data-label="Retour" class="Retour"
+                    :inner-html.prop="dateFormat(order.deliveryDate) | highlight(search)"></td>
+                <td data-label="Emplacement" class="Emplacement"
+                    :inner-html.prop="order.company.name | highlight(search)"></td>
+                <td data-label="Nom/Prénom" class="Nom"
+                    :inner-html.prop="order.userData.firstName + ' ' + order.userData.lastName | highlight(search)">
                 </td>
-                <td data-label="Service(s)" class="Service">{{ order.service.name }}</td>
+                <td data-label="N consigne" class="Consigne"
+                    :inner-html.prop="order.locker.length === 0 ? 'Bring me' : 'Classic'">
+                </td>
+                <td data-label="Service(s)" class="Service" :inner-html.prop="order.service.name"></td>
                 <td data-label="Commande" class="Commande">
                     <a href="/taken/new" class="btn waves-effect waves-light">Recupéré</a>
                 </td>
@@ -40,7 +48,13 @@
             </tr>
             </tbody>
         </table>
-        <jw-pagination :pageSize="15" :items="orders" @changePage="onChangePage"></jw-pagination>
+        <div class="search_result" v-if="filteredOrder.length === 0">Pas de résultat, veuillez affiné votre recherche
+        </div>
+        <div class="rows_number">Affichage de {{ filteredOrder.length }} résultats sur {{ orders.length }}</div>
+        <div class="pagination_container" v-if="!search">
+            <jw-pagination :pageSize="pageSize" :items="orders" @changePage="onChangePage"
+                           :labels="customLabels"></jw-pagination>
+        </div>
     </section>
 
 </template>
@@ -48,6 +62,25 @@
 <script>
 import JwPagination from 'jw-vue-pagination';
 import moment from "moment";
+import Vue from "vue";
+
+function escapeRegExp(str) {
+    return str.replace(/\W|_/g, '[$&]');
+}
+
+Vue.filter('highlight', function (words, query) {
+    var iQuery = new RegExp(escapeRegExp(query), "ig");
+    return words.toString().replace(iQuery, function (matchedTxt, a, b) {
+        return '<span class=\'highlight\'>' + matchedTxt + '</span>';
+    });
+});
+
+const customLabels = {
+    first: '<<',
+    last: '>>',
+    previous: '<',
+    next: '>'
+};
 
 export default {
     name: "Table",
@@ -55,11 +88,14 @@ export default {
         orders: Array
     },
     components: {
-      JwPagination
+        JwPagination,
     },
     data() {
         return {
-            color: '',
+            colors: [],
+            search: '',
+            customLabels,
+            pageSize: 9,
             pagination: []
         }
     },
@@ -67,52 +103,188 @@ export default {
         showPopup: function () {
             this.$parent.$data.isDisplay = true;
         },
+        onChangePage(pageOfItems) {
+            this.pagination = pageOfItems;
+        },
         dateFormat: function (date) {
             return moment(date, 'YYYY-MM-DD').format('DD-MM-YYYY');
         },
         getDateDiff: function (date) {
             if (moment(date).isSame(moment().startOf('day'), 'd')) {
-                return this.color = '#eaea55'
+                return this.colors = ['#96E4A0', '#0b4a00']
             } else if (moment(date).isSame(moment().subtract(1, 'days').startOf('day'), 'd')) {
-                return this.color = '#fb8989'
+                return this.colors = ['#ffa8a8', '#d00000']
             } else {
-                return this.color = '#8ECDF8'
+                return this.colors = ['#7bc6f9', '#005c9a']
             }
         },
-        onChangePage(pageOfItems) {
-            this.pagination = pageOfItems;
+    },
+    computed: {
+        filteredOrder: function () {
+            if (!this.search) {
+                return this.pagination
+            }
+
+            const filterValue = this.search.toLowerCase();
+
+            const filter = event =>
+                event.userData.firstName.toLowerCase().includes(filterValue) ||
+                event.userData.lastName.toLowerCase().includes(filterValue) ||
+                event.company.name.toLowerCase().includes(filterValue) ||
+                moment(event.deliveryDate).format('DD-MM-YYYY').toLowerCase().includes(filterValue) ||
+                moment(event.createdAt).format('DD-MM-YYYY').toLowerCase().includes(filterValue)
+
+            return this.orders.filter(filter)
         }
     }
 }
 </script>
 
 <style scoped lang="scss">
+@import "resources/scss/_variable.scss";
+
 html,
 body {
     height: 100%;
     width: 100%;
     display: flex;
     flex-flow: column;
-    background-color: #FCFCFC;
+}
+
+section {
+    margin-top: 90px;
+    padding: 2rem 1.5rem;
+    background: #F0F0F0
 }
 
 tbody tr td {
-    padding: 8px 15px;
+    padding: 20px;
     border-bottom: none;
+    text-align: center;
+
+    & span {
+        padding: 9px;
+        border-radius: 6px;
+        font-weight: bold;
+    }
 }
 
 thead tr {
-    color: grey;
+    color: #232222;
+    height: 50px;
+
+    & th {
+        padding: 20px;
+    }
 }
 
 #main-table {
-    & tbody tr:hover {
-        background-color: #F6F6F6;
+    background-color: white;
+    border-collapse: collapse;
+    border-radius: 20px;
+    width: 90%;
+    margin: auto;
+    box-shadow: 0 14px 38px 6px rgb(123 123 123 / 13%);
+
+    & tbody tr {
+        &:nth-child(even) {
+            background-color: #f5f5f5;
+        }
+
+        &:hover {
+            background-color: #ffe4e4;
+        }
     }
 
     & .btn {
+        cursor: pointer;
         width: 100%;
-        border-radius: 4px;
+        background-color: $btnBackground;
+        color: #fff;
+        border: unset;
+        padding: 6px;
+        border-radius: 10px;
+    }
+}
+
+.search-wrapper {
+    width: 90%;
+    margin: 20px auto;
+
+    & .search-input-contain {
+        display: flex;
+        background: white;
+        width: 288px;
+        height: 55px;
+        border-radius: 20px;
+        padding: 20px;
+        border: none;
+        align-items: center;
+        overflow: hidden;
+        box-shadow: 0 14px 38px 6px rgb(123 123 123 / 13%);
+
+        & span {
+            display: inline-block;
+            padding: 0 0.2rem;
+            font-size: 1.2rem;
+        }
+
+        & input {
+            width: 100%;
+            height: 100%;
+            padding: .5rem;
+            border: none;
+            outline: none;
+        }
+    }
+}
+
+.search_result {
+    text-align: center;
+    font-size: 18px;
+    color: rgb(255, 91, 91);
+    margin-bottom: 20px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.rows_number {
+    margin: 10px;
+    text-align: center;
+    opacity: 0.6;
+}
+
+.pagination_container {
+    text-align: center;
+    margin: 30px;
+
+    & .pagination {
+        background-color: white;
+        padding: 20px !important;
+        border-radius: 20px;
+        box-shadow: 0 14px 38px 6px rgb(123 123 123 / 13%);
+
+        & .page-item {
+            color: gray;
+        }
+    }
+
+    & .pagination .page-item.disabled {
+        color: gray;
+    }
+
+    &.disabled {
+        display: none;
+    }
+
+    & .page-item.page-number.active {
+        color: white;
+
+        & a.page-link {
+            background-color: $mainBtnBack;
+            border-radius: 9px
+        }
     }
 }
 

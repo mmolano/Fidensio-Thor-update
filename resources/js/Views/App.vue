@@ -2,24 +2,18 @@
     <section>
         <Popup v-if="isDisplay"></Popup>
         <div class="container-global">
-            <Header></Header>
+<!--            <Header></Header>-->
+            <SideBar></SideBar>
+            <!--       TODO: tranfor le app.js en login qui redirige ici       -->
             <div class="container-fluid">
-                <NavBarPanel></NavBarPanel>
-                <!--            TODO: mettre la search bar en version mobile + tranfor le app.js en login qui redirige ici       -->
-                <div class="content-parent">
-                    <div class="content card z-depth-0 table-parent">
-                        <div class="card-content">
-                            <TableRows v-bind:orders="orders"></TableRows>
-                        </div>
-                    </div>
-                </div>
+                <TableRows v-bind:orders="orders"></TableRows>
             </div>
         </div>
     </section>
 </template>
 <script>
-import TableRows from "../Components/TableRows.vue";
-import NavBarPanel from "../Components/NavBarPanel";
+import TableRows from "../Components/TableRows";
+import SideBar from "../Components/SideBar";
 import Popup from "../Components/Popup";
 import Header from "../Components/Header";
 
@@ -27,7 +21,7 @@ export default {
     components: {
         Header,
         Popup,
-        NavBarPanel,
+        SideBar,
         TableRows,
     },
     props: {
@@ -42,14 +36,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.content-parent {
-    flex: 3;
-    display: flex;
-    flex-flow: column;
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
 
-    & .table-parent {
-        background-color: #FCFCFC;
-    }
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    list-style-type: none;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
 }
 
 html, body, .container-global {
@@ -61,37 +56,8 @@ html, body, .container-global {
 }
 
 .container-fluid {
-    margin-left: 1%;
-    margin-right: 1%;
-    flex: 1 1 auto;
-    display: flex;
-    overflow: auto;
+    height: 100%;
+    margin-left: 345px;
 }
 
-@media screen and (min-width: 1440px) {
-    .content-parent {
-        flex: 7;
-        display: flex;
-        flex-flow: column;
-    }
-}
-
-@media screen and (min-width: 900px) and (max-width: 1024px) {
-    .content-parent {
-        flex: 5;
-        display: flex;
-        flex-flow: column;
-    }
-}
-
-@media screen and (max-width: 900px) {
-    .content-parent {
-        flex: 1;
-    }
-
-    .container-fluid {
-        display: flex;
-        flex-direction: column;
-    }
-}
 </style>
