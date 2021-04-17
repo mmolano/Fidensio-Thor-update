@@ -7,43 +7,41 @@
                         <div id="popup-div-one">
                             <div class="popup-row">
                                 <div>N de téléphone :</div>
-                                <div class="popup-contenu" id="popup-tel"></div>
+                                <div class="popup-contenu" id="popup-tel">+{{ orderData.user.indicMobile }}{{ orderData.user.mobile }}</div>
                             </div>
                             <div class="popup-row">
                                 <div>Email :</div>
-                                <div class="popup-contenu" id="popup-email"></div>
+                                <div class="popup-contenu" id="popup-email">{{ orderData.user.email }}</div>
                             </div>
                             <div class="popup-row">
-                                <div>N de commande :</div>
-                                <div class="popup-contenu" id="popup-n_commande"></div>
+                                <div>N° de commande :</div>
+                                <div class="popup-contenu" id="popup-n_commande">{{ orderData.id }}</div>
                             </div>
                             <div class="popup-row">
                                 <div>Service :</div>
-                                <div class="popup-contenu" id="popup-service"></div>
+                                <div class="popup-contenu" id="popup-service">{{ orderData.service.name }}</div>
                             </div>
                             <div class="popup-row">
-                                <div>Emplacement aller :</div>
-                                <div class="popup-contenu" id="popup-emplacement_aller"></div>
+                                <div>Emplacement</div>
+                                <div class="popup-contenu" id="popup-emplacement_aller">{{ orderData.company.name }}</div>
                             </div>
                         </div>
                         <div id="popup-div-two">
                             <div class="popup-row">
-                                <div>Emplacement retour :</div>
-                                <div class="popup-contenu" id="popup-emplacement_retour"></div>
-                            </div>
-                            <div class="popup-row">
                                 <div>N de consigne :</div>
-                                <div class="popup-contenu" id="popup-consigne"></div>
+                                <div class="popup-contenu" id="popup-consigne">{{ orderData.locker.length === 0 ? 'Bring me' : 'Classic' }}</div>
                             </div>
                             <div class="popup-commentaire-title" style="text-align:center">Commentaire :</div>
                             <div class="popup-row" style="margin-top: 0;">
                                 <div id="popup-commentaire-div">
-                                    <div class="popup-contenu-comment" id="popup-commentaire"></div>
+                                    <div class="popup-contenu-comment" id="popup-commentaire">{{ orderData.userComment }}</div>
                                 </div>
                             </div>
                             <div id="popup-commande-div" v-on:click="hidePopup">
                                 <div id="popup-commande">
-                                    <button class="btn waves-effect waves-light red lighten-1 center-align">Fermer</button>
+                                    <button>
+                                        Fermer
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -57,6 +55,9 @@
 <script>
 export default {
     name: "Popup",
+    props: {
+      orderData: Object
+    },
     methods: {
         hidePopup: function () {
             this.$parent.$data.isDisplay = false;
@@ -66,8 +67,14 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "../../sass/assets/variable";
+
+section {
+    height: initial !important;
+}
+
 #popup-container {
-    z-index: 2;
+    z-index: 5;
     display: flex;
     position: absolute;
     height: 100%;
@@ -76,10 +83,6 @@ export default {
     align-items: center;
     justify-content: center;
     background-color: #80808047;
-
-    & .card {
-        border-radius: 30px;
-    }
 }
 
 #popup {
@@ -89,6 +92,9 @@ export default {
     width: 100%;
     max-width: 340px;
     max-height: 80%;
+    border-radius: 20px;
+    background-color: white;
+    padding: 29px;
 }
 
 #popup-commande {
@@ -96,7 +102,11 @@ export default {
 
     & button {
         width: 100%;
-        border-radius: 15px;
+        border-radius: 20px;
+        height: 45px;
+        border: unset;
+        background-color: $mainBtnBack;
+        color: white;
     }
 }
 

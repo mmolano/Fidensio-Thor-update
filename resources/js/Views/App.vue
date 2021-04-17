@@ -1,12 +1,13 @@
 <template>
     <section>
-        <Popup v-if="isDisplay"></Popup>
+        <Popup v-if="isDisplay" :order-data="orderData"></Popup>
         <div class="container-global">
-<!--            <Header></Header>-->
+            <input type="checkbox" id="nav-toggle">
             <SideBar></SideBar>
             <!--       TODO: tranfor le app.js en login qui redirige ici       -->
             <div class="container-fluid">
-                <TableRows v-bind:orders="orders"></TableRows>
+                <Header></Header>
+                <TableRows :orders="orders"></TableRows>
             </div>
         </div>
     </section>
@@ -30,12 +31,13 @@ export default {
     data() {
         return {
             isDisplay: false,
+            orderData: []
         }
     },
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
 
 * {
@@ -57,7 +59,8 @@ html, body, .container-global {
 
 .container-fluid {
     height: 100%;
-    margin-left: 345px;
+    margin-top: 90px;
+    margin-left: 385px;
+    transition: margin-left 300ms;
 }
-
 </style>

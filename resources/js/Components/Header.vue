@@ -1,58 +1,57 @@
 <template>
     <section>
-
+        <header class="header-nav">
+            <h1>
+                <label for="nav-toggle">
+                    <span class="las la-bars"></span>
+                    Bienvenue Miguel
+                </label>
+                <!--                TODO: mettre le nom du mec qui est log   -->
+            </h1>
+        </header>
     </section>
 </template>
 
 <script>
 export default {
-    name: "Header",
-    data() {
-        return {
-            logo: process.env.MIX_LOGO
-        }
-    }
+    name: "Header"
 }
 </script>
 
 <style scoped lang="scss">
-#icon {
-    height: 64px;
-}
+@import "../../sass/assets/variable";
 
-.deconnection {
-    background-color: orange;
-    transition: 0.6s;
-}
+header {
+    z-index: 20;
+    position: fixed;
+    display: flex;
+    width: 100%;
+    height: 90px;
+    justify-content: space-between;
+    top: 0;
+    padding: 1rem;
+    font-size: 30px;
+    background-color: white;
+    box-shadow: 0 14px 38px 6px rgb(74 74 74 / 13%);
+    transition: width 300ms;
 
-.deconnection:hover {
-    background-color: red;
-}
+    & h1, label {
+        cursor: pointer;
+    }
 
-.icon-black {
-    color: black;
-}
-
-.brand-logo {
-    height: 64px !important;
-    margin-left: 0px;
-}
-
-@media screen and (min-width: 993px) {
-    #icon {
-        margin-left: 24px;
+    & span {
+        margin-right: 17px;
     }
 }
 
-@media screen and (max-width: 600px) {
-    #icon {
-        height: 56px;
-        margin-left: 0px;
-    }
+section {
+    height: initial !important;
+}
 
-    .brand-logo {
-        height: 56px !important;
-        margin-left: 0px;
+@media only screen and (max-width: 490px) {
+    header {
+        font-size: 20px;
+        height: auto;
     }
 }
 </style>

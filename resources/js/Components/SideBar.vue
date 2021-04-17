@@ -1,7 +1,7 @@
 <template>
     <div class="sidebar">
         <div class="sidebar-brand">
-            <h2>Fidensio</h2>
+            <img src="img/logo.png" id="icon" alt="logo"/>
         </div>
         <div class="sidebar-menu">
             <ul>
@@ -37,21 +37,22 @@
 
 <script>
 export default {
-    name: "SideBar"
+    name: "SideBar",
 }
 </script>
 
 <style scoped lang="scss">
-@import "resources/scss/_variable";
+@import "../../sass/assets/variable";
 
 .sidebar {
-    width: 345px;
+    width: 385px;
     position: fixed;
     left: 0;
     top: 0;
     height: 100%;
     background: $main;
     z-index: 100;
+    transition: width 300ms;
 
     & span {
         font-family: 'Line Awesome Free', sans-serif !important;
@@ -59,17 +60,22 @@ export default {
 }
 
 .sidebar-brand {
+    margin-top: 20px;
     height: 90px;
     padding: 1rem 0 1rem 2rem;
     color: #fff;
 
-    & span {
+    & img {
+        width: 284px;
+        height: 47px;
         display: inline-block;
         padding-right: 1rem;
     }
 }
 
 .sidebar-menu {
+    margin: 20px 0;
+
     & li {
         width: 100%;
         margin-bottom: 1.3rem;
@@ -109,8 +115,33 @@ button {
     border-radius: 20px;
     width: 100%;
     max-width: 200px;
+
     & a {
         color: $main;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .sidebar {
+        width: 70px;
+
+        & li a {
+            padding-left: 0;
+        }
+
+        & .sidebar-brand {
+            width: 70px;
+            overflow: hidden;
+        }
+
+        & .sidebar-brand, li {
+            padding-left: 1rem;
+            text-align: center;
+        }
+
+        & .sidebar-brand h2 span:last-child, li a span:last-child {
+            display: none;
+        }
     }
 }
 </style>

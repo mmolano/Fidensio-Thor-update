@@ -6,51 +6,58 @@
                 <input id="search" v-model="search" type="search" placeholder="Faire une recherche"/>
             </div>
         </div>
-        <table id="main-table" v-if="filteredOrder.length !== 0">
-            <thead>
-            <tr>
-                <th class="Infos">Infos</th>
-                <th class="Debut">Début</th>
-                <th class="Retour">Retour</th>
-                <th class="Emplacement">Emplacement</th>
-                <th class="Nom">Prénom / Nom</th>
-                <th class="Consigne">N consigne</th>
-                <th class="Service">Service(s)</th>
-                <th class="Commande">Commande</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr class="refSearch" v-for="order in filteredOrder">
-                <td data-label="Infos" class="Infos">
-                    <button v-on:click="showPopup" class="btn waves-effect waves-light teal lighten-3 infos-buttons">
-                        +
-                    </button>
-                </td>
-                <td data-label="Début" class="Debut"><span
-                    v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"
-                    :inner-html.prop="dateFormat(order.createdAt) | highlight(search)"></span>
-                </td>
-                <td data-label="Retour" class="Retour"
-                    :inner-html.prop="dateFormat(order.deliveryDate) | highlight(search)"></td>
-                <td data-label="Emplacement" class="Emplacement"
-                    :inner-html.prop="order.company.name | highlight(search)"></td>
-                <td data-label="Nom/Prénom" class="Nom"
-                    :inner-html.prop="order.userData.firstName + ' ' + order.userData.lastName | highlight(search)">
-                </td>
-                <td data-label="N consigne" class="Consigne"
-                    :inner-html.prop="order.locker.length === 0 ? 'Bring me' : 'Classic'">
-                </td>
-                <td data-label="Service(s)" class="Service" :inner-html.prop="order.service.name"></td>
-                <td data-label="Commande" class="Commande">
-                    <a href="/taken/new" class="btn waves-effect waves-light">Recupéré</a>
-                </td>
-                <td class="orderStatus" style="display: none">En Attente</td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="responsive-table" v-if="filteredOrder.length !== 0">
+            <table id="main-table">
+                <thead>
+                <tr>
+                    <th class="Infos">Infos</th>
+                    <th class="Debut">Début</th>
+                    <th class="Retour">Retour</th>
+                    <th class="Emplacement">Emplacement</th>
+                    <th class="Nom">Prénom / Nom</th>
+                    <th class="Consigne">N° consigne</th>
+                    <th class="Service">Service(s)</th>
+                    <th class="Commande">Commande</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="refSearch" v-for="order in filteredOrder">
+                    <td data-label="Infos" class="Infos">
+                        <button @click="showPopup(order)"
+                                class="btn waves-effect waves-light teal lighten-3 infos-buttons">
+                            +
+                        </button>
+                    </td>
+                    <td data-label="Début" class="Debut"><span
+                        v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"
+                        :inner-html.prop="dateFormat(order.createdAt) | highlight(search)"></span>
+                    </td>
+                    <td data-label="Retour" class="Retour"
+                        :inner-html.prop="dateFormat(order.deliveryDate) | highlight(search)"></td>
+                    <td data-label="Emplacement" class="Emplacement"
+                        :inner-html.prop="order.company.name | highlight(search)"></td>
+                    <td data-label="Nom/Prénom" class="Nom"
+                        :inner-html.prop="order.userData.firstName + ' ' + order.userData.lastName | highlight(search)">
+                    </td>
+                    <td data-label="N consigne" class="Consigne"
+                        :inner-html.prop="order.locker.length === 0 ? 'Bring me' : 'Classic'">
+                    </td>
+                    <td data-label="Service(s)" class="Service" :inner-html.prop="order.service.name"></td>
+                    <td data-label="Commande" class="Commande">
+                        <a href="/taken/new" class="btn waves-effect waves-light">Recupéré</a>
+                    </td>
+                    <td class="orderStatus" style="display: none">En Attente</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
         <div class="search_result" v-if="filteredOrder.length === 0">Pas de résultat, veuillez affiné votre recherche
         </div>
-        <div class="rows_number">Affichage de {{ filteredOrder.length }} résultats sur {{ orders.length }}</div>
+        <div class="rows_number">
+            <span v-if="search">Affichage de {{ filteredOrder.length }} résultats</span>
+            <span v-if="!search">Affichage de {{ filteredOrder.length }} résultats sur {{ orders.length }}</span>
+        </div>
         <div class="pagination_container" v-if="!search">
             <jw-pagination :pageSize="pageSize" :items="orders" @changePage="onChangePage"
                            :labels="customLabels"></jw-pagination>
@@ -100,7 +107,8 @@ export default {
         }
     },
     methods: {
-        showPopup: function () {
+        showPopup (value) {
+            this.$parent.$data.orderData = value;
             this.$parent.$data.isDisplay = true;
         },
         onChangePage(pageOfItems) {
@@ -141,7 +149,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import "resources/scss/_variable.scss";
+@import "../../sass/assets/variable";
 
 html,
 body {
@@ -152,7 +160,6 @@ body {
 }
 
 section {
-    margin-top: 90px;
     padding: 2rem 1.5rem;
     background: #F0F0F0
 }
@@ -174,15 +181,31 @@ thead tr {
     height: 50px;
 
     & th {
+        top: 0;
+        z-index: 2;
+        position: sticky;
+        background-color: white;
         padding: 20px;
     }
 }
 
-#main-table {
+.responsive-table {
+    display: block;
     background-color: white;
+    border-radius: 20px;
+    max-height: 858px;
+    height: 100%;
+    width: 90%;
+    margin: auto;
+    overflow: scroll;
+}
+
+#main-table {
     border-collapse: collapse;
     border-radius: 20px;
-    width: 90%;
+    overflow-y: scroll;
+    width: 100%;
+    height: 100%;
     margin: auto;
     box-shadow: 0 14px 38px 6px rgb(123 123 123 / 13%);
 
@@ -194,6 +217,8 @@ thead tr {
         &:hover {
             background-color: #ffe4e4;
         }
+
+        width: 100%;
     }
 
     & .btn {
@@ -243,49 +268,17 @@ thead tr {
     text-align: center;
     font-size: 18px;
     color: rgb(255, 91, 91);
-    margin-bottom: 20px;
     background-color: white;
     padding: 20px;
     border-radius: 20px;
+    width: 90%;
+    margin: auto auto 20px;
 }
 
 .rows_number {
     margin: 10px;
     text-align: center;
     opacity: 0.6;
-}
-
-.pagination_container {
-    text-align: center;
-    margin: 30px;
-
-    & .pagination {
-        background-color: white;
-        padding: 20px !important;
-        border-radius: 20px;
-        box-shadow: 0 14px 38px 6px rgb(123 123 123 / 13%);
-
-        & .page-item {
-            color: gray;
-        }
-    }
-
-    & .pagination .page-item.disabled {
-        color: gray;
-    }
-
-    &.disabled {
-        display: none;
-    }
-
-    & .page-item.page-number.active {
-        color: white;
-
-        & a.page-link {
-            background-color: $mainBtnBack;
-            border-radius: 9px
-        }
-    }
 }
 
 .refSearch {
