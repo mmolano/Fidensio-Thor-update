@@ -74,7 +74,7 @@ section {
 }
 
 #popup-container {
-    z-index: 5;
+    z-index: 9999;
     display: flex;
     position: absolute;
     height: 100%;
@@ -107,6 +107,7 @@ section {
         border: unset;
         background-color: $mainBtnBack;
         color: white;
+        cursor: pointer;
     }
 }
 

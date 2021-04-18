@@ -30,13 +30,17 @@ header {
     justify-content: space-between;
     top: 0;
     padding: 1rem;
-    font-size: 30px;
+    font-size: 27px;
     background-color: white;
     box-shadow: 0 14px 38px 6px rgb(74 74 74 / 13%);
     transition: width 300ms;
 
     & h1, label {
         cursor: pointer;
+    }
+
+    & label {
+        vertical-align: sub;
     }
 
     & span {
@@ -50,8 +54,11 @@ section {
 
 @media only screen and (max-width: 490px) {
     header {
-        font-size: 20px;
-        height: auto;
+        z-index: 999;
+        font-size: 1.4rem;
+        height: 90px;
+        width: 100% !important;
+        left: 0 !important;
     }
 }
 </style>

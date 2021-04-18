@@ -107,7 +107,7 @@ export default {
         }
     },
     methods: {
-        showPopup (value) {
+        showPopup(value) {
             this.$parent.$data.orderData = value;
             this.$parent.$data.isDisplay = true;
         },
@@ -176,16 +176,20 @@ tbody tr td {
     }
 }
 
-thead tr {
-    color: #232222;
-    height: 50px;
+thead {
+    box-shadow: 0 2px 31px 0 rgb(123 123 123 / 20%);
+    & tr {
+        color: #232222;
+        height: 50px;
 
-    & th {
-        top: 0;
-        z-index: 2;
-        position: sticky;
-        background-color: white;
-        padding: 20px;
+        & th {
+            top: 0;
+            z-index: 2;
+            position: sticky;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 20px 9px 31px 0 rgb(123 123 123 / 20%);
+        }
     }
 }
 
@@ -295,6 +299,12 @@ thead tr {
     font-size: 24px;
 }
 
+@media only screen and (min-width: 900px) {
+    .Debut, .Retour{
+        min-width: 140px;
+    }
+}
+
 @media screen and (max-width: 900px) {
     .Debut,
     .Retour,
@@ -308,18 +318,19 @@ thead tr {
         font-size: 12px;
     }
 
+    table {
+        height: unset !important;
+        margin-left: 10px;
+    }
+
+    .refSearch {
+        height: unset;
+    }
+
     #main-table tbody tr {
         display: flex;
         flex-direction: column;
     }
-
-    tbody tr td {
-        display: flex;
-        justify-content: space-between;
-        padding-left: 15px;
-        padding-right: 15px;
-    }
-
     .Infos {
         width: 30%;
         margin: auto;
@@ -330,19 +341,19 @@ thead tr {
     }
 
     .Emplacement::before {
-        content: 'Emplacement';
+        content: 'Emplacement: ';
         color: grey;
         font-weight: bold;
     }
 
     .Nom::before {
-        content: 'Nom';
+        content: 'Nom: ';
         color: grey;
         font-weight: bold;
     }
 
     .Consigne::before {
-        content: 'Consigne';
+        content: 'Consigne: ';
         color: grey;
         font-weight: bold;
     }
@@ -363,13 +374,9 @@ thead tr {
     }
 }
 
-@media screen and (max-height: 500px) {
-    body {
-        font-size: 12px;
-    }
-
-    table {
-        margin-left: 10px;
+@media only screen and (max-width: 380px) {
+    section {
+        padding: 5px !important;
     }
 }
 </style>

@@ -41,7 +41,7 @@
     }
 
     & .sidebar-brand {
-        width: 70px;
+        width: 60px;
         overflow: hidden;
     }
 
@@ -52,6 +52,24 @@
 
     & .sidebar-brand h2 span:last-child, li a span:last-child {
         display: none;
+    }
+
+    & button {
+        width: 82%;
+        padding: 16px;
+
+        & a {
+            padding: 0 !important;
+            color: black !important;
+
+            & span {
+                padding: 0;
+
+                &:last-child {
+                    display: none;
+                }
+            }
+        }
     }
 }
 
@@ -68,10 +86,67 @@
     .header-nav {
         margin-left: 0 !important;
     }
+
+    #nav-toggle:checked + .sidebar {
+        left: -100% !important;
+        transition: left 300ms;
+    }
+
+    #nav-toggle:checked {
+        & ~ .container-fluid, .header-nav {
+            margin-left: 0 !important;
+            transition: margin-left 100ms;
+        }
+    }
 }
 
 @media screen and (max-width: 490px) {
     .container-fluid {
-        margin-top: 50px !important;
+        margin-top: 65px !important;
+        width: 100%;
+        margin-left: 0 !important;
+    }
+
+    .search-wrapper .search-input-contain {
+        width: 100% !important;
+    }
+
+    #nav-toggle:checked + .sidebar {
+        left: 0 !important;
+        width: 345px !important;
+
+        & li a {
+            padding-left: 1rem;
+        }
+
+        & .sidebar-brand {
+            width: 100%;
+        }
+
+        & .sidebar-brand, li {
+            padding-left: 2rem;
+            text-align: left;
+        }
+
+        & .sidebar-brand h2 span:last-child, li a span:last-child {
+            display: inline;
+        }
+    }
+}
+
+
+@media screen and (max-width: 380px) {
+    header {
+        font-size: 1.2rem;
+    }
+    .container-fluid {
+        margin-top: 87px !important;
+    }
+    #nav-toggle:checked + .sidebar {
+        width: 100% !important;
+
+        & li {
+            padding-left: 1rem;
+        }
     }
 }

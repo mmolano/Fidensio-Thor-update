@@ -30,8 +30,13 @@
                     </a>
                 </li>
             </ul>
+            <button>
+                <a href="">
+                    <span class="las la-sign-out-alt"></span>
+                    <span>Déconnexion</span>
+                </a>
+            </button>
         </div>
-        <button><a href="">Déconnexion</a></button>
     </div>
 </template>
 
@@ -60,14 +65,15 @@ export default {
 }
 
 .sidebar-brand {
-    margin-top: 20px;
+    margin-top: 2px;
     height: 90px;
-    padding: 1rem 0 1rem 2rem;
+    padding: 1rem 0 1rem 2.813rem;
     color: #fff;
 
     & img {
-        width: 284px;
-        height: 47px;
+        vertical-align: text-top;
+        width: 250px;
+        height: 44px;
         display: inline-block;
         padding-right: 1rem;
     }
@@ -117,20 +123,28 @@ button {
     max-width: 200px;
 
     & a {
-        color: $main;
+        color: $main !important;
+        padding-left: 0 !important;
+
+        & span:first-child {
+            vertical-align: top;
+        }
     }
 }
 
 @media only screen and (max-width: 1200px) {
     .sidebar {
         width: 70px;
+        left: 0;
+        transition: left 100ms;
 
         & li a {
             padding-left: 0;
         }
 
         & .sidebar-brand {
-            width: 70px;
+            margin-top: 2px;
+            width: 60px;
             overflow: hidden;
         }
 
@@ -142,6 +156,31 @@ button {
         & .sidebar-brand h2 span:last-child, li a span:last-child {
             display: none;
         }
+    }
+
+    button {
+        width: 82%;
+        padding: 16px;
+
+        & a {
+            padding: 0 !important;
+            color: black !important;
+
+            & span {
+                padding: 0;
+
+                &:last-child {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 490px) {
+    .sidebar {
+        left: -100% !important;
+        transition: left 300ms;
     }
 }
 </style>
