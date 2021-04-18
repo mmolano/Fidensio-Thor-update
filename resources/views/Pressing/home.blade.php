@@ -14,9 +14,10 @@
     <title>{{env('APP_NAME')}}</title>
 </head>
 <body>
+@include('flash::message')
 
 <div id="app">
-    <app v-bind:orders="{{ json_encode($orders) }}"></app>
+    <app v-bind:orders="{{  json_encode($orders) }}"></app>
 </div>
 
 <script src="{{ mix('js/app.js') }}"></script>

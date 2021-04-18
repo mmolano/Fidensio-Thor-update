@@ -52,7 +52,7 @@
             </table>
         </div>
 
-        <div class="search_result" v-if="filteredOrder.length === 0">Pas de résultat, veuillez affiné votre recherche
+        <div class="search_result" v-if="filteredOrder.length === 0">Aucune commande trouvée
         </div>
         <div class="rows_number">
             <span v-if="search">Affichage de {{ filteredOrder.length }} résultats</span>

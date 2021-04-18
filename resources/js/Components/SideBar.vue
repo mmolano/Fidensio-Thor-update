@@ -1,30 +1,30 @@
 <template>
     <div class="sidebar">
         <div class="sidebar-brand">
-            <img src="img/logo.png" id="icon" alt="logo"/>
+            <img src="/img/logo.png" id="icon" alt="logo"/>
         </div>
         <div class="sidebar-menu">
             <ul>
                 <li>
-                    <a href="" class="active">
+                    <a href="/" class="active">
                         <span class="las la-warehouse"></span>
                         <span>Prêt à être récupérée</span>
                     </a>
                 </li>
                 <li>
-                    <a href="">
+                    <a href="/taken/pickupDone">
                         <span class="las la-truck"></span>
                         <span>Récupérée</span>
                     </a>
                 </li>
                 <li>
-                    <a href="">
+                    <a href="/processing/processing">
                         <span class="las la-hourglass-half"></span>
                         <span>En cours de traitement</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/pressing/deliver">
+                    <a href="/completed/finished">
                         <span class="las la-thumbs-up"></span>
                         <span>Commande terminé</span>
                     </a>

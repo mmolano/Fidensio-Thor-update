@@ -42030,13 +42030,13 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "sidebar" }, [
       _c("div", { staticClass: "sidebar-brand" }, [
-        _c("img", { attrs: { src: "img/logo.png", id: "icon", alt: "logo" } })
+        _c("img", { attrs: { src: "/img/logo.png", id: "icon", alt: "logo" } })
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "sidebar-menu" }, [
         _c("ul", [
           _c("li", [
-            _c("a", { staticClass: "active", attrs: { href: "" } }, [
+            _c("a", { staticClass: "active", attrs: { href: "/" } }, [
               _c("span", { staticClass: "las la-warehouse" }),
               _vm._v(" "),
               _c("span", [_vm._v("Prêt à être récupérée")])
@@ -42044,7 +42044,7 @@ var staticRenderFns = [
           ]),
           _vm._v(" "),
           _c("li", [
-            _c("a", { attrs: { href: "" } }, [
+            _c("a", { attrs: { href: "/taken/pickupDone" } }, [
               _c("span", { staticClass: "las la-truck" }),
               _vm._v(" "),
               _c("span", [_vm._v("Récupérée")])
@@ -42052,7 +42052,7 @@ var staticRenderFns = [
           ]),
           _vm._v(" "),
           _c("li", [
-            _c("a", { attrs: { href: "" } }, [
+            _c("a", { attrs: { href: "/processing/processing" } }, [
               _c("span", { staticClass: "las la-hourglass-half" }),
               _vm._v(" "),
               _c("span", [_vm._v("En cours de traitement")])
@@ -42060,7 +42060,7 @@ var staticRenderFns = [
           ]),
           _vm._v(" "),
           _c("li", [
-            _c("a", { attrs: { href: "/pressing/deliver" } }, [
+            _c("a", { attrs: { href: "/completed/finished" } }, [
               _c("span", { staticClass: "las la-thumbs-up" }),
               _vm._v(" "),
               _c("span", [_vm._v("Commande terminé")])
@@ -42284,7 +42284,7 @@ var render = function() {
     _vm._v(" "),
     _vm.filteredOrder.length === 0
       ? _c("div", { staticClass: "search_result" }, [
-          _vm._v("Pas de résultat, veuillez affiné votre recherche\n    ")
+          _vm._v("Aucune commande trouvée\n    ")
         ])
       : _vm._e(),
     _vm._v(" "),

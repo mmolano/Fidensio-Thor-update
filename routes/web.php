@@ -17,3 +17,10 @@ use Illuminate\Support\Facades\Route;
 /*TODO: mettre une route de login, un middleware et la route pour l'affichage du tableau */
 
 Route::get('/', [PressingController::class, 'index']);
+Route::get('/taken/{type}', [PressingController::class, 'index']);
+Route::get('/processing/{type}', [PressingController::class, 'index']);
+Route::get('/completed/{type}', [PressingController::class, 'index']);
+
+Route::post('/', [PressingController::class, 'commitStatus']);
+Route::post('/taken', [PressingController::class, 'commitStatus']);
+Route::post('/processing', [PressingController::class, 'commitStatus']);
