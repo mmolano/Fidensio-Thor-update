@@ -2361,7 +2361,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "html[data-v-4040ad8c],\nbody[data-v-4040ad8c] {\n  height: 100%;\n  width: 100%;\n  display: flex;\n  flex-flow: column;\n}\nsection[data-v-4040ad8c] {\n  padding: 2rem 1.5rem;\n  background: #F0F0F0;\n}\ntbody tr td[data-v-4040ad8c] {\n  padding: 20px;\n  border-bottom: none;\n  text-align: center;\n}\ntbody tr td span[data-v-4040ad8c] {\n  padding: 9px;\n  border-radius: 6px;\n  font-weight: bold;\n}\nthead[data-v-4040ad8c] {\n  box-shadow: 0 2px 31px 0 rgba(123, 123, 123, 0.2);\n}\nthead tr[data-v-4040ad8c] {\n  color: #232222;\n  height: 50px;\n}\nthead tr th[data-v-4040ad8c] {\n  top: 0;\n  z-index: 2;\n  position: sticky;\n  background-color: white;\n  padding: 20px;\n  box-shadow: 20px 9px 31px 0 rgba(123, 123, 123, 0.2);\n}\n.responsive-table[data-v-4040ad8c] {\n  display: block;\n  background-color: white;\n  border-radius: 20px;\n  max-height: 858px;\n  height: 100%;\n  width: 90%;\n  margin: auto;\n  overflow: scroll;\n}\n#main-table[data-v-4040ad8c] {\n  border-collapse: collapse;\n  border-radius: 20px;\n  overflow-y: scroll;\n  width: 100%;\n  height: 100%;\n  margin: auto;\n  box-shadow: 0 14px 38px 6px rgba(123, 123, 123, 0.13);\n}\n#main-table tbody tr[data-v-4040ad8c] {\n  width: 100%;\n}\n#main-table tbody tr[data-v-4040ad8c]:nth-child(even) {\n  background-color: #f5f5f5;\n}\n#main-table tbody tr[data-v-4040ad8c]:hover {\n  background-color: #ffe4e4;\n}\n#main-table .btn[data-v-4040ad8c] {\n  cursor: pointer;\n  width: 100%;\n  background-color: #a4c3e8;\n  color: #fff;\n  border: unset;\n  padding: 6px;\n  border-radius: 10px;\n}\n.search-wrapper[data-v-4040ad8c] {\n  width: 90%;\n  margin: 20px auto;\n}\n.search-wrapper .search-input-contain[data-v-4040ad8c] {\n  display: flex;\n  background: white;\n  width: 288px;\n  height: 55px;\n  border-radius: 20px;\n  padding: 20px;\n  border: none;\n  align-items: center;\n  overflow: hidden;\n  box-shadow: 0 14px 38px 6px rgba(123, 123, 123, 0.13);\n}\n.search-wrapper .search-input-contain span[data-v-4040ad8c] {\n  display: inline-block;\n  padding: 0 0.2rem;\n  font-size: 1.2rem;\n}\n.search-wrapper .search-input-contain input[data-v-4040ad8c] {\n  width: 100%;\n  height: 100%;\n  padding: 0.5rem;\n  border: none;\n  outline: none;\n}\n.search_result[data-v-4040ad8c] {\n  text-align: center;\n  font-size: 18px;\n  color: #ff5b5b;\n  background-color: white;\n  padding: 20px;\n  border-radius: 20px;\n  width: 90%;\n  margin: auto auto 20px;\n}\n.rows_number[data-v-4040ad8c] {\n  margin: 10px;\n  text-align: center;\n  opacity: 0.6;\n}\n.refSearch[data-v-4040ad8c] {\n  height: 70px;\n  min-height: 100%;\n}\n.btn[data-v-4040ad8c] {\n  margin-top: 0;\n  margin-bottom: 0;\n}\n.infos-buttons[data-v-4040ad8c] {\n  font-size: 24px;\n}\n@media only screen and (min-width: 900px) {\n.Debut[data-v-4040ad8c], .Retour[data-v-4040ad8c] {\n    min-width: 140px;\n}\n}\n@media screen and (max-width: 900px) {\n.Debut[data-v-4040ad8c],\n.Retour[data-v-4040ad8c],\n.Service[data-v-4040ad8c] {\n    display: none;\n}\n}\n@media screen and (max-width: 500px) {\nbody[data-v-4040ad8c] {\n    font-size: 12px;\n}\ntable[data-v-4040ad8c] {\n    height: unset !important;\n    margin-left: 10px;\n}\n.refSearch[data-v-4040ad8c] {\n    height: unset;\n}\n#main-table tbody tr[data-v-4040ad8c] {\n    display: flex;\n    flex-direction: column;\n}\n.Infos[data-v-4040ad8c] {\n    width: 30%;\n    margin: auto;\n}\ntbody tr td a[data-v-4040ad8c] {\n    width: 20px;\n}\n.Emplacement[data-v-4040ad8c]::before {\n    content: \"Emplacement: \";\n    color: grey;\n    font-weight: bold;\n}\n.Nom[data-v-4040ad8c]::before {\n    content: \"Nom: \";\n    color: grey;\n    font-weight: bold;\n}\n.Consigne[data-v-4040ad8c]::before {\n    content: \"Consigne: \";\n    color: grey;\n    font-weight: bold;\n}\n#main-table thead[data-v-4040ad8c] {\n    display: none;\n}\n#main-table tbody tr[data-v-4040ad8c] {\n    border-radius: 6px;\n    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.24), 0 1px 2px rgba(0, 0, 0, 0.24);\n    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);\n    margin-bottom: 15px;\n}\n#main-table tbody tr[data-v-4040ad8c]:hover {\n    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);\n}\n}\n@media only screen and (max-width: 380px) {\nsection[data-v-4040ad8c] {\n    padding: 5px !important;\n}\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "html[data-v-4040ad8c],\nbody[data-v-4040ad8c] {\n  height: 100%;\n  width: 100%;\n  display: flex;\n  flex-flow: column;\n}\nsection[data-v-4040ad8c] {\n  padding: 2rem 1.5rem;\n  background: #F0F0F0;\n}\ntbody tr td[data-v-4040ad8c] {\n  padding: 20px;\n  border-bottom: none;\n  text-align: center;\n}\ntbody tr td span[data-v-4040ad8c] {\n  padding: 9px;\n  border-radius: 6px;\n  font-weight: bold;\n}\nthead[data-v-4040ad8c] {\n  box-shadow: 0 2px 31px 0 rgba(123, 123, 123, 0.2);\n}\nthead tr[data-v-4040ad8c] {\n  color: #232222;\n  height: 50px;\n}\nthead tr th[data-v-4040ad8c] {\n  top: 0;\n  z-index: 2;\n  position: sticky;\n  background-color: white;\n  padding: 20px;\n  box-shadow: 20px 9px 31px 0 rgba(123, 123, 123, 0.2);\n}\n.responsive-table[data-v-4040ad8c] {\n  display: block;\n  background-color: white;\n  border-radius: 20px;\n  max-height: 858px;\n  height: 100%;\n  width: 90%;\n  margin: auto;\n  overflow: scroll;\n}\n.pastille-info[data-v-4040ad8c] {\n  display: none;\n}\n#main-table[data-v-4040ad8c] {\n  border-collapse: collapse;\n  border-radius: 20px;\n  overflow-y: scroll;\n  width: 100%;\n  height: 100%;\n  margin: auto;\n  box-shadow: 0 14px 38px 6px rgba(123, 123, 123, 0.13);\n}\n#main-table tbody tr[data-v-4040ad8c] {\n  width: 100%;\n}\n#main-table tbody tr[data-v-4040ad8c]:nth-child(even) {\n  background-color: #f5f5f5;\n}\n#main-table tbody tr[data-v-4040ad8c]:hover {\n  background-color: #ffe4e4;\n}\n#main-table .btn[data-v-4040ad8c] {\n  cursor: pointer;\n  width: 100%;\n  background-color: #a4c3e8;\n  color: #fff;\n  border: unset;\n  padding: 6px;\n  border-radius: 10px;\n}\n.search-wrapper[data-v-4040ad8c] {\n  width: 90%;\n  margin: 20px auto;\n}\n.search-wrapper .search-input-contain[data-v-4040ad8c] {\n  display: flex;\n  background: white;\n  width: 288px;\n  height: 55px;\n  border-radius: 20px;\n  padding: 20px;\n  border: none;\n  align-items: center;\n  overflow: hidden;\n  box-shadow: 0 14px 38px 6px rgba(123, 123, 123, 0.13);\n}\n.search-wrapper .search-input-contain span[data-v-4040ad8c] {\n  display: inline-block;\n  padding: 0 0.2rem;\n  font-size: 1.2rem;\n}\n.search-wrapper .search-input-contain input[data-v-4040ad8c] {\n  width: 100%;\n  height: 100%;\n  padding: 0.5rem;\n  border: none;\n  outline: none;\n}\n.search_result[data-v-4040ad8c] {\n  text-align: center;\n  font-size: 18px;\n  color: #ff5b5b;\n  background-color: white;\n  padding: 20px;\n  border-radius: 20px;\n  width: 90%;\n  margin: auto auto 20px;\n}\n.rows_number[data-v-4040ad8c] {\n  margin: 10px;\n  text-align: center;\n  opacity: 0.6;\n}\n.refSearch[data-v-4040ad8c] {\n  height: 70px;\n  min-height: 100%;\n}\n.btn[data-v-4040ad8c] {\n  margin-top: 0;\n  margin-bottom: 0;\n}\n.infos-buttons[data-v-4040ad8c] {\n  font-size: 24px;\n}\n@media only screen and (min-width: 900px) {\n.Debut[data-v-4040ad8c], .Retour[data-v-4040ad8c] {\n    min-width: 140px;\n}\n}\n@media screen and (max-width: 900px) {\n.Debut[data-v-4040ad8c],\n.Retour[data-v-4040ad8c],\n.Service[data-v-4040ad8c] {\n    display: none;\n}\n}\n@media screen and (max-width: 500px) {\nbody[data-v-4040ad8c] {\n    font-size: 12px;\n}\ntable[data-v-4040ad8c] {\n    height: unset !important;\n    margin-left: 10px;\n}\n.refSearch[data-v-4040ad8c] {\n    height: unset;\n}\n#main-table tbody tr[data-v-4040ad8c] {\n    display: flex;\n    flex-direction: column;\n}\n.Infos[data-v-4040ad8c] {\n    width: 30%;\n    margin: auto;\n}\n.Commande a[data-v-4040ad8c] {\n    position: relative;\n}\n.pastille-info[data-v-4040ad8c] {\n    position: absolute;\n    display: block;\n    height: 25px;\n    width: 25px;\n    border-radius: 50px;\n}\ntbody tr td a[data-v-4040ad8c] {\n    width: 20px;\n}\n.Emplacement[data-v-4040ad8c]::before {\n    content: \"Emplacement: \";\n    color: grey;\n    font-weight: bold;\n}\n.Nom[data-v-4040ad8c]::before {\n    content: \"Nom: \";\n    color: grey;\n    font-weight: bold;\n}\n.Consigne[data-v-4040ad8c]::before {\n    content: \"Consigne: \";\n    color: grey;\n    font-weight: bold;\n}\n#main-table thead[data-v-4040ad8c] {\n    display: none;\n}\n}\n@media only screen and (max-width: 380px) {\nsection[data-v-4040ad8c] {\n    padding: 5px !important;\n}\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -42237,7 +42237,34 @@ var render = function() {
                     domProps: { innerHTML: order.service.name }
                   }),
                   _vm._v(" "),
-                  _vm._m(2, true),
+                  _c(
+                    "td",
+                    {
+                      staticClass: "Commande",
+                      attrs: { "data-label": "Commande" }
+                    },
+                    [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "btn waves-effect waves-light",
+                          attrs: { href: "/taken/new" }
+                        },
+                        [
+                          _c("span", {
+                            staticClass: "pastille-info",
+                            style: {
+                              "background-color": _vm.getDateDiff(
+                                order.deliveryDate
+                              )[0],
+                              color: _vm.getDateDiff(order.deliveryDate)[1]
+                            }
+                          }),
+                          _vm._v("Recupéré")
+                        ]
+                      )
+                    ]
+                  ),
                   _vm._v(" "),
                   _c(
                     "td",
@@ -42333,25 +42360,6 @@ var staticRenderFns = [
         _c("th", { staticClass: "Commande" }, [_vm._v("Commande")])
       ])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "td",
-      { staticClass: "Commande", attrs: { "data-label": "Commande" } },
-      [
-        _c(
-          "a",
-          {
-            staticClass: "btn waves-effect waves-light",
-            attrs: { href: "/taken/new" }
-          },
-          [_vm._v("Recupéré")]
-        )
-      ]
-    )
   }
 ]
 render._withStripped = true

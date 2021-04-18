@@ -44,7 +44,7 @@
                     </td>
                     <td data-label="Service(s)" class="Service" :inner-html.prop="order.service.name"></td>
                     <td data-label="Commande" class="Commande">
-                        <a href="/taken/new" class="btn waves-effect waves-light">Recupéré</a>
+                        <a href="/taken/new" class="btn waves-effect waves-light"><span class="pastille-info" v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"></span>Recupéré</a>
                     </td>
                     <td class="orderStatus" style="display: none">En Attente</td>
                 </tr>
@@ -204,6 +204,10 @@ thead {
     overflow: scroll;
 }
 
+.pastille-info {
+    display: none;
+}
+
 #main-table {
     border-collapse: collapse;
     border-radius: 20px;
@@ -336,6 +340,20 @@ thead {
         margin: auto;
     }
 
+    .Commande {
+        & a {
+            position: relative;
+        }
+    }
+
+    .pastille-info {
+        position: absolute;
+        display: block;
+        height: 25px;
+        width: 25px;
+        border-radius: 50px;
+    }
+
     tbody tr td a {
         width: 20px;
     }
@@ -360,17 +378,6 @@ thead {
 
     #main-table thead {
         display: none;
-    }
-
-    #main-table tbody tr {
-        border-radius: 6px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.24), 0 1px 2px rgba(0, 0, 0, 0.24);
-        transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
-        margin-bottom: 15px;
-    }
-
-    #main-table tbody tr:hover {
-        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
     }
 }
 
