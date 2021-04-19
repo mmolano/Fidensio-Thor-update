@@ -68,6 +68,9 @@
 </template>
 
 <script>
+
+// TODO: mettre les bon id pour les calls axios & mettre les bons bouton
+
 import JwPagination from 'jw-vue-pagination';
 import moment from "moment";
 import axios from "axios";

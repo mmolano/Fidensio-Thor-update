@@ -1,9 +1,11 @@
 import Vue from 'vue'
 require('./bootstrap');
 
-import App from './Views/app.vue'
+import Home from './Views/home.vue'
+import Login from './Views/login.vue'
+
 
 const app = new Vue({
     el: '#app',
-    components: { App }
+    components: { Home, Login }
 });

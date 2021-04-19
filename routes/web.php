@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PressingController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,13 +15,11 @@ use Illuminate\Support\Facades\Session;
 |
 */
 
-/*TODO: mettre une route de login, un middleware et la route pour l'affichage du tableau */
+/*TODO: mettre une route de login, un middleware et la route pour l'affichage du tableau et remove ce truc */
 
-Route::get('/y',
-    function () {
-        flash('Welcome to expertphp.in!');
-        return view('Pressing/test');
-    });
+Route::get('/login', [AuthController::class, 'index']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::get('/logout', [AuthController::class, 'logout']);
 
 Route::get('/', [PressingController::class, 'index']);
 

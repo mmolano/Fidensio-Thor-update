@@ -19,6 +19,7 @@ import Popup from "../Components/Popup";
 import Header from "../Components/Header";
 
 export default {
+    name: 'Home',
     components: {
         Header,
         Popup,
