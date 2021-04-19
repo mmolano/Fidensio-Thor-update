@@ -12,7 +12,7 @@ class Pressing
     public static function getProviderOrder(int $id, string $status): ?array
     {
         $response = Http::withToken(env('MIX_OURANOS_KEY'))
-            ->get(env('MIX_OURANOS_PRESSING_ORDER_URL') . $id . '/order/' . $status);
+            ->get(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'provider/' . $id . '/order/' . $status);
 
         if (!$response->successful()) {
             Log::error($response->status() === 404 ? 'Route url not found' : $response->body(), [
@@ -27,12 +27,11 @@ class Pressing
         return $response->json();
     }
 
-    public static function changeStatus(int $orderId, int $providerId, string $statusId): ?JsonResponse
+    public static function changeStatus(int $orderId, int $statusId)
     {
         $response = Http::withToken(env('MIX_OURANOS_KEY'))
-            ->post(env('MIX_OURANOS_PRESSING_ORDER_URL') . $providerId . '/order/status', [
-                'orderId' => $orderId,
-                'statusId' => $statusId
+            ->put(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'order/' . $orderId, [
+                'status' => $statusId
             ]);
 
         if (!$response->successful()) {

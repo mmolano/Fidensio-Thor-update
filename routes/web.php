@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PressingController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,10 +17,13 @@ use Illuminate\Support\Facades\Route;
 
 /*TODO: mettre une route de login, un middleware et la route pour l'affichage du tableau */
 
+Route::get('/y',
+    function () {
+        flash('Welcome to expertphp.in!');
+        return view('Pressing/test');
+    });
+
 Route::get('/', [PressingController::class, 'index']);
-Route::get('/taken/{type}', [PressingController::class, 'index']);
-Route::get('/processing/{type}', [PressingController::class, 'index']);
-Route::get('/completed/{type}', [PressingController::class, 'index']);
 
 Route::post('/', [PressingController::class, 'commitStatus']);
 Route::post('/taken', [PressingController::class, 'commitStatus']);

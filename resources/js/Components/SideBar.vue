@@ -6,25 +6,25 @@
         <div class="sidebar-menu">
             <ul>
                 <li>
-                    <a href="/" class="active">
+                    <a href="#" v-on:click="getOrders('')" v-bind:class="getActiveUrl('')">
                         <span class="las la-warehouse"></span>
                         <span>Prêt à être récupérée</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/taken/pickupDone">
+                    <a href="#?type=pickupDone" v-on:click="getOrders('?type=pickupDone')" v-bind:class="getActiveUrl('?type=pickupDone')">
                         <span class="las la-truck"></span>
                         <span>Récupérée</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/processing/processing">
+                    <a href="#?type=processing" v-on:click="getOrders('?type=processing')" v-bind:class="getActiveUrl('?type=processing')">
                         <span class="las la-hourglass-half"></span>
                         <span>En cours de traitement</span>
                     </a>
                 </li>
                 <li>
-                    <a href="/completed/finished">
+                    <a href="#?type=finished" v-on:click="getOrders('?type=finished')" v-bind:class="getActiveUrl('?type=finished')">
                         <span class="las la-thumbs-up"></span>
                         <span>Commande terminé</span>
                     </a>
@@ -43,6 +43,22 @@
 <script>
 export default {
     name: "SideBar",
+    props: {
+        activeUrl: String
+    },
+    data() {
+        return {
+            urlString: ''
+        }
+    },
+    methods: {
+        getOrders: function (url) {
+            this.$parent.$data.typeOfStatus = url;
+        },
+        getActiveUrl: function (url) {
+            return this.activeUrl === url ? 'active' : '';
+        }
+    }
 }
 </script>
 

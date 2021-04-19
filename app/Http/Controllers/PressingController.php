@@ -50,19 +50,20 @@ class PressingController extends Controller
         return back();
     }
 
-    public function commitStatus(Request $request): RedirectResponse
+    public function commitStatus(Request $request)
     {
         $validation = Validator::make($request->all(), [
-            'userId' => ['required', 'exists:User,id']
+            'orderId' => ['required', 'integer'],
+            'statusId' => ['required', 'integer']
         ]);
 
         if ($validation->fails()) {
             return $this->error(3, json_encode($validation->errors()));
         }
 
-        if (!$order = Pressing::changeStatus($request->orderId, $request->statusId)) {
-            return $this->error(4);
-        }
+//        if (!$order = Pressing::changeStatus($request->orderId, $request->statusId)) {
+//            return $this->error(4);
+//        }
 
         // TODO: voir si besoin de mettre crisp ici
         flash('Le statut a bien été mis à jour')->success();
@@ -91,18 +92,26 @@ class PressingController extends Controller
         ]);
     }
 
-    public function pickupDone()
+    public function getOrders(Request $request): array
     {
         // Check l'id du provider qui est log puis on selectionne le statut en fonction de la fonction
         // TODO: check que le mec est bien log sur l'api et on envoie l'id du provider dans la vue (puis on modifie l'id dans la vue pour le call axios)
-
-        if (!$order = Pressing::getProviderOrder(1, 2)) {
-            $order = [];
+        if (isset($request->type)) {
+            switch ($request->type) {
+                case $type = 'finished':
+                case $type = 'processing':
+                case $type = 'pickupDone';
+                    $order = Pressing::getProviderOrder(1, $this->status[$type]);
+                    break;
+                default:
+                    $order = Pressing::getProviderOrder(1, $this->status['default']);
+                    break;
+            }
+        } else {
+            $order = Pressing::getProviderOrder(1, $this->status['default']);
         }
 
-        return view('Pressing/home', [
-            'orders' => $order
-        ]);
+        return isset($order) ? $order : [];
     }
 
 }

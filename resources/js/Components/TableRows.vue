@@ -44,7 +44,8 @@
                     </td>
                     <td data-label="Service(s)" class="Service" :inner-html.prop="order.service.name"></td>
                     <td data-label="Commande" class="Commande">
-                        <a href="/taken/new" class="btn waves-effect waves-light"><span class="pastille-info" v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"></span>Recupéré</a>
+                        <button @click="sendProcessing(order.id)" class="btn waves-effect waves-light"><span class="pastille-info"
+                                                                                        v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"></span>Recupéré</button>
                     </td>
                     <td class="orderStatus" style="display: none">En Attente</td>
                 </tr>
@@ -69,6 +70,7 @@
 <script>
 import JwPagination from 'jw-vue-pagination';
 import moment from "moment";
+import axios from "axios";
 import Vue from "vue";
 
 function escapeRegExp(str) {
@@ -91,11 +93,11 @@ const customLabels = {
 
 export default {
     name: "Table",
-    props: {
-        orders: Array
-    },
     components: {
         JwPagination,
+    },
+    props: {
+        typeOfStatus: String
     },
     data() {
         return {
@@ -103,7 +105,9 @@ export default {
             search: '',
             customLabels,
             pageSize: 9,
-            pagination: []
+            pagination: [],
+            orders: [],
+            searchOrderUrl: '/api/getData'
         }
     },
     methods: {
@@ -126,6 +130,27 @@ export default {
                 return this.colors = ['#7bc6f9', '#005c9a']
             }
         },
+        loadOrders: function () {
+            axios.get(this.searchOrderUrl + this.typeOfStatus).then(res => {
+                if (res.status === 200) {
+                    this.orders = res.data;
+                }
+            }).catch(err => {
+                console.log(err)
+            });
+        },
+        sendProcessing: async function (id) {
+            await axios.post('/taken', {
+                'orderId': id,
+                'statusId': 2
+            }).then(res => {
+                if (res.status === 200) {
+                    this.loadOrders();
+                }
+            }).catch(err => {
+                console.log(err)
+            });
+        }
     },
     computed: {
         filteredOrder: function () {
@@ -143,6 +168,23 @@ export default {
                 moment(event.createdAt).format('DD-MM-YYYY').toLowerCase().includes(filterValue)
 
             return this.orders.filter(filter)
+        }
+    },
+    mounted() {
+        this.loadOrders();
+    },
+    watch: {
+        typeOfStatus: function (newUrl) {
+            axios
+                .get(this.searchOrderUrl + newUrl)
+                .then(res => {
+                    if (res.status === 200) {
+                        this.orders = res.data;
+                    }
+                })
+                .catch(err => {
+                    console.log(err)
+                });
         }
     }
 }
@@ -178,6 +220,7 @@ tbody tr td {
 
 thead {
     box-shadow: 0 2px 31px 0 rgb(123 123 123 / 20%);
+
     & tr {
         color: #232222;
         height: 50px;
@@ -304,7 +347,7 @@ thead {
 }
 
 @media only screen and (min-width: 900px) {
-    .Debut, .Retour{
+    .Debut, .Retour {
         min-width: 140px;
     }
 }

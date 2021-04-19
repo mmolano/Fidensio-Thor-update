@@ -3,11 +3,11 @@
         <Popup v-if="isDisplay" :order-data="orderData"></Popup>
         <div class="container-global">
             <input type="checkbox" id="nav-toggle">
-            <SideBar></SideBar>
+            <SideBar :active-url="typeOfStatus"></SideBar>
             <!--       TODO: tranfor le app.js en login qui redirige ici       -->
             <div class="container-fluid">
                 <Header></Header>
-                <TableRows :orders="orders"></TableRows>
+                <TableRows :type-of-status="typeOfStatus"></TableRows>
             </div>
         </div>
     </section>
@@ -25,13 +25,11 @@ export default {
         SideBar,
         TableRows,
     },
-    props: {
-        orders: Array
-    },
     data() {
         return {
             isDisplay: false,
-            orderData: []
+            orderData: [],
+            typeOfStatus: ''
         }
     },
 };
