@@ -31,7 +31,7 @@
                 </li>
             </ul>
             <button>
-                <a href="">
+                <a href="/logout">
                     <span class="las la-sign-out-alt"></span>
                     <span>Déconnexion</span>
                 </a>

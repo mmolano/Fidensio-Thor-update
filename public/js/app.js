@@ -1871,7 +1871,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "Header"
+  name: "Header",
+  props: {
+    userName: String
+  }
 });
 
 /***/ }),
@@ -2191,6 +2194,7 @@ var customLabels = {
 
       axios__WEBPACK_IMPORTED_MODULE_3___default().get(this.searchOrderUrl + this.typeOfStatus).then(function (res) {
         if (res.status === 200) {
+          console.log(res.data);
           _this.orders = res.data;
         }
       })["catch"](function (err) {
@@ -2302,6 +2306,9 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'Home',
+  props: {
+    user: String
+  },
   components: {
     Header: _Components_Header__WEBPACK_IMPORTED_MODULE_3__.default,
     Popup: _Components_Popup__WEBPACK_IMPORTED_MODULE_2__.default,
@@ -2330,37 +2337,39 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+ // TODO: fix l'erreur 419
 
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+(axios__WEBPACK_IMPORTED_MODULE_0___default().defaults.headers.common) = {
+  'X-Requested-With': 'XMLHttpRequest',
+  'X-CSRF-TOKEN': document.getElementById('csrf-token').getAttribute('content')
+};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Login",
   data: function data() {
@@ -2370,39 +2379,47 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   methods: {
-    submit: function () {
-      var _submit = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                console.log(this.email);
-                _context.next = 3;
-                return axios.post('/login', {
-                  'email': this.email,
-                  'password': this.password
-                }).then(function (res) {
-                  if (res.status === 200) {
-                    alert('success');
-                  }
-                })["catch"](function (err) {
-                  console.log(err);
-                });
+    submit: function submit() {
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post('/login', {
+        'email': this.email,
+        'password': this.password
+      }).then(function (response) {
+        console.log(response.data);
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    flashPopupMessage: function flashPopupMessage() {
+      var messages = document.getElementsByClassName('alert');
+      var secondes = 100;
 
-              case 3:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, this);
-      }));
+      var _loop = function _loop(i) {
+        var message = messages[i];
+        var popupDelete = document.getElementById('alert-data-dissmiss');
+        popupDelete.addEventListener('click', function (e) {
+          message.style.left = "-100%";
+        });
+        setTimeout(function () {
+          message.style.left = "42px";
+        }, secondes);
+        secondes += 5800;
 
-      function submit() {
-        return _submit.apply(this, arguments);
+        if (!message.classList.contains('alert-important')) {
+          setTimeout(function () {
+            message.style.left = "-100%";
+          }, secondes);
+        }
+
+        secondes -= 1000;
+      };
+
+      for (var i = 0; i < messages.length; i++) {
+        _loop(i);
       }
-
-      return submit;
-    }()
+    }
+  },
+  created: function created() {
+    this.flashPopupMessage();
   }
 });
 
@@ -2604,7 +2621,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "section[data-v-6015d15a] {\n  position: relative;\n  background-color: #1a202e !important;\n}\n.login-container[data-v-6015d15a] {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  margin: auto;\n  max-width: 500px;\n  height: -webkit-fit-content;\n  height: -moz-fit-content;\n  height: fit-content;\n  width: 100%;\n  padding: 50px;\n  border-radius: 20px;\n  background-color: #4d5261;\n}\n.login-container form[data-v-6015d15a] {\n  text-align: center;\n}\n.login-container form img[data-v-6015d15a] {\n  width: 100%;\n  max-width: 370px;\n}\n.login-container form .input-field[data-v-6015d15a] {\n  display: flex;\n  flex-direction: column;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "section[data-v-6015d15a] {\n  position: relative;\n  background-color: #1a202e !important;\n}\n.login-container[data-v-6015d15a] {\n  position: absolute;\n  top: 0;\n  bottom: 0;\n  left: 0;\n  right: 0;\n  margin: auto;\n  max-width: 500px;\n  height: -webkit-fit-content;\n  height: -moz-fit-content;\n  height: fit-content;\n  width: 100%;\n  padding: 50px;\n}\n.login-container form[data-v-6015d15a] {\n  text-align: center;\n}\n.login-container form img[data-v-6015d15a] {\n  width: 100%;\n  max-width: 370px;\n}\n.login-container form .input-field[data-v-6015d15a] {\n  display: flex;\n  flex-direction: column;\n  margin: 22px 0;\n  color: white;\n}\n.login-container form .input-field label[data-v-6015d15a] {\n  text-align: left;\n  margin-bottom: 10px;\n}\n.login-container form .input-field input[data-v-6015d15a] {\n  background-color: unset;\n  border: unset;\n  border-bottom: 1px solid white;\n  color: white;\n  padding: 0 0 3px;\n}\n.login-container form .input-field input[data-v-6015d15a]:focus {\n  outline: none;\n  border-bottom: 1px solid #ef7ca6;\n}\n.login-container form .input-field input.input-colored[data-v-6015d15a] {\n  border-bottom: 1px solid #ef7ca6;\n}\n.login-container form button[data-v-6015d15a] {\n  padding: 14px;\n  border-radius: 20px;\n  border: none;\n  cursor: pointer;\n  background-color: #ef7ca6;\n  color: white;\n}\n.login-container form button.disabled[data-v-6015d15a] {\n  cursor: not-allowed;\n  color: black;\n  background-color: #caccd0;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -42870,25 +42887,22 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("section", [
-      _c("header", { staticClass: "header-nav" }, [
-        _c("h1", [
-          _c("label", { attrs: { for: "nav-toggle" } }, [
-            _c("span", { staticClass: "las la-bars" }),
-            _vm._v("\n                Bienvenue Miguel\n            ")
-          ])
+  return _c("section", [
+    _c("header", { staticClass: "header-nav" }, [
+      _c("h1", [
+        _c("label", { attrs: { for: "nav-toggle" } }, [
+          _c("span", { staticClass: "las la-bars" }),
+          _vm._v(
+            "\n                Bienvenue " +
+              _vm._s(_vm.userName) +
+              "\n            "
+          )
         ])
       ])
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -43192,7 +43206,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("button", [
-      _c("a", { attrs: { href: "" } }, [
+      _c("a", { attrs: { href: "/logout" } }, [
         _c("span", { staticClass: "las la-sign-out-alt" }),
         _vm._v(" "),
         _c("span", [_vm._v("Déconnexion")])
@@ -43528,7 +43542,7 @@ var render = function() {
             "div",
             { staticClass: "container-fluid" },
             [
-              _c("Header"),
+              _c("Header", { attrs: { "user-name": _vm.user } }),
               _vm._v(" "),
               _c("TableRows", { attrs: { "type-of-status": _vm.typeOfStatus } })
             ],
@@ -43581,6 +43595,7 @@ var render = function() {
                 expression: "email"
               }
             ],
+            class: { "input-colored": _vm.email },
             attrs: { type: "email", id: "email", name: "email" },
             domProps: { value: _vm.email },
             on: {
@@ -43606,7 +43621,13 @@ var render = function() {
                 expression: "password"
               }
             ],
-            attrs: { type: "password", id: "password", name: "password" },
+            class: { "input-colored": _vm.password },
+            attrs: {
+              type: "password",
+              id: "password",
+              name: "password",
+              autocomplete: "password"
+            },
             domProps: { value: _vm.password },
             on: {
               input: function($event) {
@@ -43619,32 +43640,31 @@ var render = function() {
           })
         ]),
         _vm._v(" "),
-        _vm._m(0)
+        _c(
+          "div",
+          { staticClass: "center-align", attrs: { id: "login-button-div" } },
+          [
+            _c(
+              "button",
+              {
+                staticClass: "btn waves-effect waves-light",
+                class: { disabled: !_vm.email },
+                attrs: {
+                  type: "submit",
+                  name: "action",
+                  id: "login-button",
+                  disabled: !_vm.email
+                }
+              },
+              [_vm._v("\n                    Connexion\n                ")]
+            )
+          ]
+        )
       ])
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "center-align", attrs: { id: "login-button-div" } },
-      [
-        _c(
-          "button",
-          {
-            staticClass: "btn waves-effect waves-light",
-            attrs: { type: "submit", name: "action", id: "login-button" }
-          },
-          [_vm._v("\n                    Connexion\n                ")]
-        )
-      ]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

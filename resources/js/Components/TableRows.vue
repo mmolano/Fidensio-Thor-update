@@ -70,7 +70,6 @@
 <script>
 
 // TODO: mettre les bon id pour les calls axios & mettre les bons bouton
-
 import JwPagination from 'jw-vue-pagination';
 import moment from "moment";
 import axios from "axios";
@@ -136,6 +135,7 @@ export default {
         loadOrders: function () {
             axios.get(this.searchOrderUrl + this.typeOfStatus).then(res => {
                 if (res.status === 200) {
+                    console.log(res.data);
                     this.orders = res.data;
                 }
             }).catch(err => {

@@ -6,7 +6,7 @@
             <SideBar :active-url="typeOfStatus"></SideBar>
             <!--       TODO: tranfor le app.js en login qui redirige ici       -->
             <div class="container-fluid">
-                <Header></Header>
+                <Header :user-name="user"></Header>
                 <TableRows :type-of-status="typeOfStatus"></TableRows>
             </div>
         </div>
@@ -20,6 +20,9 @@ import Header from "../Components/Header";
 
 export default {
     name: 'Home',
+    props: {
+        user: String,
+    },
     components: {
         Header,
         Popup,

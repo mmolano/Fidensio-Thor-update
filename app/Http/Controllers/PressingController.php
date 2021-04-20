@@ -70,45 +70,28 @@ class PressingController extends Controller
         return back();
     }
 
-    public function index(Request $request)
+    public function index()
     {
-        // Check l'id du provider qui est log puis on selectionne le statut en fonction de la fonction
-        // TODO: check que le mec est bien log sur l'api et on envoie l'id du provider dans la vue (puis on modifie l'id dans la vue pour le call axios)
-
-        if (isset($request->type)) {
-            switch ($request->type) {
-                case $type = 'finished':
-                case $type = 'processing':
-                case $type = 'pickupDone';
-                    $order = Pressing::getProviderOrder(1, $this->status[$type]);
-                    break;
-            }
-        } else {
-            $order = Pressing::getProviderOrder(1, $this->status['default']);
-        }
-
-        return view('Pressing/home', [
-            'orders' => isset($order) ? $order : []
-        ]);
+        return view('Pressing/home');
     }
 
     public function getOrders(Request $request): array
     {
-        // Check l'id du provider qui est log puis on selectionne le statut en fonction de la fonction
-        // TODO: check que le mec est bien log sur l'api et on envoie l'id du provider dans la vue (puis on modifie l'id dans la vue pour le call axios)
+        $providerId = session('authId');
+
         if (isset($request->type)) {
             switch ($request->type) {
                 case $type = 'finished':
                 case $type = 'processing':
                 case $type = 'pickupDone';
-                    $order = Pressing::getProviderOrder(1, $this->status[$type]);
+                    $order = Pressing::getProviderOrder($providerId, $this->status[$type]);
                     break;
                 default:
-                    $order = Pressing::getProviderOrder(1, $this->status['default']);
+                    $order = Pressing::getProviderOrder($providerId, $this->status['default']);
                     break;
             }
         } else {
-            $order = Pressing::getProviderOrder(1, $this->status['default']);
+            $order = Pressing::getProviderOrder($providerId, $this->status['default']);
         }
 
         return isset($order) ? $order : [];

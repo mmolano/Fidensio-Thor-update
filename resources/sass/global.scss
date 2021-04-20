@@ -29,6 +29,36 @@
     }
 }
 
+.alert {
+    left: -100%;
+    top: 33px;
+    position: absolute;
+    color: white;
+    z-index: 99999999;
+    padding: 30px;
+    border-radius: 20px;
+    transition: left 300ms;
+
+    &.alert-info {
+        background-color: #00ddb6;
+    }
+
+    & button.close {
+        cursor: pointer;
+        position: absolute;
+        right: -12px;
+        top: -12px;
+        color: white;
+        background-color: #ff5858;
+        border-radius: 50px;
+        width: 30px;
+        height: 30px;
+        border: unset;
+        font-weight: bold;
+        font-size: 18px;
+    }
+}
+
 #nav-toggle {
     display: none;
 }

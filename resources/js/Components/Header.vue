@@ -4,7 +4,7 @@
             <h1>
                 <label for="nav-toggle">
                     <span class="las la-bars"></span>
-                    Bienvenue Miguel
+                    Bienvenue {{ userName }}
                 </label>
                 <!--                TODO: mettre le nom du mec qui est log   -->
             </h1>
@@ -14,7 +14,10 @@
 
 <script>
 export default {
-    name: "Header"
+    name: "Header",
+    props: {
+        userName: String
+    }
 }
 </script>
 

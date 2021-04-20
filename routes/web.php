@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PressingController;
+use App\Http\Middleware\SessionAuth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,14 +16,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-/*TODO: mettre une route de login, un middleware et la route pour l'affichage du tableau et remove ce truc */
-
 Route::get('/login', [AuthController::class, 'index']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/logout', [AuthController::class, 'logout']);
 
-Route::get('/', [PressingController::class, 'index']);
-
-Route::post('/', [PressingController::class, 'commitStatus']);
-Route::post('/taken', [PressingController::class, 'commitStatus']);
-Route::post('/processing', [PressingController::class, 'commitStatus']);
+Route::group([
+    'middleware' => SessionAuth::class
+], function () {
+    Route::get('/', [PressingController::class, 'index']);
+    Route::post('/', [PressingController::class, 'commitStatus']);
+    Route::post('/taken', [PressingController::class, 'commitStatus']);
+    Route::post('/processing', [PressingController::class, 'commitStatus']);
+});

@@ -3,7 +3,7 @@
 @section('body')
 
 <div id="app">
-    <Home></Home>
+    <Home :user="{{ json_encode(session('authName')) }}" :provider-id="{{ json_encode(session('authId')) }}"></Home>
 </div>
 
 @endsection
