@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Services\Pressing\Pressing;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -18,7 +17,7 @@ class PressingController extends Controller
         'finished' => 5
     ];
 
-    private function error(?int $error, ?string $specialErrors = null, ?string $message = null): RedirectResponse
+    private function error(?int $error, ?string $specialErrors = null, ?string $message = null): array
     {
         if ($error) {
             $this->error = $error;
@@ -42,19 +41,21 @@ class PressingController extends Controller
             case 4:
                 $message = 'Impossible de changer le statut de la commande';
                 break;
+            case 5:
+                $message = 'Impossible d\'obtenir les informations de la commande';
+                break;
             default:
                 $message ?: $message = 'Undefined error';
         }
 
-        flash($message)->error();
-        return back();
+        return [$message];
     }
 
     public function commitStatus(Request $request)
     {
         $validation = Validator::make($request->all(), [
             'orderId' => ['required', 'integer'],
-            'statusId' => ['required', 'integer']
+            'status' => ['required', 'integer']
         ]);
 
         if ($validation->fails()) {
@@ -95,6 +96,13 @@ class PressingController extends Controller
         }
 
         return isset($order) ? $order : [];
+    }
+
+    public function getProducts(Request $request): array
+    {
+        $products = Pressing::getProviderProduct($request->id);
+
+        return isset($products) ? $products : $this->error(5);
     }
 
 }

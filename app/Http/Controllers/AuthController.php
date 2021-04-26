@@ -24,7 +24,7 @@ class AuthController extends Controller
                 $message ?: $message = 'Undefined error';
         }
 
-        flash($message)->error();
+        flash('Vous avez été déconnecté !');
         return back();
     }
 
@@ -43,7 +43,7 @@ class AuthController extends Controller
             return $this->error(1);
         }
 
-        session([
+        session()->put([
             'authenticated' => time(),
             'authId' => $user['id'],
             'authName' => $user['name']

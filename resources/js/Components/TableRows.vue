@@ -1,11 +1,6 @@
 <template>
     <section>
-        <div class="search-wrapper">
-            <div class="search-input-contain">
-                <label for="search"><span class="las la-search"></span></label>
-                <input id="search" v-model="search" type="search" placeholder="Faire une recherche"/>
-            </div>
-        </div>
+        <SearchComponent v-model="search"></SearchComponent>
         <div class="responsive-table" v-if="filteredOrder.length !== 0">
             <table id="main-table">
                 <thead>
@@ -44,9 +39,25 @@
                     </td>
                     <td data-label="Service(s)" class="Service" :inner-html.prop="order.service.name"></td>
                     <td data-label="Commande" class="Commande">
-                        <button @click="sendProcessing(order.id)" class="btn waves-effect waves-light"><span class="pastille-info"
-                                                                                        v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"></span>Recupéré</button>
+                        <button v-if="typeOfStatus === ''" @click="sendProcessing(order.id, 2)"
+                                class="btn waves-effect waves-light"><span
+                            class="pastille-info"
+                            v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"></span>Recupéré
+                        </button>
+
+                        <button v-if="typeOfStatus === '?type=pickupDone'" @click="viewOrder(order)"
+                                class="btn waves-effect waves-light">
+                            <span class="pastille-info"
+                                  v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"></span>Payer
+                        </button>
+
+                        <button v-if="typeOfStatus === '?type=processing'" @click="sendProcessing(order.id, 5)"
+                                class="btn waves-effect waves-light">
+                            <span class="pastille-info"
+                                  v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"></span>Completer
+                        </button>
                     </td>
+
                     <td class="orderStatus" style="display: none">En Attente</td>
                 </tr>
                 </tbody>
@@ -69,22 +80,10 @@
 
 <script>
 
-// TODO: mettre les bon id pour les calls axios & mettre les bons bouton
 import JwPagination from 'jw-vue-pagination';
+import SearchComponent from "./SearchComponent";
 import moment from "moment";
 import axios from "axios";
-import Vue from "vue";
-
-function escapeRegExp(str) {
-    return str.replace(/\W|_/g, '[$&]');
-}
-
-Vue.filter('highlight', function (words, query) {
-    var iQuery = new RegExp(escapeRegExp(query), "ig");
-    return words.toString().replace(iQuery, function (matchedTxt, a, b) {
-        return '<span class=\'highlight\'>' + matchedTxt + '</span>';
-    });
-});
 
 const customLabels = {
     first: '<<',
@@ -97,6 +96,7 @@ export default {
     name: "Table",
     components: {
         JwPagination,
+        SearchComponent
     },
     props: {
         typeOfStatus: String
@@ -109,13 +109,17 @@ export default {
             pageSize: 9,
             pagination: [],
             orders: [],
-            searchOrderUrl: '/api/getData'
+            searchOrderUrl: 'getData'
         }
     },
     methods: {
         showPopup(value) {
             this.$parent.$data.orderData = value;
             this.$parent.$data.isDisplay = true;
+        },
+        viewOrder(order) {
+            this.$parent.$data.orderData = order;
+            this.$parent.$data.viewOrderProfile = true;
         },
         onChangePage(pageOfItems) {
             this.pagination = pageOfItems;
@@ -135,22 +139,23 @@ export default {
         loadOrders: function () {
             axios.get(this.searchOrderUrl + this.typeOfStatus).then(res => {
                 if (res.status === 200) {
-                    console.log(res.data);
                     this.orders = res.data;
                 }
             }).catch(err => {
-                console.log(err)
+                // TODO: catch l'erreur dans une popup
+                console.log(err.data)
             });
         },
-        sendProcessing: async function (id) {
-            await axios.post('/taken', {
-                'orderId': id,
-                'statusId': 2
+        sendProcessing: async function (orderId, status) {
+            await axios.post('/update', {
+                'orderId': orderId,
+                'status': status
             }).then(res => {
                 if (res.status === 200) {
                     this.loadOrders();
                 }
             }).catch(err => {
+                // TODO: catch l'erreur dans une popup
                 console.log(err)
             });
         }
@@ -166,6 +171,7 @@ export default {
             const filter = event =>
                 event.userData.firstName.toLowerCase().includes(filterValue) ||
                 event.userData.lastName.toLowerCase().includes(filterValue) ||
+                event.userData.firstName.toLowerCase().includes(filterValue) + ' ' + event.userData.lastName.toLowerCase().includes(filterValue) ||
                 event.company.name.toLowerCase().includes(filterValue) ||
                 moment(event.deliveryDate).format('DD-MM-YYYY').toLowerCase().includes(filterValue) ||
                 moment(event.createdAt).format('DD-MM-YYYY').toLowerCase().includes(filterValue)
@@ -186,6 +192,7 @@ export default {
                     }
                 })
                 .catch(err => {
+                    // TODO: catch l'erreur dans une popup
                     console.log(err)
                 });
         }
@@ -283,38 +290,6 @@ thead {
         border: unset;
         padding: 6px;
         border-radius: 10px;
-    }
-}
-
-.search-wrapper {
-    width: 90%;
-    margin: 20px auto;
-
-    & .search-input-contain {
-        display: flex;
-        background: white;
-        width: 288px;
-        height: 55px;
-        border-radius: 20px;
-        padding: 20px;
-        border: none;
-        align-items: center;
-        overflow: hidden;
-        box-shadow: 0 14px 38px 6px rgb(123 123 123 / 13%);
-
-        & span {
-            display: inline-block;
-            padding: 0 0.2rem;
-            font-size: 1.2rem;
-        }
-
-        & input {
-            width: 100%;
-            height: 100%;
-            padding: .5rem;
-            border: none;
-            outline: none;
-        }
     }
 }
 

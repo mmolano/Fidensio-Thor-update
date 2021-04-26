@@ -25,6 +25,9 @@ Route::group([
 ], function () {
     Route::get('/', [PressingController::class, 'index']);
     Route::post('/', [PressingController::class, 'commitStatus']);
-    Route::post('/taken', [PressingController::class, 'commitStatus']);
+    Route::post('/update', [PressingController::class, 'commitStatus']);
     Route::post('/processing', [PressingController::class, 'commitStatus']);
+
+    Route::get('/getData', [PressingController::class, 'getOrders']);
+    Route::get('/getProduct', [PressingController::class, 'getProducts']);
 });

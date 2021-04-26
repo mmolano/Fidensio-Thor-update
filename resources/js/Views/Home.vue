@@ -7,7 +7,8 @@
             <!--       TODO: tranfor le app.js en login qui redirige ici       -->
             <div class="container-fluid">
                 <Header :user-name="user"></Header>
-                <TableRows :type-of-status="typeOfStatus"></TableRows>
+                <TableRows v-if="!viewOrderProfile" :type-of-status="typeOfStatus"></TableRows>
+                <OrderProfile v-if="viewOrderProfile" :order-data="orderData"></OrderProfile>
             </div>
         </div>
     </section>
@@ -17,21 +18,24 @@ import TableRows from "../Components/TableRows";
 import SideBar from "../Components/SideBar";
 import Popup from "../Components/Popup";
 import Header from "../Components/Header";
+import OrderProfile from "../Components/OrderProfile";
 
 export default {
     name: 'Home',
     props: {
-        user: String,
+        user: String
     },
     components: {
         Header,
         Popup,
         SideBar,
         TableRows,
+        OrderProfile
     },
     data() {
         return {
             isDisplay: false,
+            viewOrderProfile: false,
             orderData: [],
             typeOfStatus: ''
         }

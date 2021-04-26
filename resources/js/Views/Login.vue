@@ -2,6 +2,7 @@
     <section>
         <div class="login-container">
             <form method="POST" @submit="submit">
+                <input type="hidden" name="_token" :value="csrf">
                 <img src="/img/logo.png" alt="fidensio logo">
                 <div class="input-field">
                     <label for="email">Email</label>
@@ -26,13 +27,6 @@
 <script>
 import axios from 'axios';
 
-// TODO: fix l'erreur 419
-
-axios.defaults.headers.common = {
-    'X-Requested-With': 'XMLHttpRequest',
-    'X-CSRF-TOKEN': document.getElementById('csrf-token').getAttribute('content')
-};
-
 export default {
     name: "Login",
     data() {
@@ -54,7 +48,7 @@ export default {
         },
         flashPopupMessage: function () {
             let messages = document.getElementsByClassName('alert');
-            let secondes = 100;
+            let secondes = 200;
             for (let i = 0; i < messages.length; i++) {
                 let message = messages[i];
 
@@ -68,7 +62,7 @@ export default {
                     message.style.left = "42px";
                 }, secondes);
 
-                secondes += 5800;
+                secondes += 2800;
                 if (!message.classList.contains('alert-important')) {
                     setTimeout(() => {
                         message.style.left = "-100%";
@@ -77,6 +71,11 @@ export default {
                 secondes -= 1000;
             }
         }
+    },
+    computed: {
+        csrf() {
+            return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        },
     },
     created() {
         this.flashPopupMessage();

@@ -28,7 +28,7 @@
                         </div>
                         <div id="popup-div-two">
                             <div class="popup-row">
-                                <div>N de consigne :</div>
+                                <div>N° de consigne :</div>
                                 <div class="popup-contenu" id="popup-consigne">{{ orderData.locker.length === 0 ? 'Bring me' : 'Classic' }}</div>
                             </div>
                             <div class="popup-commentaire-title" style="text-align:center">Commentaire :</div>

@@ -23,44 +23,6 @@ class Pressing
         return null;
     }
 
-    public static function getProviderOrder(int $id, string $status): ?array
-    {
-        $response = Http::withToken(env('MIX_OURANOS_KEY'))
-            ->get(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'provider/' . $id . '/order/' . $status);
-
-        if (!$response->successful()) {
-            Log::error($response->status() === 404 ? 'Route url not found' : $response->body(), [
-                'className' => class_basename(self::class),
-                'functionName' => __FUNCTION__,
-                'codeStatus' => $response->status(),
-            ]);
-
-            return null;
-        }
-
-        return $response->json();
-    }
-
-    public static function changeStatus(int $orderId, int $statusId): ?JsonResponse
-    {
-        $response = Http::withToken(env('MIX_OURANOS_KEY'))
-            ->put(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'order/' . $orderId, [
-                'status' => $statusId
-            ]);
-
-        if (!$response->successful()) {
-            Log::error($response->status() === 404 ? 'Route url not found' : $response->body(), [
-                'className' => class_basename(self::class),
-                'functionName' => __FUNCTION__,
-                'codeStatus' => $response->status(),
-            ]);
-
-            return null;
-        }
-
-        return $response->json();
-    }
-
     public static function checkProvider(string $email, ?string $password = null): ?array
     {
         $response = Http::withToken(env('MIX_OURANOS_KEY'))
@@ -88,4 +50,82 @@ class Pressing
 
         return $user;
     }
+
+    public static function changeStatus(int $orderId, int $statusId): ?JsonResponse
+    {
+        $response = Http::withToken(env('MIX_OURANOS_KEY'))
+            ->put(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'order/' . $orderId, [
+                'status' => $statusId
+            ]);
+
+        if (!$response->successful()) {
+            Log::error($response->status() === 404 ? 'Route url not found' : $response->body(), [
+                'className' => class_basename(self::class),
+                'functionName' => __FUNCTION__,
+                'codeStatus' => $response->status(),
+            ]);
+
+            return null;
+        }
+
+        return $response->json();
+    }
+
+    //TODO: voir si on filtre par status ici plutôt que d'avoir une route sur ouranos qui le fait
+    public static function getProviderOrder(int $id, string $status): ?array
+    {
+        $response = Http::withToken(env('MIX_OURANOS_KEY'))
+            ->get(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'provider/' . $id . '/order/' . $status);
+
+        if (!$response->successful()) {
+            Log::error($response->status() === 404 ? 'Route url not found' : $response->body(), [
+                'className' => class_basename(self::class),
+                'functionName' => __FUNCTION__,
+                'codeStatus' => $response->status(),
+            ]);
+
+            return null;
+        }
+
+        return $response->json();
+    }
+
+    public static function getOrder(int $orderId): ?array
+    {
+        $response = Http::withToken(env('MIX_OURANOS_KEY'))
+            ->get(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'order/' . $orderId);
+
+        if (!$response->successful()) {
+            Log::error($response->status() === 404 ? 'Route url not found' : $response->body(), [
+                'className' => class_basename(self::class),
+                'functionName' => __FUNCTION__,
+                'codeStatus' => $response->status(),
+            ]);
+
+            return null;
+        }
+
+        return $response->json();
+    }
+
+    public static function getProviderProduct(int $userId): ?array
+    {
+        $response = Http::withToken(env('MIX_OURANOS_KEY'))
+            ->get(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'service/pressingAtCompany', [
+                'userId' => $userId
+            ]);
+
+        if (!$response->successful()) {
+            Log::error($response->status() === 404 ? 'Route url not found' : $response->body(), [
+                'className' => class_basename(self::class),
+                'functionName' => __FUNCTION__,
+                'codeStatus' => $response->status(),
+            ]);
+
+            return null;
+        }
+
+        return $response->json();
+    }
+
 }
