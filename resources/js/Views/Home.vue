@@ -4,7 +4,6 @@
         <div class="container-global">
             <input type="checkbox" id="nav-toggle">
             <SideBar :active-url="typeOfStatus"></SideBar>
-            <!--       TODO: tranfor le app.js en login qui redirige ici       -->
             <div class="container-fluid">
                 <Header :user-name="user"></Header>
                 <TableRows v-if="!viewOrderProfile" :type-of-status="typeOfStatus"></TableRows>

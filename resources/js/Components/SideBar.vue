@@ -53,6 +53,7 @@ export default {
     },
     methods: {
         getOrders: function (url) {
+            this.$parent.$data.viewOrderProfile = false;
             this.$parent.$data.typeOfStatus = url;
         },
         getActiveUrl: function (url) {

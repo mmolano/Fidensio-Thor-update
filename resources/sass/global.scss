@@ -43,6 +43,10 @@
         background-color: #00ddb6;
     }
 
+    &.alert-danger {
+        background-color: #ff5858;
+    }
+
     & button.close {
         cursor: pointer;
         position: absolute;

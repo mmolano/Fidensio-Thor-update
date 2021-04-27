@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\Pressing\Pressing;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -10,7 +11,7 @@ class AuthController extends Controller
 {
     private ?int $error = null;
 
-    private function error(?int $error, ?string $message = null): RedirectResponse
+    private function error(?int $error, ?string $message = null): JsonResponse
     {
         if ($error) {
             $this->error = $error;
@@ -24,8 +25,10 @@ class AuthController extends Controller
                 $message ?: $message = 'Undefined error';
         }
 
-        flash('Vous avez été déconnecté !');
-        return back();
+        return response()->json([
+            'status'    => 'error',
+            'message' => $message,
+        ], 400);
     }
 
     public function index()
@@ -50,9 +53,6 @@ class AuthController extends Controller
         ]);
 
         session()->save();
-
-        flash('Welcome');
-        return redirect('/');
     }
 
     public function logout()

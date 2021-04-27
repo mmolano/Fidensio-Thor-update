@@ -1,7 +1,8 @@
 <template>
     <section>
+        <flashPopup :my-message="message"></flashPopup>
         <div class="login-container">
-            <form method="POST" @submit="submit">
+            <form method="POST" @submit.prevent="submit">
                 <input type="hidden" name="_token" :value="csrf">
                 <img src="/img/logo.png" alt="fidensio logo">
                 <div class="input-field">
@@ -26,59 +27,39 @@
 
 <script>
 import axios from 'axios';
+import flashPopup from "../Components/flashPopup";
 
 export default {
     name: "Login",
+    components: {
+        flashPopup
+    },
     data() {
         return {
             email: '',
-            password: ''
+            password: '',
+            message: Object
         }
     },
     methods: {
-        submit: function () {
+        submit: function (e) {
             axios.post('/login', {
                 'email': this.email,
                 'password': this.password
-            }).then(response => {
-                console.log(response.data)
+            }).then(res => {
+                window.location = '/'
             }).catch(err => {
-                console.log(err)
+                if (err.response) {
+                    e.preventDefault()
+                    this.message = err.response.data
+                }
             });
         },
-        flashPopupMessage: function () {
-            let messages = document.getElementsByClassName('alert');
-            let secondes = 200;
-            for (let i = 0; i < messages.length; i++) {
-                let message = messages[i];
-
-                let popupDelete = document.getElementById('alert-data-dissmiss');
-
-                popupDelete.addEventListener('click', e => {
-                    message.style.left = "-100%";
-                });
-
-                setTimeout(() => {
-                    message.style.left = "42px";
-                }, secondes);
-
-                secondes += 2800;
-                if (!message.classList.contains('alert-important')) {
-                    setTimeout(() => {
-                        message.style.left = "-100%";
-                    }, secondes);
-                }
-                secondes -= 1000;
-            }
-        }
     },
     computed: {
         csrf() {
             return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         },
-    },
-    created() {
-        this.flashPopupMessage();
     }
 }
 </script>
@@ -108,7 +89,7 @@ section {
 
         & img {
             width: 100%;
-            max-width: 370px;
+            max-width: 396px;
         }
 
         & .input-field {

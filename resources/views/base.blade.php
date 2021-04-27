@@ -17,8 +17,6 @@
 </head>
 <body>
 
-@include('flash::message')
-
 @yield('body')
 
 <script src="{{ mix('js/app.js') }}"></script>

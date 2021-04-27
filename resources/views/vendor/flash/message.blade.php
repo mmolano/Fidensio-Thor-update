@@ -1,4 +1,4 @@
-@foreach ((array) session('flash_notification') as $message)
+@foreach (session('flash_notification', collect())->toArray() as $message)
     @if ($message['overlay'])
         @include('flash::modal', [
             'modalClass' => 'flash-modal',
@@ -11,13 +11,14 @@
         {{ $message['important'] ? 'alert-important' : '' }}"
              role="alert"
         >
-            @if ($message['important'])
-                <button type="button"
-                        class="close"
-                        data-dismiss="alert"
-                        aria-hidden="true"
-                >&times;</button>
-            @endif
+
+            <button type="button"
+                    class="close"
+                    id="alert-data-dissmiss"
+                    data-dismiss="alert"
+                    aria-hidden="true"
+            >&times;
+            </button>
 
             {!! $message['message'] !!}
         </div>
