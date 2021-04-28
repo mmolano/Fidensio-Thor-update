@@ -32,19 +32,29 @@
             </div>
         </div>
         <div class="secondary-container">
-            <div class="bottom-informations">
-                <div class="input-container">
-                    <input type="checkbox" id="gift">
-                    <label for="gift">Offrir au client</label>
+            <form method="POST" @submit.prevent="submit">
+                <input type="hidden" name="_token" :value="csrf">
+                <div class="bottom-informations">
+                    <div v-for="(item, index) in selectedProduct">
+                        {{ item.name }}
+                    </div>
+                    <div class="input-container">
+                        <input id='one' type='checkbox' v-model="gift"/>
+                        <label for='one'>
+                            <span></span>
+                            Offrir au client
+                            <ins><i>Offrir au client</i></ins>
+                        </label>
+                    </div>
+                    <div class="total-price">
+                        <h4>Total: </h4>
+                        <p :inner-html.prop="gift === false ? (finalPrice / 100) + ' €' : 0 + ' €'"></p>
+                    </div>
+                    <button type="submit" name="action" id="login-button">
+                        Confirmer la commande
+                    </button>
                 </div>
-                <div class="total-price">
-                    <h4>Total: </h4>
-                    <p>{{ finalPrice / 100 }} &euro;</p>
-                </div>
-                <button>
-                    Confirmer la commande
-                </button>
-            </div>
+            </form>
         </div>
     </section>
 </template>
@@ -68,7 +78,9 @@ export default {
         return {
             search: '',
             productData: [],
-            finalPrice: 0
+            finalPrice: 0,
+            selectedProduct: [],
+            gift: false
         }
     },
     methods: {
@@ -100,7 +112,10 @@ export default {
                 event.description.toLowerCase().includes(filterValue)
 
             return this.productData.filter(filter)
-        }
+        },
+        csrf() {
+            return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        },
     },
     mounted() {
         this.loadProducts()
@@ -152,6 +167,118 @@ thead {
             padding: 20px;
             box-shadow: 20px 9px 31px 0 rgb(123 123 123 / 20%);
         }
+    }
+}
+
+input[type='checkbox'] {
+    height: 0;
+    width: 0;
+}
+
+ins {
+    margin-left: 10px;
+}
+
+input[type='checkbox'] + label {
+    position: relative;
+    display: flex;
+    margin: .6em 0;
+    align-items: center;
+    color: #9e9e9e;
+    transition: color 250ms cubic-bezier(.4, .0, .23, 1);
+}
+
+input[type='checkbox'] + label > ins {
+    position: absolute;
+    display: block;
+    bottom: 0;
+    left: 2em;
+    height: 0;
+    width: 100%;
+    overflow: hidden;
+    text-decoration: none;
+    transition: height 300ms cubic-bezier(.4, .0, .23, 1);
+}
+
+input[type='checkbox'] + label > ins > i {
+    position: absolute;
+    bottom: 0;
+    font-style: normal;
+    color: $mainBtnBack;
+}
+
+input[type='checkbox'] + label > span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 1em;
+    width: 1em;
+    height: 1em;
+    background: transparent;
+    border: 2px solid #9E9E9E;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 250ms cubic-bezier(.4, .0, .23, 1);
+}
+
+input[type='checkbox'] + label:hover, input[type='checkbox']:focus + label {
+    color: black;
+}
+
+input[type='checkbox'] + label:hover > span, input[type='checkbox']:focus + label > span {
+    background: rgba(255, 255, 255, .1);
+}
+
+input[type='checkbox']:checked + label > ins {
+    height: 100%;
+}
+
+input[type='checkbox']:checked + label > span {
+    border: .5em solid $mainBtnBack;
+    animation: shrink-bounce 200ms cubic-bezier(.4, .0, .23, 1);
+}
+
+input[type='checkbox']:checked + label > span:before {
+    content: "";
+    position: absolute;
+    top: .6em;
+    left: .8em;
+    border-right: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    transform: rotate(45deg);
+    transform-origin: 0% 100%;
+    animation: checkbox-check 125ms 250ms cubic-bezier(.4, .0, .23, 1) forwards;
+}
+
+@keyframes shrink-bounce {
+    0% {
+        transform: scale(1);
+    }
+    33% {
+        transform: scale(.85);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes checkbox-check {
+    0% {
+        width: 0;
+        height: 0;
+        border-color: #212121;
+        transform: translate3d(0, 0, 0) rotate(45deg);
+    }
+    33% {
+        width: .2em;
+        height: 0;
+        transform: translate3d(0, 0, 0) rotate(45deg);
+    }
+    100% {
+        width: .2em;
+        height: .5em;
+        border-color: #212121;
+        transform: translate3d(0, -.5em, 0) rotate(45deg);
     }
 }
 
@@ -223,6 +350,7 @@ thead {
         color: white;
         padding: 6px;
         border-radius: 6px;
+        height: 43px
     }
 
     & input, label {

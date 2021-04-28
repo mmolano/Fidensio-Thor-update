@@ -14,11 +14,11 @@
         <div class="card-quantity">
             <h4>Quantité: </h4>
             <div class="card-quantity-selection">
-                <button @click="iteration('decrease', product.price)" :class="{'disabled': productCount === 0}"
+                <button @click="iteration('decrease', product.price, product)" :class="{'disabled': productCount === 0}"
                         :disabled="productCount === 0">-
                 </button>
                 <span>{{ productCount }}</span>
-                <button @click="iteration('add', product.price)">+</button>
+                <button @click="iteration('add', product.price, product)">+</button>
             </div>
         </div>
     </div>
@@ -36,10 +36,11 @@ export default {
         }
     },
     methods: {
-        iteration(type, price) {
+        iteration(type, price, product) {
             if (type === 'add') {
                 this.productCount += 1;
                 this.$parent.finalPrice += price;
+                this.$parent.selectedProduct.push(product);
             } else if (this.productCount > 0 && type === 'decrease') {
                 this.productCount -= 1;
                 this.$parent.finalPrice -= price;

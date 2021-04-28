@@ -1,6 +1,6 @@
 <template>
     <section>
-        <flashPopup :my-message="message"></flashPopup>
+        <FlashPopup :my-message="message"></FlashPopup>
         <div class="login-container">
             <form method="POST" @submit.prevent="submit">
                 <input type="hidden" name="_token" :value="csrf">
@@ -27,12 +27,12 @@
 
 <script>
 import axios from 'axios';
-import flashPopup from "../Components/flashPopup";
+import FlashPopup from "../Components/FlashPopup";
 
 export default {
     name: "Login",
     components: {
-        flashPopup
+        FlashPopup
     },
     data() {
         return {

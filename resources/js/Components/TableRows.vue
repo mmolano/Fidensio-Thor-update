@@ -12,7 +12,7 @@
                     <th class="Nom">Prénom / Nom</th>
                     <th class="Consigne">N° consigne</th>
                     <th class="Service">Service(s)</th>
-                    <th class="Commande">Commande</th>
+                    <th class="Commande" v-if="typeOfStatus !== '?type=finished'">Commande</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -38,27 +38,22 @@
                         :inner-html.prop="order.locker.length === 0 ? 'Bring me' : 'Classic'">
                     </td>
                     <td data-label="Service(s)" class="Service" :inner-html.prop="order.service.name"></td>
-                    <td data-label="Commande" class="Commande">
-                        <button v-if="typeOfStatus === ''" @click="sendProcessing(order.id, 2)"
-                                class="btn waves-effect waves-light"><span
+                    <td data-label="Commande" class="Commande" v-if="typeOfStatus !== '?type=finished'">
+                        <span
                             class="pastille-info"
-                            v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"></span>Recupéré
+                            v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"></span>
+                        <button v-if="typeOfStatus === ''" @click="sendProcessing(order.id, 2)"
+                                class="btn waves-effect waves-light">Récupéré
                         </button>
 
                         <button v-if="typeOfStatus === '?type=pickupDone'" @click="viewOrder(order)"
-                                class="btn waves-effect waves-light">
-                            <span class="pastille-info"
-                                  v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"></span>Payer
+                                class="btn waves-effect waves-light">Payer
                         </button>
 
                         <button v-if="typeOfStatus === '?type=processing'" @click="sendProcessing(order.id, 5)"
-                                class="btn waves-effect waves-light">
-                            <span class="pastille-info"
-                                  v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"></span>Completer
+                                class="btn waves-effect waves-light">Compléter
                         </button>
                     </td>
-
-                    <td class="orderStatus" style="display: none">En Attente</td>
                 </tr>
                 </tbody>
             </table>
@@ -142,22 +137,30 @@ export default {
                     this.orders = res.data;
                 }
             }).catch(err => {
-                // TODO: catch l'erreur dans une popup
-                console.log(err.data)
+                this.$parent.$data.message = err.response.data
             });
         },
-        sendProcessing: async function (orderId, status) {
-            await axios.post('/update', {
+        sendProcessing: function (orderId, status) {
+            axios.post('/update', {
                 'orderId': orderId,
                 'status': status
             }).then(res => {
                 if (res.status === 200) {
+                    this.$parent.$data.message = res.data
                     this.loadOrders();
                 }
             }).catch(err => {
-                // TODO: catch l'erreur dans une popup
-                console.log(err)
+                this.$parent.$data.message = err.response.data
             });
+        },
+        setLoading(isLoading) {
+            if (isLoading) {
+                this.$parent.$data.refCount++;
+                this.$parent.$data.isLoading = true;
+            } else if (this.$parent.$data.refCount > 0) {
+                this.$parent.$data.refCount--;
+                this.$parent.$data.isLoading = (this.$parent.$data.refCount > 0);
+            }
         }
     },
     computed: {
@@ -171,7 +174,7 @@ export default {
             const filter = event =>
                 event.userData.firstName.toLowerCase().includes(filterValue) ||
                 event.userData.lastName.toLowerCase().includes(filterValue) ||
-                event.userData.firstName.toLowerCase().includes(filterValue) + ' ' + event.userData.lastName.toLowerCase().includes(filterValue) ||
+                (event.userData.firstName.toLowerCase() + ' ' + event.userData.lastName.toLowerCase()).includes(filterValue) ||
                 event.company.name.toLowerCase().includes(filterValue) ||
                 moment(event.deliveryDate).format('DD-MM-YYYY').toLowerCase().includes(filterValue) ||
                 moment(event.createdAt).format('DD-MM-YYYY').toLowerCase().includes(filterValue)
@@ -192,10 +195,26 @@ export default {
                     }
                 })
                 .catch(err => {
-                    // TODO: catch l'erreur dans une popup
-                    console.log(err)
+                    this.$parent.$data.message = err.response.data
                 });
         }
+    },
+    created() {
+        axios.interceptors.request.use((config) => {
+            this.setLoading(true);
+            return config;
+        }, (error) => {
+            this.setLoading(false);
+            return Promise.reject(error);
+        });
+
+        axios.interceptors.response.use((response) => {
+            this.setLoading(false);
+            return response;
+        }, (error) => {
+            this.setLoading(false);
+            return Promise.reject(error);
+        });
     }
 }
 </script>
@@ -368,10 +387,10 @@ thead {
     }
 
     .pastille-info {
-        position: absolute;
         display: block;
         height: 25px;
         width: 25px;
+        margin: auto auto 10px;
         border-radius: 50px;
     }
 

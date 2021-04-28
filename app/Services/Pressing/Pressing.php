@@ -3,7 +3,6 @@
 
 namespace App\Services\Pressing;
 
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -51,7 +50,7 @@ class Pressing
         return $user;
     }
 
-    public static function changeStatus(int $orderId, int $statusId): ?JsonResponse
+    public static function changeStatus(int $orderId, int $statusId): ?array
     {
         $response = Http::withToken(env('MIX_OURANOS_KEY'))
             ->put(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'order/' . $orderId, [

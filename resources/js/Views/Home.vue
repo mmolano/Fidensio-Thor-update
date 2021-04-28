@@ -1,5 +1,7 @@
 <template>
     <section>
+        <Loader v-if="isLoading"></Loader>
+        <FlashPopup :my-message="message"></FlashPopup>
         <Popup v-if="isDisplay" :order-data="orderData"></Popup>
         <div class="container-global">
             <input type="checkbox" id="nav-toggle">
@@ -18,6 +20,8 @@ import SideBar from "../Components/SideBar";
 import Popup from "../Components/Popup";
 import Header from "../Components/Header";
 import OrderProfile from "../Components/OrderProfile";
+import FlashPopup from "../Components/FlashPopup";
+import Loader from "../Components/Loader";
 
 export default {
     name: 'Home',
@@ -29,14 +33,19 @@ export default {
         Popup,
         SideBar,
         TableRows,
-        OrderProfile
+        OrderProfile,
+        FlashPopup,
+        Loader
     },
     data() {
         return {
             isDisplay: false,
             viewOrderProfile: false,
             orderData: [],
-            typeOfStatus: ''
+            typeOfStatus: '',
+            message: Object,
+            refCount: 0,
+            isLoading: false
         }
     },
 };

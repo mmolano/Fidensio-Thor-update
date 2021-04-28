@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\Pressing\Pressing;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -17,7 +18,7 @@ class PressingController extends Controller
         'finished' => 5
     ];
 
-    private function error(?int $error, ?string $specialErrors = null, ?string $message = null): array
+    private function error(?int $error, ?string $specialErrors = null, ?string $message = null): JsonResponse
     {
         if ($error) {
             $this->error = $error;
@@ -48,10 +49,13 @@ class PressingController extends Controller
                 $message ?: $message = 'Undefined error';
         }
 
-        return [$message];
+        return response()->json([
+            'status' => 'error',
+            'message' => $message,
+        ], 400);
     }
 
-    public function commitStatus(Request $request)
+    public function commitStatus(Request $request): JsonResponse
     {
         $validation = Validator::make($request->all(), [
             'orderId' => ['required', 'integer'],
@@ -62,13 +66,15 @@ class PressingController extends Controller
             return $this->error(3, json_encode($validation->errors()));
         }
 
-//        if (!$order = Pressing::changeStatus($request->orderId, $request->statusId)) {
-//            return $this->error(4);
-//        }
+        if (!$order = Pressing::changeStatus($request->orderId, $request->status)) {
+            return $this->error(4);
+        }
 
         // TODO: voir si besoin de mettre crisp ici
-        flash('Le statut a bien été mis à jour')->success();
-        return back();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'La commande a été mis à jour',
+        ]);
     }
 
     public function index()
