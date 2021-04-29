@@ -190,12 +190,16 @@ export default {
             axios
                 .get(this.searchOrderUrl + newUrl)
                 .then(res => {
+                    console.log(res);
                     if (res.status === 200) {
                         this.orders = res.data;
                     }
                 })
                 .catch(err => {
                     this.$parent.$data.message = err.response.data
+                    if (err.response.status === 500) {
+                        window.location = '/logout';
+                    }
                 });
         }
     },

@@ -17,9 +17,27 @@
 </head>
 <body>
 
+@include('flash::message')
+
 @yield('body')
 
 <script src="{{ mix('js/app.js') }}"></script>
+<script>
+    if (document.getElementById('flashData')) {
+        let popup = document.getElementById('flashData');
+        let popupDelete = document.getElementById('alert-flash-dissmiss');
+
+        popup.style.left = "42px";
+
+        popupDelete.addEventListener('click', e => {
+            popup.style.left = "-100%";
+        }, {passive: true});
+
+        setTimeout(() => {
+            popup.removeAttribute('style');
+        }, 2000);
+    }
+</script>
 </body>
 </html>
 

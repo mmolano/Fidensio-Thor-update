@@ -33,10 +33,6 @@ class AuthController extends Controller
 
     public function index()
     {
-        if (session('authenticated')) {
-            return redirect('/');
-        }
-
         return view('authenticate');
     }
 
@@ -63,7 +59,7 @@ class AuthController extends Controller
             'authId'
         ]);
 
-        flash('Vous avez été déconnecté !');
+        flash('Vous avez été déconnecté')->error();
         return redirect('/login');
     }
 }

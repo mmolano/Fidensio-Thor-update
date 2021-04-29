@@ -6,7 +6,7 @@
             'body'       => $message['message']
         ])
     @else
-        <div class="alert
+        <div id="flashData" class="alert-flash-container alert-flash
                     alert-{{ $message['level'] }}
         {{ $message['important'] ? 'alert-important' : '' }}"
              role="alert"
@@ -14,7 +14,7 @@
 
             <button type="button"
                     class="close"
-                    id="alert-data-dissmiss"
+                    id="alert-flash-dissmiss"
                     data-dismiss="alert"
                     aria-hidden="true"
             >&times;

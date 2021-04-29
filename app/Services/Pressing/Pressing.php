@@ -70,7 +70,6 @@ class Pressing
         return $response->json();
     }
 
-    //TODO: voir si on filtre par status ici plutôt que d'avoir une route sur ouranos qui le fait
     public static function getProviderOrder(int $id, string $status): ?array
     {
         $response = Http::withToken(env('MIX_OURANOS_KEY'))
@@ -127,4 +126,28 @@ class Pressing
         return $response->json();
     }
 
+    public static function postDetail(int $orderId, array $data): ?array
+    {
+        $response = Http::withToken(env('MIX_OURANOS_KEY'))
+            ->post(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'order/' . $orderId . '/detail', [
+                'name' => $data['name'],
+                'isNegative' => $data['isNegative'],
+                'isPercent' => $data['isPercent'],
+                'quantity' => $data['quantity'],
+                'price' => $data['price'],
+                'total' => $data['total'],
+            ]);
+
+        if (!$response->successful()) {
+            Log::error($response->status() === 404 ? 'Route url not found' : $response->body(), [
+                'className' => class_basename(self::class),
+                'functionName' => __FUNCTION__,
+                'codeStatus' => $response->status(),
+            ]);
+
+            return null;
+        }
+
+        return $response->json();
+    }
 }

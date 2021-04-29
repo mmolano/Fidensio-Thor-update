@@ -21,6 +21,12 @@ class SessionAuth
             return $next($request);
         }
 
+        if ($request->ajax()) {
+            return response()->json([
+                'status' => 'error'
+            ], 500);
+        }
+
         return redirect('/login');
     }
 }

@@ -2114,6 +2114,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -2166,6 +2169,9 @@ __webpack_require__.r(__webpack_exports__);
       };
 
       return this.productData.filter(filter);
+    },
+    csrf: function csrf() {
+      return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     }
   },
   mounted: function mounted() {
@@ -2587,11 +2593,17 @@ var customLabels = {
       var _this3 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_3___default().get(this.searchOrderUrl + newUrl).then(function (res) {
+        console.log(res);
+
         if (res.status === 200) {
           _this3.orders = res.data;
         }
       })["catch"](function (err) {
         _this3.$parent.$data.message = err.response.data;
+
+        if (err.response.status === 500) {
+          window.location = '/logout';
+        }
       });
     }
   },
@@ -2758,6 +2770,7 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (err) {
         if (err.response) {
           e.preventDefault();
+          console.log(err.response.data);
           _this.message = err.response.data;
         }
       });
@@ -43314,75 +43327,106 @@ var render = function() {
     _vm._v(" "),
     _c("div", { staticClass: "secondary-container" }, [
       _c(
-        "div",
-        { staticClass: "bottom-informations" },
+        "form",
+        {
+          attrs: { method: "POST" },
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.submit($event)
+            }
+          }
+        },
         [
-          _vm._l(_vm.selectedProduct, function(item, index) {
-            return _c("div", [
-              _vm._v(
-                "\n                " + _vm._s(item.name) + "\n            "
-              )
-            ])
+          _c("input", {
+            attrs: { type: "hidden", name: "_token" },
+            domProps: { value: _vm.csrf }
           }),
           _vm._v(" "),
-          _c("div", { staticClass: "input-container" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.gift,
-                  expression: "gift"
-                }
-              ],
-              attrs: { id: "one", type: "checkbox" },
-              domProps: {
-                checked: Array.isArray(_vm.gift)
-                  ? _vm._i(_vm.gift, null) > -1
-                  : _vm.gift
-              },
-              on: {
-                change: function($event) {
-                  var $$a = _vm.gift,
-                    $$el = $event.target,
-                    $$c = $$el.checked ? true : false
-                  if (Array.isArray($$a)) {
-                    var $$v = null,
-                      $$i = _vm._i($$a, $$v)
-                    if ($$el.checked) {
-                      $$i < 0 && (_vm.gift = $$a.concat([$$v]))
-                    } else {
-                      $$i > -1 &&
-                        (_vm.gift = $$a
-                          .slice(0, $$i)
-                          .concat($$a.slice($$i + 1)))
+          _c(
+            "div",
+            { staticClass: "bottom-informations" },
+            [
+              _vm._l(_vm.selectedProduct, function(item, index) {
+                return _c("div", [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(item.name) +
+                      "\n                "
+                  )
+                ])
+              }),
+              _vm._v(" "),
+              _c("div", { staticClass: "input-container" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.gift,
+                      expression: "gift"
                     }
-                  } else {
-                    _vm.gift = $$c
+                  ],
+                  attrs: { id: "one", type: "checkbox" },
+                  domProps: {
+                    checked: Array.isArray(_vm.gift)
+                      ? _vm._i(_vm.gift, null) > -1
+                      : _vm.gift
+                  },
+                  on: {
+                    change: function($event) {
+                      var $$a = _vm.gift,
+                        $$el = $event.target,
+                        $$c = $$el.checked ? true : false
+                      if (Array.isArray($$a)) {
+                        var $$v = null,
+                          $$i = _vm._i($$a, $$v)
+                        if ($$el.checked) {
+                          $$i < 0 && (_vm.gift = $$a.concat([$$v]))
+                        } else {
+                          $$i > -1 &&
+                            (_vm.gift = $$a
+                              .slice(0, $$i)
+                              .concat($$a.slice($$i + 1)))
+                        }
+                      } else {
+                        _vm.gift = $$c
+                      }
+                    }
                   }
-                }
-              }
-            }),
-            _vm._v(" "),
-            _vm._m(0)
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "total-price" }, [
-            _c("h4", [_vm._v("Total: ")]),
-            _vm._v(" "),
-            _c("p", {
-              domProps: {
-                innerHTML:
-                  _vm.gift === false ? _vm.finalPrice / 100 + " €" : 0 + " €"
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("button", [
-            _vm._v("\n                Confirmer la commande\n            ")
-          ])
-        ],
-        2
+                }),
+                _vm._v(" "),
+                _vm._m(0)
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "total-price" }, [
+                _c("h4", [_vm._v("Total: ")]),
+                _vm._v(" "),
+                _c("p", {
+                  domProps: {
+                    innerHTML:
+                      _vm.gift === false
+                        ? _vm.finalPrice / 100 + " €"
+                        : 0 + " €"
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  attrs: { type: "submit", name: "action", id: "login-button" }
+                },
+                [
+                  _vm._v(
+                    "\n                    Confirmer la commande\n                "
+                  )
+                ]
+              )
+            ],
+            2
+          )
+        ]
       )
     ])
   ])
@@ -43394,7 +43438,9 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("label", { attrs: { for: "one" } }, [
       _c("span"),
-      _vm._v("\n                    Offrir au client\n                    "),
+      _vm._v(
+        "\n                        Offrir au client\n                        "
+      ),
       _c("ins", [_c("i", [_vm._v("Offrir au client")])])
     ])
   }
