@@ -27,8 +27,12 @@
                         v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"
                         :inner-html.prop="dateFormat(order.createdAt) | highlight(search)"></span>
                     </td>
-                    <td data-label="Retour" class="Retour"
-                        :inner-html.prop="dateFormat(order.deliveryDate) | highlight(search)"></td>
+                    <td data-label="Retour" class="Retour">
+                        <span
+                            v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"
+                            :inner-html.prop="dateFormat(order.deliveryDate) | highlight(search)"
+                        ></span>
+                    </td>
                     <td data-label="Emplacement" class="Emplacement"
                         :inner-html.prop="order.company.name | highlight(search)"></td>
                     <td data-label="Nom/Prénom" class="Nom"
@@ -43,15 +47,23 @@
                             class="pastille-info"
                             v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"></span>
                         <button v-if="typeOfStatus === ''" @click="sendProcessing(order.id, 2)"
+                                v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"
                                 class="btn waves-effect waves-light">Récupéré
                         </button>
-
-                        <button v-if="typeOfStatus === '?type=pickupDone'" @click="viewOrder(order)"
+                        <button v-else-if="typeOfStatus === '?type=pickupDone'" @click="viewOrder(order)"
+                                v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"
                                 class="btn waves-effect waves-light">Payer
                         </button>
 
-                        <button v-if="typeOfStatus === '?type=processing'" @click="sendProcessing(order.id, 5)"
+                        <button v-else-if="typeOfStatus === '?type=processing' && order.payment.pay === 1"
+                                @click="sendProcessing(order.id, 5)"
+                                v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"
                                 class="btn waves-effect waves-light">Compléter
+                        </button>
+
+                        <button v-else-if="typeOfStatus === '?type=processing' && order.payment.pay === 0"
+                                class="btn waves-effect waves-light btn-warning">Ré-encaisser
+                            <!--                                TODO: faire que au clique on récup le prix de l'order et on fait un pay stripe           -->
                         </button>
                     </td>
                 </tr>
@@ -190,7 +202,6 @@ export default {
             axios
                 .get(this.searchOrderUrl + newUrl)
                 .then(res => {
-                    console.log(res);
                     if (res.status === 200) {
                         this.orders = res.data;
                     }
@@ -345,6 +356,18 @@ thead {
 
 .infos-buttons {
     font-size: 24px;
+}
+
+.Commande {
+    & button {
+        text-transform: uppercase;
+        font-weight: bold;
+
+        &.btn-warning {
+            background-color: $warning-btn !important;
+            color: $warning-btn-text !important;
+        }
+    }
 }
 
 @media only screen and (min-width: 900px) {

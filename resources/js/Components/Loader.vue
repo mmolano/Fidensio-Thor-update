@@ -20,7 +20,7 @@ export default {
 @import "resources/sass/assets/variable";
 
 .loader-container {
-    z-index: 9999999999;
+    z-index: 9999999;
     position: fixed;
     display: flex;
     top: 0;

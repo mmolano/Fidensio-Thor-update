@@ -2148,8 +2148,8 @@ __webpack_require__.r(__webpack_exports__);
           _this.productData = res.data.products;
         }
       })["catch"](function (err) {
-        // TODO: catch l'erreur dans une popup
-        console.log(err.data);
+        _this.$parent.$data.message = err.response.data;
+        _this.$parent.$data.viewOrderProfile = false;
       });
     },
     dateFormat: function dateFormat(date) {
@@ -2479,6 +2479,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2593,8 +2605,6 @@ var customLabels = {
       var _this3 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_3___default().get(this.searchOrderUrl + newUrl).then(function (res) {
-        console.log(res);
-
         if (res.status === 200) {
           _this3.orders = res.data;
         }
@@ -2908,7 +2918,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".loader-container[data-v-0ddc26c4] {\n  z-index: 9999999999;\n  position: fixed;\n  display: flex;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  justify-content: center;\n  flex-direction: column;\n  height: 100%;\n  background-color: #d4d0d073;\n}\n.loader-container .lds-ring[data-v-0ddc26c4], .loader-container .load-text[data-v-0ddc26c4] {\n  margin: 5px auto;\n}\n.loader-container .lds-ring[data-v-0ddc26c4] {\n  display: inline-block;\n  position: relative;\n  width: 80px;\n  height: 80px;\n}\n.loader-container .lds-ring div[data-v-0ddc26c4] {\n  box-sizing: border-box;\n  display: block;\n  position: absolute;\n  width: 64px;\n  height: 64px;\n  margin: 8px;\n  border: 8px solid #1a202e;\n  border-radius: 50%;\n  -webkit-animation: lds-ring-data-v-0ddc26c4 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;\n          animation: lds-ring-data-v-0ddc26c4 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;\n  border-color: #ef7ca6 transparent transparent transparent;\n}\n.loader-container .lds-ring div[data-v-0ddc26c4]:nth-child(1) {\n  -webkit-animation-delay: -0.45s;\n          animation-delay: -0.45s;\n}\n.loader-container .lds-ring div[data-v-0ddc26c4]:nth-child(2) {\n  -webkit-animation-delay: -0.3s;\n          animation-delay: -0.3s;\n}\n.loader-container .lds-ring div[data-v-0ddc26c4]:nth-child(3) {\n  -webkit-animation-delay: -0.15s;\n          animation-delay: -0.15s;\n}\n@-webkit-keyframes lds-ring-data-v-0ddc26c4 {\n0% {\n    transform: rotate(0deg);\n}\n100% {\n    transform: rotate(360deg);\n}\n}\n@keyframes lds-ring-data-v-0ddc26c4 {\n0% {\n    transform: rotate(0deg);\n}\n100% {\n    transform: rotate(360deg);\n}\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".loader-container[data-v-0ddc26c4] {\n  z-index: 9999999;\n  position: fixed;\n  display: flex;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  justify-content: center;\n  flex-direction: column;\n  height: 100%;\n  background-color: #d4d0d073;\n}\n.loader-container .lds-ring[data-v-0ddc26c4], .loader-container .load-text[data-v-0ddc26c4] {\n  margin: 5px auto;\n}\n.loader-container .lds-ring[data-v-0ddc26c4] {\n  display: inline-block;\n  position: relative;\n  width: 80px;\n  height: 80px;\n}\n.loader-container .lds-ring div[data-v-0ddc26c4] {\n  box-sizing: border-box;\n  display: block;\n  position: absolute;\n  width: 64px;\n  height: 64px;\n  margin: 8px;\n  border: 8px solid #1a202e;\n  border-radius: 50%;\n  -webkit-animation: lds-ring-data-v-0ddc26c4 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;\n          animation: lds-ring-data-v-0ddc26c4 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;\n  border-color: #ef7ca6 transparent transparent transparent;\n}\n.loader-container .lds-ring div[data-v-0ddc26c4]:nth-child(1) {\n  -webkit-animation-delay: -0.45s;\n          animation-delay: -0.45s;\n}\n.loader-container .lds-ring div[data-v-0ddc26c4]:nth-child(2) {\n  -webkit-animation-delay: -0.3s;\n          animation-delay: -0.3s;\n}\n.loader-container .lds-ring div[data-v-0ddc26c4]:nth-child(3) {\n  -webkit-animation-delay: -0.15s;\n          animation-delay: -0.15s;\n}\n@-webkit-keyframes lds-ring-data-v-0ddc26c4 {\n0% {\n    transform: rotate(0deg);\n}\n100% {\n    transform: rotate(360deg);\n}\n}\n@keyframes lds-ring-data-v-0ddc26c4 {\n0% {\n    transform: rotate(0deg);\n}\n100% {\n    transform: rotate(360deg);\n}\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3028,7 +3038,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "html[data-v-4040ad8c],\nbody[data-v-4040ad8c] {\n  height: 100%;\n  width: 100%;\n  display: flex;\n  flex-flow: column;\n}\nsection[data-v-4040ad8c] {\n  padding: 2rem 1.5rem;\n  background: #F0F0F0;\n}\ntbody tr td[data-v-4040ad8c] {\n  padding: 20px;\n  border-bottom: none;\n  text-align: center;\n}\ntbody tr td span[data-v-4040ad8c] {\n  padding: 9px;\n  border-radius: 6px;\n  font-weight: bold;\n}\nthead[data-v-4040ad8c] {\n  box-shadow: 0 2px 31px 0 rgba(123, 123, 123, 0.2);\n}\nthead tr[data-v-4040ad8c] {\n  color: #232222;\n  height: 50px;\n}\nthead tr th[data-v-4040ad8c] {\n  top: 0;\n  z-index: 2;\n  position: sticky;\n  background-color: white;\n  padding: 20px;\n  box-shadow: 20px 9px 31px 0 rgba(123, 123, 123, 0.2);\n}\n.responsive-table[data-v-4040ad8c] {\n  display: block;\n  background-color: white;\n  border-radius: 20px;\n  max-height: 858px;\n  height: 100%;\n  width: 90%;\n  margin: auto;\n  overflow: scroll;\n}\n.pastille-info[data-v-4040ad8c] {\n  display: none;\n}\n#main-table[data-v-4040ad8c] {\n  border-collapse: collapse;\n  border-radius: 20px;\n  overflow-y: scroll;\n  width: 100%;\n  height: 100%;\n  margin: auto;\n  box-shadow: 0 14px 38px 6px rgba(123, 123, 123, 0.13);\n}\n#main-table tbody tr[data-v-4040ad8c] {\n  width: 100%;\n}\n#main-table tbody tr[data-v-4040ad8c]:nth-child(even) {\n  background-color: #f5f5f5;\n}\n#main-table tbody tr[data-v-4040ad8c]:hover {\n  background-color: #ffe4e4;\n}\n#main-table .btn[data-v-4040ad8c] {\n  cursor: pointer;\n  width: 100%;\n  background-color: #a4c3e8;\n  color: #fff;\n  border: unset;\n  padding: 6px;\n  border-radius: 10px;\n}\n.search_result[data-v-4040ad8c] {\n  text-align: center;\n  font-size: 18px;\n  color: #ff5b5b;\n  background-color: white;\n  padding: 20px;\n  border-radius: 20px;\n  width: 90%;\n  margin: auto auto 20px;\n}\n.rows_number[data-v-4040ad8c] {\n  margin: 10px;\n  text-align: center;\n  opacity: 0.6;\n}\n.refSearch[data-v-4040ad8c] {\n  height: 70px;\n  min-height: 100%;\n}\n.btn[data-v-4040ad8c] {\n  margin-top: 0;\n  margin-bottom: 0;\n}\n.infos-buttons[data-v-4040ad8c] {\n  font-size: 24px;\n}\n@media only screen and (min-width: 900px) {\n.Debut[data-v-4040ad8c], .Retour[data-v-4040ad8c] {\n    min-width: 140px;\n}\n}\n@media screen and (max-width: 900px) {\n.Debut[data-v-4040ad8c],\n.Retour[data-v-4040ad8c],\n.Service[data-v-4040ad8c] {\n    display: none;\n}\n}\n@media screen and (max-width: 500px) {\nbody[data-v-4040ad8c] {\n    font-size: 12px;\n}\ntable[data-v-4040ad8c] {\n    height: unset !important;\n    margin-left: 10px;\n}\n.refSearch[data-v-4040ad8c] {\n    height: unset;\n}\n#main-table tbody tr[data-v-4040ad8c] {\n    display: flex;\n    flex-direction: column;\n}\n.Infos[data-v-4040ad8c] {\n    width: 30%;\n    margin: auto;\n}\n.Commande a[data-v-4040ad8c] {\n    position: relative;\n}\n.pastille-info[data-v-4040ad8c] {\n    display: block;\n    height: 25px;\n    width: 25px;\n    margin: auto auto 10px;\n    border-radius: 50px;\n}\ntbody tr td a[data-v-4040ad8c] {\n    width: 20px;\n}\n.Emplacement[data-v-4040ad8c]::before {\n    content: \"Emplacement: \";\n    color: grey;\n    font-weight: bold;\n}\n.Nom[data-v-4040ad8c]::before {\n    content: \"Nom: \";\n    color: grey;\n    font-weight: bold;\n}\n.Consigne[data-v-4040ad8c]::before {\n    content: \"Consigne: \";\n    color: grey;\n    font-weight: bold;\n}\n#main-table thead[data-v-4040ad8c] {\n    display: none;\n}\n}\n@media only screen and (max-width: 380px) {\nsection[data-v-4040ad8c] {\n    padding: 5px !important;\n}\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "html[data-v-4040ad8c],\nbody[data-v-4040ad8c] {\n  height: 100%;\n  width: 100%;\n  display: flex;\n  flex-flow: column;\n}\nsection[data-v-4040ad8c] {\n  padding: 2rem 1.5rem;\n  background: #F0F0F0;\n}\ntbody tr td[data-v-4040ad8c] {\n  padding: 20px;\n  border-bottom: none;\n  text-align: center;\n}\ntbody tr td span[data-v-4040ad8c] {\n  padding: 9px;\n  border-radius: 6px;\n  font-weight: bold;\n}\nthead[data-v-4040ad8c] {\n  box-shadow: 0 2px 31px 0 rgba(123, 123, 123, 0.2);\n}\nthead tr[data-v-4040ad8c] {\n  color: #232222;\n  height: 50px;\n}\nthead tr th[data-v-4040ad8c] {\n  top: 0;\n  z-index: 2;\n  position: sticky;\n  background-color: white;\n  padding: 20px;\n  box-shadow: 20px 9px 31px 0 rgba(123, 123, 123, 0.2);\n}\n.responsive-table[data-v-4040ad8c] {\n  display: block;\n  background-color: white;\n  border-radius: 20px;\n  max-height: 858px;\n  height: 100%;\n  width: 90%;\n  margin: auto;\n  overflow: scroll;\n}\n.pastille-info[data-v-4040ad8c] {\n  display: none;\n}\n#main-table[data-v-4040ad8c] {\n  border-collapse: collapse;\n  border-radius: 20px;\n  overflow-y: scroll;\n  width: 100%;\n  height: 100%;\n  margin: auto;\n  box-shadow: 0 14px 38px 6px rgba(123, 123, 123, 0.13);\n}\n#main-table tbody tr[data-v-4040ad8c] {\n  width: 100%;\n}\n#main-table tbody tr[data-v-4040ad8c]:nth-child(even) {\n  background-color: #f5f5f5;\n}\n#main-table tbody tr[data-v-4040ad8c]:hover {\n  background-color: #ffe4e4;\n}\n#main-table .btn[data-v-4040ad8c] {\n  cursor: pointer;\n  width: 100%;\n  background-color: #a4c3e8;\n  color: #fff;\n  border: unset;\n  padding: 6px;\n  border-radius: 10px;\n}\n.search_result[data-v-4040ad8c] {\n  text-align: center;\n  font-size: 18px;\n  color: #ff5b5b;\n  background-color: white;\n  padding: 20px;\n  border-radius: 20px;\n  width: 90%;\n  margin: auto auto 20px;\n}\n.rows_number[data-v-4040ad8c] {\n  margin: 10px;\n  text-align: center;\n  opacity: 0.6;\n}\n.refSearch[data-v-4040ad8c] {\n  height: 70px;\n  min-height: 100%;\n}\n.btn[data-v-4040ad8c] {\n  margin-top: 0;\n  margin-bottom: 0;\n}\n.infos-buttons[data-v-4040ad8c] {\n  font-size: 24px;\n}\n.Commande button[data-v-4040ad8c] {\n  text-transform: uppercase;\n  font-weight: bold;\n}\n.Commande button.btn-warning[data-v-4040ad8c] {\n  background-color: #ff9d38 !important;\n  color: #674508 !important;\n}\n@media only screen and (min-width: 900px) {\n.Debut[data-v-4040ad8c], .Retour[data-v-4040ad8c] {\n    min-width: 140px;\n}\n}\n@media screen and (max-width: 900px) {\n.Debut[data-v-4040ad8c],\n.Retour[data-v-4040ad8c],\n.Service[data-v-4040ad8c] {\n    display: none;\n}\n}\n@media screen and (max-width: 500px) {\nbody[data-v-4040ad8c] {\n    font-size: 12px;\n}\ntable[data-v-4040ad8c] {\n    height: unset !important;\n    margin-left: 10px;\n}\n.refSearch[data-v-4040ad8c] {\n    height: unset;\n}\n#main-table tbody tr[data-v-4040ad8c] {\n    display: flex;\n    flex-direction: column;\n}\n.Infos[data-v-4040ad8c] {\n    width: 30%;\n    margin: auto;\n}\n.Commande a[data-v-4040ad8c] {\n    position: relative;\n}\n.pastille-info[data-v-4040ad8c] {\n    display: block;\n    height: 25px;\n    width: 25px;\n    margin: auto auto 10px;\n    border-radius: 50px;\n}\ntbody tr td a[data-v-4040ad8c] {\n    width: 20px;\n}\n.Emplacement[data-v-4040ad8c]::before {\n    content: \"Emplacement: \";\n    color: grey;\n    font-weight: bold;\n}\n.Nom[data-v-4040ad8c]::before {\n    content: \"Nom: \";\n    color: grey;\n    font-weight: bold;\n}\n.Consigne[data-v-4040ad8c]::before {\n    content: \"Consigne: \";\n    color: grey;\n    font-weight: bold;\n}\n#main-table thead[data-v-4040ad8c] {\n    display: none;\n}\n}\n@media only screen and (max-width: 380px) {\nsection[data-v-4040ad8c] {\n    padding: 5px !important;\n}\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -43940,16 +43950,29 @@ var render = function() {
                       ]
                     ),
                     _vm._v(" "),
-                    _c("td", {
-                      staticClass: "Retour",
-                      attrs: { "data-label": "Retour" },
-                      domProps: {
-                        innerHTML: _vm._f("highlight")(
-                          _vm.dateFormat(order.deliveryDate),
-                          _vm.search
-                        )
-                      }
-                    }),
+                    _c(
+                      "td",
+                      {
+                        staticClass: "Retour",
+                        attrs: { "data-label": "Retour" }
+                      },
+                      [
+                        _c("span", {
+                          style: {
+                            "background-color": _vm.getDateDiff(
+                              order.deliveryDate
+                            )[0],
+                            color: _vm.getDateDiff(order.deliveryDate)[1]
+                          },
+                          domProps: {
+                            innerHTML: _vm._f("highlight")(
+                              _vm.dateFormat(order.deliveryDate),
+                              _vm.search
+                            )
+                          }
+                        })
+                      ]
+                    ),
                     _vm._v(" "),
                     _c("td", {
                       staticClass: "Emplacement",
@@ -44013,6 +44036,14 @@ var render = function() {
                                   "button",
                                   {
                                     staticClass: "btn waves-effect waves-light",
+                                    style: {
+                                      "background-color": _vm.getDateDiff(
+                                        order.deliveryDate
+                                      )[0],
+                                      color: _vm.getDateDiff(
+                                        order.deliveryDate
+                                      )[1]
+                                    },
                                     on: {
                                       click: function($event) {
                                         return _vm.sendProcessing(order.id, 2)
@@ -44021,13 +44052,19 @@ var render = function() {
                                   },
                                   [_vm._v("Récupéré\n                    ")]
                                 )
-                              : _vm._e(),
-                            _vm._v(" "),
-                            _vm.typeOfStatus === "?type=pickupDone"
+                              : _vm.typeOfStatus === "?type=pickupDone"
                               ? _c(
                                   "button",
                                   {
                                     staticClass: "btn waves-effect waves-light",
+                                    style: {
+                                      "background-color": _vm.getDateDiff(
+                                        order.deliveryDate
+                                      )[0],
+                                      color: _vm.getDateDiff(
+                                        order.deliveryDate
+                                      )[1]
+                                    },
                                     on: {
                                       click: function($event) {
                                         return _vm.viewOrder(order)
@@ -44036,13 +44073,20 @@ var render = function() {
                                   },
                                   [_vm._v("Payer\n                    ")]
                                 )
-                              : _vm._e(),
-                            _vm._v(" "),
-                            _vm.typeOfStatus === "?type=processing"
+                              : _vm.typeOfStatus === "?type=processing" &&
+                                order.payment.pay === 1
                               ? _c(
                                   "button",
                                   {
                                     staticClass: "btn waves-effect waves-light",
+                                    style: {
+                                      "background-color": _vm.getDateDiff(
+                                        order.deliveryDate
+                                      )[0],
+                                      color: _vm.getDateDiff(
+                                        order.deliveryDate
+                                      )[1]
+                                    },
                                     on: {
                                       click: function($event) {
                                         return _vm.sendProcessing(order.id, 5)
@@ -44050,6 +44094,20 @@ var render = function() {
                                     }
                                   },
                                   [_vm._v("Compléter\n                    ")]
+                                )
+                              : _vm.typeOfStatus === "?type=processing" &&
+                                order.payment.pay === 0
+                              ? _c(
+                                  "button",
+                                  {
+                                    staticClass:
+                                      "btn waves-effect waves-light btn-warning"
+                                  },
+                                  [
+                                    _vm._v(
+                                      "Ré-encaisser\n                        "
+                                    )
+                                  ]
                                 )
                               : _vm._e()
                           ]
