@@ -3,9 +3,6 @@
         <div class="card-head">
             <h2 :inner-html.prop="product.name | highlight(this.$parent.search)"></h2>
         </div>
-        <div class="card-desc">
-            <p :inner-html.prop="product.description | highlight(this.$parent.search)"></p>
-        </div>
         <div class="card-price">
             <h4>Prix: </h4>
             <p :inner-html.prop="product.price / 100 | highlight(this.$parent.search)"></p>
@@ -32,7 +29,7 @@ export default {
     },
     data() {
         return {
-            productCount: 0
+            productCount: 0,
         }
     },
     methods: {
@@ -40,12 +37,40 @@ export default {
             if (type === 'add') {
                 this.productCount += 1;
                 this.$parent.finalPrice += price;
-                this.$parent.selectedProduct.push(product);
+                if (this.$parent.selectedProduct.length > 0) {
+                    this.$parent.selectedProduct.forEach((element, index) => {
+                        console.log(element, index)
+                        console.log(this.element, this.index)
+                            if (product.name === element.name) {
+                                //TODO voir pourquoi le element.name ne correspond pas à celui lorsqu'on clique
+                                element.price = price
+                                element.numberOfSelect += 1;
+                            } else {
+                                product.numberOfSelect = 1
+                                return this.$parent.selectedProduct.push(product)
+                            }
+                        }
+                    )
+                } else {
+                    product.numberOfSelect = 1
+                    this.$parent.selectedProduct.push(product)
+                }
+
             } else if (this.productCount > 0 && type === 'decrease') {
                 this.productCount -= 1;
                 this.$parent.finalPrice -= price;
+
+                this.$parent.selectedProduct.forEach((element, index) => {
+                        if (element.numberOfSelect > 1) {
+                            element.numberOfSelect -= 1
+                        } else {
+                            this.$parent.selectedProduct.splice(index, 1);
+                        }
+                    }
+                )
+
             }
-        }
+        },
     }
 }
 </script>

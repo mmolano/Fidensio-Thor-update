@@ -1868,9 +1868,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "CardSelection",
   props: {
@@ -1883,13 +1880,40 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     iteration: function iteration(type, price, product) {
+      var _this = this;
+
       if (type === 'add') {
         this.productCount += 1;
         this.$parent.finalPrice += price;
-        this.$parent.selectedProduct.push(product);
+
+        if (this.$parent.selectedProduct.length > 0) {
+          this.$parent.selectedProduct.forEach(function (element, index) {
+            console.log(element, index);
+            console.log(_this.element, _this.index);
+
+            if (product.name === element.name) {
+              //TODO voir pourquoi le element.name ne correspond pas à celui lorsqu'on clique
+              element.price = price;
+              element.numberOfSelect += 1;
+            } else {
+              product.numberOfSelect = 1;
+              return _this.$parent.selectedProduct.push(product);
+            }
+          });
+        } else {
+          product.numberOfSelect = 1;
+          this.$parent.selectedProduct.push(product);
+        }
       } else if (this.productCount > 0 && type === 'decrease') {
         this.productCount -= 1;
         this.$parent.finalPrice -= price;
+        this.$parent.selectedProduct.forEach(function (element, index) {
+          if (element.numberOfSelect > 1) {
+            element.numberOfSelect -= 1;
+          } else {
+            _this.$parent.selectedProduct.splice(index, 1);
+          }
+        });
       }
     }
   }
@@ -43040,17 +43064,6 @@ var render = function() {
       })
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "card-desc" }, [
-      _c("p", {
-        domProps: {
-          innerHTML: _vm._f("highlight")(
-            _vm.product.description,
-            this.$parent.search
-          )
-        }
-      })
-    ]),
-    _vm._v(" "),
     _c("div", { staticClass: "card-price" }, [
       _c("h4", [_vm._v("Prix: ")]),
       _vm._v(" "),
@@ -43362,6 +43375,8 @@ var render = function() {
                   _vm._v(
                     "\n                    " +
                       _vm._s(item.name) +
+                      " x" +
+                      _vm._s(item.numberOfSelect ? item.numberOfSelect : "1") +
                       "\n                "
                   )
                 ])

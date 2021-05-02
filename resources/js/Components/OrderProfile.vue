@@ -36,7 +36,7 @@
                 <input type="hidden" name="_token" :value="csrf">
                 <div class="bottom-informations">
                     <div v-for="(item, index) in selectedProduct">
-                        {{ item.name }}
+                        {{ item.name }} x{{ item.numberOfSelect ? item.numberOfSelect : '1' }}
                     </div>
                     <div class="input-container">
                         <input id='one' type='checkbox' v-model="gift"/>
