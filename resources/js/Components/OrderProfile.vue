@@ -90,8 +90,8 @@ export default {
                     this.productData = res.data.products;
                 }
             }).catch(err => {
-                this.$parent.$data.message = err.response.data
                 this.$parent.$data.viewOrderProfile = false;
+                this.$parent.$data.message = err.response.data
             });
         },
         dateFormat: function (date) {

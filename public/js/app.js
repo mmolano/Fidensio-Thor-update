@@ -2148,8 +2148,8 @@ __webpack_require__.r(__webpack_exports__);
           _this.productData = res.data.products;
         }
       })["catch"](function (err) {
-        _this.$parent.$data.message = err.response.data;
         _this.$parent.$data.viewOrderProfile = false;
+        _this.$parent.$data.message = err.response.data;
       });
     },
     dateFormat: function dateFormat(date) {

@@ -15,11 +15,11 @@ class Stripe
         $this->client = new StripeClient(env('STRIPE_SECRET'));
     }
 
-    public function getDefaultCard(object $user): ?array
+    public function getDefaultCard(array $user): ?array
     {
         try {
-            $userStripe = $this->client->customers->retrieve($user->stripeId);
-            $card = $this->client->customers->retrieveSource($user->stripeId, $userStripe->default_source);
+            $userStripe = $this->client->customers->retrieve($user['stripeId']);
+            $card = $this->client->customers->retrieveSource($user['stripeId'], $userStripe->default_source);
         } catch (\Exception $exception) {
             return null;
         }

@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Services\Pressing\Pressing;
+use App\Services\Pressing\PressingFake;
+use App\Services\Stripe\Stripe;
+use App\Services\Stripe\StripeFake;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +17,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        if (env('APP_ENV') === 'testing') {
+            $this->app->singleton(StripeFake::class);
+            $this->app->alias(StripeFake::class, 'stripe');
+
+            $this->app->singleton(PressingFake::class);
+            $this->app->alias(PressingFake::class, 'pressing');
+        } else {
+            $this->app->singleton(Stripe::class);
+            $this->app->alias(Stripe::class, 'stripe');
+
+            $this->app->singleton(Pressing::class);
+            $this->app->alias(Pressing::class, 'pressing');
+        }
     }
 
     /**

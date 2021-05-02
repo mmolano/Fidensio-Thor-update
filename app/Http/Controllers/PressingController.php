@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\Stripe;
 use App\Services\Pressing\Pressing;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -198,7 +199,7 @@ class PressingController extends Controller
         }
 
         if ($order['payment']->pay !== 1) {
-            if (!$payment = (new \App\Services\Stripe\Stripe)->pay($order, $user)) {
+            if (!$payment = Stripe::pay($order, $user)) {
                 // TODO: proposer de passer à l'étape suivante en attendant et mettre bouton re-encaisser sur le status suivant
                 return $this->error(8, (string)$order['id']);
             } elseif ($payment['status'] === 2) {

@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 
 class Pressing
 {
-    private function checkIfExist(array $providers, string $email, string $password): ?array
+    private static function checkIfExist(array $providers, string $email, string $password): ?array
     {
         foreach ($providers as $provider) {
             if ($provider['email'] === $email && $provider['password'] === $password) {
@@ -37,11 +37,10 @@ class Pressing
             return null;
         }
 
-        if (!$user = (new Pressing)->checkIfExist($response->json(), $email, $password)) {
+        if (!$user = self::checkIfExist($response->json(), $email, $password)) {
             Log::error('Could not log user ' . $email, [
                 'className' => class_basename(self::class),
                 'functionName' => __FUNCTION__,
-                'codeStatus' => $response->status(),
             ]);
 
             return null;
