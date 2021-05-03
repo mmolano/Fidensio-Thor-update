@@ -16,10 +16,11 @@ class PressingController extends Controller
         'default' => 1,
         'pickupDone' => 2,
         'processing' => 3,
-        'finished' => 5
+        'finished' => 5,
+        'waitingForPayment' => 7
     ];
 
-    private function error(?int $error, ?string $infos = null, string $status = 'error', ?string $message = null): JsonResponse
+    private function error(?int $error, ?string $infos = null, string $status = 'error', int $errorCode = 400, ?string $message = null): JsonResponse
     {
         if ($error) {
             $this->error = $error;
@@ -66,7 +67,7 @@ class PressingController extends Controller
                 ]);
                 break;
             case 8:
-                $message = 'Impossible de finaliser la procedure au paiement';
+                $message = 'Impossible de finaliser la procédure de paiement mais détails ajoutés';
                 Log::error('MyError', [
                     'Class' => class_basename(self::class),
                     'Code' => $this->error,
@@ -76,6 +77,12 @@ class PressingController extends Controller
                 break;
             case 9:
                 $message = 'Un paiement  3DS est requis';
+                Log::error('MyError', [
+                    'Class' => class_basename(self::class),
+                    'Code' => $this->error,
+                    'OrderId' => $infos,
+                    'Comment' => '3DS pay required'
+                ]);
                 break;
             case 10:
                 $message = 'Impossible d\'obtenir les informations du client';
@@ -88,6 +95,24 @@ class PressingController extends Controller
                     'Comment' => 'Erreur lors de l\'obtention des produits'
                 ]);
                 break;
+            case 12:
+                $message = 'Une erreur est survenue, impossible d\'envoyer les details';
+                Log::error('MyError', [
+                    'Class' => class_basename(self::class),
+                    'Code' => $this->error,
+                    'validationErrors' => json_decode($infos),
+                    'Comment' => 'Impossible de récupérer les details'
+                ]);
+                break;
+            case 13:
+                $message = 'Une erreur est survenue, impossible de modifier le statut du paiement';
+                Log::error('MyError', [
+                    'Class' => class_basename(self::class),
+                    'Code' => $this->error,
+                    'OrderId' => $infos,
+                    'Comment' => 'Impossible d\'update le statut du paiement'
+                ]);
+                break;
             default:
                 $message ?: $message = 'Undefined error';
         }
@@ -95,7 +120,7 @@ class PressingController extends Controller
         return response()->json([
             'status' => $status,
             'message' => $message,
-        ], 400);
+        ], $errorCode);
     }
 
     public function commitStatus(Request $request): JsonResponse
@@ -109,13 +134,70 @@ class PressingController extends Controller
             return $this->error(3, json_encode($validation->errors()));
         }
 
-        if (!$order = Pressing::changeStatus($request->orderId, $request->status)) {
+        if (!Pressing::changeStatus($request->orderId, $request->status)) {
             return $this->error(4);
         }
 
         return response()->json([
             'status' => 'success',
             'message' => 'La commande a été mis à jour',
+        ]);
+    }
+
+    public function pay(array $order, array $user, bool $changeStatus = false)
+    {
+        if ($order['payment']['pay'] !== 1) {
+            if (!$payment = Stripe::pay($order, $user)) {
+        return $payment;
+                if ($changeStatus === true) {
+                    if (!Pressing::changeStatus($order['id'], $this->status['processing'])) {
+                        return $this->error(4);
+                    }
+
+                    return $this->error(8, $order['id'], 'warning', 200);
+                }
+                return $payment;
+                return $this->error(8, $order['id']);
+            } elseif ($payment['status'] === 2) {
+                if (!Pressing::updatePayment($order['id'], [
+                    'status' => $payment['status'],
+                    'intentStripeId' => $payment['intentId'],
+                    'paymentToken3ds' => $payment['paymentToken'],
+                ])) {
+                    if ($changeStatus === true) {
+                        if (!Pressing::changeStatus($order['id'], $this->status['waitingForPayment'])) {
+                            return $this->error(4);
+                        }
+                        return $this->error(9, $order['id'], 'warning', 200);
+                    }
+
+                    // TODO: send email
+
+                    return $this->error(9, $order['id'], 'warning');
+                }
+            } elseif ($payment['status'] === 1) {
+                if (!Pressing::updatePayment($order['id'], [
+                    'status' => $payment['status'],
+                    'intentStripeId' => $payment['intentId']
+                ])) {
+                    return $this->error(13, null, 'warning');
+                }
+
+                if ($changeStatus === true) {
+                    if (!Pressing::changeStatus($order['id'], $this->status['processing'])) {
+                        return $this->error(4);
+                    }
+                } else {
+                    if (!Pressing::changeStatus($order['id'], $this->status['finished'])) {
+                        return $this->error(4);
+                    }
+                }
+            }
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Le paiement a été accepté',
         ]);
     }
 
@@ -131,9 +213,13 @@ class PressingController extends Controller
         if (isset($request->type)) {
             switch ($request->type) {
                 case $type = 'finished':
-                case $type = 'processing':
                 case $type = 'pickupDone':
                     $order = Pressing::getProviderOrder($providerId, $this->status[$type]);
+                    break;
+                case $type = 'processing':
+                    $orderProcess = Pressing::getProviderOrder($providerId, $this->status[$type]);
+                    $orderWaiting = Pressing::getProviderOrder($providerId, $this->status['waitingForPayment']);
+                    $order = array_merge($orderProcess, $orderWaiting);
                     break;
                 default:
                     $order = Pressing::getProviderOrder($providerId, $this->status['default']);
@@ -153,67 +239,62 @@ class PressingController extends Controller
         return isset($products) ? $products : $this->error(5);
     }
 
+    public function reHandlePayment(Request $request): JsonResponse
+    {
+        if (!$order = Pressing::getOrder($request->id)) {
+            return $this->error(5);
+        } elseif (!$user = Pressing::getUser($order['userId'])) {
+            return $this->error(10);
+        }
+
+        return self::pay($order, $user);
+    }
+
     public function processPayment(Request $request): JsonResponse
     {
-        if (!$order = Pressing::getOrder($request->orderId)) {
+        if (!$order = Pressing::getOrder($request->id)) {
             return $this->error(5);
-        } elseif ($user = Pressing::getUser($order['userId'])) {
+        } elseif (!$user = Pressing::getUser($order['userId'])) {
             return $this->error(10);
         } elseif (!$products = Pressing::getProviderProduct($user['id'])) {
             return $this->error(11);
         } elseif ($request->details) {
-            //TODO: faire une boucle dans une autre fonction qui va merge les items qui ont le même nom et up la quantity et le prix
-
             foreach ($request->details as $detail) {
                 $success = false;
-                foreach ($products as $product) {
-                    if ($detail->id === $product['id']) {
+                foreach ($products['products'] as $product) {
+                    if ($detail['id'] === $product['id']) {
                         $success = true;
                         break;
                     }
                 }
 
                 if (!$success) {
-                    return $this->error(6, $detail->name);
-                } elseif ($detail->quantity < 1) {
-                    return $this->error(6, $detail->name);
+                    return $this->error(6, $detail['name']);
+                } elseif ($detail['quantity'] < 1) {
+                    return $this->error(6, $detail['name']);
                 }
 
-                if (!Pressing::postDetail($detail->id, [
-                    'name' => $detail->name,
+                if (!Pressing::postDetail($order['id'], [
+                    'name' => $detail['name'],
                     'isNegative' => 0,
                     'isPercent' => 0,
-                    'quantity' => $detail->quantity,
-                    'price' => $detail->price,
-                    'total' => $detail->total
+                    'quantity' => $detail['quantity'] * 100,
+                    'price' => $detail['price'],
+                    'total' => $detail['finalPrice']
                 ])) {
-                    return $this->error(7, $detail->name);
+                    return $this->error(7, $detail['name']);
                 }
             }
 
-            //TODO: faire une route sur ouranos qui update ça:
+            //TODO: faire une route sur ouranos qui update ça: + champ dans le front
 //            $order->Pressing()->update([
-//                'comment' => $request->comment,
-//                'numberPress' => $request->numberPress
+//                'providerComment' => $request->comment,
+//                'providerOrderNumber' => $request->numberPress
 //            ]);
         }
 
-        if ($order['payment']->pay !== 1) {
-            if (!$payment = Stripe::pay($order, $user)) {
-                // TODO: proposer de passer à l'étape suivante en attendant et mettre bouton re-encaisser sur le status suivant
-                return $this->error(8, (string)$order['id']);
-            } elseif ($payment['status'] === 2) {
-                // TODO: proposer de passer à l'étape suivante en attendant
-                return $this->error(9, null, 'warning');
-            } elseif ($payment['status'] === 1) {
-                //TODO update le status de l'order et de l'orderPayment
-            }
-        }
+        //TODO HANDLE le gift
 
-        //TODO: mettre crisp ici ou alors directement sur ouranos
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Le paiment a été accepté',
-        ]);
+        return self::pay($order, $user, true);
     }
 }

@@ -4,6 +4,7 @@
 namespace App\Services\Stripe;
 
 use Illuminate\Support\Facades\Log;
+use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
 
 class Stripe
@@ -36,7 +37,7 @@ class Stripe
 
     public function pay(array $order, array $user): ?array
     {
-        if (!$card = $this->getDefaultCard($user['userIntegration'])) {
+        if (!$card = $this->getDefaultCard($user['integration'])) {
             return null;
         }
 
@@ -45,16 +46,16 @@ class Stripe
                 'payment_method_types' => ['card'],
                 'amount' => $order['amount'],
                 'currency' => 'eur',
-                'customer' => $order['userIntegration']->stripeId,
+                'customer' => $user['integration']['stripeId'],
                 'metadata' => [
-                    'orderId' => $order->id,
+                    'orderId' => $order['id'],
                 ],
                 'payment_method' => $card['id'],
                 'off_session' => 'one_off',
                 'confirm' => true
 
             ]);
-        } catch (\Exception $exception) {
+        } catch (ApiErrorException $exception) {
             if ($exception->getStripeCode() === 'authentication_required') {
                 return [
                     'status' => 2,
@@ -63,6 +64,13 @@ class Stripe
                     'paymentToken' => $exception->getJsonBody()['error']['payment_intent']['client_secret']
                 ];
             }
+
+            Log::error('Error exception', [
+                'className' => class_basename(self::class),
+                'functionName' => __FUNCTION__,
+                'message' => $exception->getJsonBody()
+            ]);
+
             return null;
         }
 

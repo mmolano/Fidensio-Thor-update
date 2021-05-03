@@ -32,11 +32,11 @@
             </div>
         </div>
         <div class="secondary-container">
-            <form method="POST" @submit.prevent="submit">
+            <form method="POST" @submit.prevent="sendProducts">
                 <input type="hidden" name="_token" :value="csrf">
                 <div class="bottom-informations">
                     <div v-for="(item, index) in selectedProduct">
-                        {{ item.name }} x{{ item.numberOfSelect ? item.numberOfSelect : '1' }}
+                        {{ item.name }} x{{ item.quantity ? item.quantity : '1' }}
                     </div>
                     <div class="input-container">
                         <input id='one' type='checkbox' v-model="gift"/>
@@ -91,6 +91,20 @@ export default {
                 }
             }).catch(err => {
                 this.$parent.$data.viewOrderProfile = false;
+                this.$parent.$data.message = err.response.data
+            });
+        },
+        sendProducts: function () {
+            axios.post('/pay/order', {
+                'id': this.orderData.id,
+                'details': this.selectedProduct
+            }).then(res => {
+                if (res.status === 200) {
+                    this.$parent.$data.message = res.data
+                    this.$parent.$data.viewOrderProfile = false;
+                }
+            }).catch(err => {
+                console.log(err.response.data)
                 this.$parent.$data.message = err.response.data
             });
         },

@@ -19,6 +19,11 @@ export default {
             required: true
         }
     },
+    data() {
+        return {
+            defaultMessage: 'Une erreur est survenue, veuillez nous contacter'
+        }
+    },
     watch: {
         myMessage: function (value) {
             let messages = document.getElementsByClassName('alert');
@@ -34,12 +39,22 @@ export default {
                     message.style.left = "-100%";
                 }, {passive: true});
 
-                customMessage.innerHTML = value.message;
+                if (value.exception) {
+                    customMessage.innerHTML = this.defaultMessage;
+                } else {
+                    customMessage.innerHTML = value.message;
+                }
 
-                if (value.status === 'error') {
+                if (value.status === 'error' || value.exception) {
+                    messageDiv.classList.remove('alert-warning');
                     messageDiv.classList.remove('alert-info');
                     messageDiv.classList.add("alert-danger");
+                } else if (value.status === 'warning') {
+                    messageDiv.classList.remove('alert-danger');
+                    messageDiv.classList.remove('alert-info');
+                    messageDiv.classList.add("alert-warning");
                 } else {
+                    messageDiv.classList.remove('alert-warning');
                     messageDiv.classList.remove('alert-danger');
                     messageDiv.classList.add("alert-info");
                 }

@@ -28,6 +28,9 @@ Route::group([
     Route::post('/update', [PressingController::class, 'commitStatus']);
     Route::post('/processing', [PressingController::class, 'commitStatus']);
 
+    Route::post('/pay/order', [PressingController::class, 'processPayment']);
+    Route::post('/rePay/order', [PressingController::class, 'reHandlePayment']);
+
     Route::get('/getData', [PressingController::class, 'getOrders']);
     Route::get('/getProduct', [PressingController::class, 'getProducts']);
 });

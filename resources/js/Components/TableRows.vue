@@ -61,8 +61,8 @@
                                 class="btn waves-effect waves-light">Compléter
                         </button>
 
-                        <button v-else-if="typeOfStatus === '?type=processing' && order.payment.pay === 0"
-                                class="btn waves-effect waves-light btn-warning">Ré-encaisser
+                        <button v-else-if="typeOfStatus === '?type=processing' && order.status === 7 && order.payment.pay === 0 || order.payment.pay === 0"
+                                class="btn waves-effect waves-light btn-warning" @click="sendPay(order.id)">Ré-encaisser
                             <!--                                TODO: faire que au clique on récup le prix de l'order et on fait un pay stripe           -->
                         </button>
                     </td>
@@ -162,6 +162,20 @@ export default {
                     this.loadOrders();
                 }
             }).catch(err => {
+                this.$parent.$data.message = err.response.data
+            });
+        },
+        sendPay: function (orderId) {
+            axios.post('/rePay/order', {
+                'id': orderId,
+            }).then(res => {
+                console.log(resp.data);
+                if (res.status === 200) {
+                    this.$parent.$data.message = res.data
+                    this.loadOrders();
+                }
+            }).catch(err => {
+                console.log(err.response.data)
                 this.$parent.$data.message = err.response.data
             });
         },

@@ -1887,31 +1887,32 @@ __webpack_require__.r(__webpack_exports__);
         this.$parent.finalPrice += price;
 
         if (this.$parent.selectedProduct.length > 0) {
-          this.$parent.selectedProduct.forEach(function (element, index) {
-            console.log(element, index);
-            console.log(_this.element, _this.index);
-
+          this.$parent.selectedProduct.filter(function (element, index) {
             if (product.name === element.name) {
               //TODO voir pourquoi le element.name ne correspond pas à celui lorsqu'on clique
-              element.price = price;
-              element.numberOfSelect += 1;
+              element.finalPrice += price;
+              element.quantity += 1;
+              return true;
             } else {
-              product.numberOfSelect = 1;
+              product.quantity = 1;
+              element.finalPrice = price;
               return _this.$parent.selectedProduct.push(product);
             }
           });
         } else {
-          product.numberOfSelect = 1;
+          product.quantity = 1;
+          product.finalPrice = price;
           this.$parent.selectedProduct.push(product);
         }
       } else if (this.productCount > 0 && type === 'decrease') {
         this.productCount -= 1;
-        this.$parent.finalPrice -= price;
-        this.$parent.selectedProduct.forEach(function (element, index) {
-          if (element.numberOfSelect > 1) {
-            element.numberOfSelect -= 1;
+        this.$parent.finalPrice -= price; // TODO: mettre autre chose qu'un forEach car impossible de break la fonction
+
+        this.$parent.selectedProduct.filter(function (element, index) {
+          if (element.quantity > 1) {
+            return element.quantity -= 1;
           } else {
-            _this.$parent.selectedProduct.splice(index, 1);
+            return _this.$parent.selectedProduct.splice(index, 1);
           }
         });
       }
@@ -1952,8 +1953,15 @@ __webpack_require__.r(__webpack_exports__);
       required: true
     }
   },
+  data: function data() {
+    return {
+      defaultMessage: 'Une erreur est survenue, veuillez nous contacter'
+    };
+  },
   watch: {
     myMessage: function myMessage(value) {
+      var _this = this;
+
       var messages = document.getElementsByClassName('alert');
       var messageDiv = document.getElementById('alert-row');
       var customMessage = document.getElementById('messageBox');
@@ -1967,12 +1975,23 @@ __webpack_require__.r(__webpack_exports__);
         }, {
           passive: true
         });
-        customMessage.innerHTML = value.message;
 
-        if (value.status === 'error') {
+        if (value.exception) {
+          customMessage.innerHTML = _this.defaultMessage;
+        } else {
+          customMessage.innerHTML = value.message;
+        }
+
+        if (value.status === 'error' || value.exception) {
+          messageDiv.classList.remove('alert-warning');
           messageDiv.classList.remove('alert-info');
           messageDiv.classList.add("alert-danger");
+        } else if (value.status === 'warning') {
+          messageDiv.classList.remove('alert-danger');
+          messageDiv.classList.remove('alert-info');
+          messageDiv.classList.add("alert-warning");
         } else {
+          messageDiv.classList.remove('alert-warning');
           messageDiv.classList.remove('alert-danger');
           messageDiv.classList.add("alert-info");
         }
@@ -2174,6 +2193,22 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (err) {
         _this.$parent.$data.viewOrderProfile = false;
         _this.$parent.$data.message = err.response.data;
+      });
+    },
+    sendProducts: function sendProducts() {
+      var _this2 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_2___default().post('/pay/order', {
+        'id': this.orderData.id,
+        'details': this.selectedProduct
+      }).then(function (res) {
+        if (res.status === 200) {
+          _this2.$parent.$data.message = res.data;
+          _this2.$parent.$data.viewOrderProfile = false;
+        }
+      })["catch"](function (err) {
+        console.log(err.response.data);
+        _this2.$parent.$data.message = err.response.data;
       });
     },
     dateFormat: function dateFormat(date) {
@@ -2596,6 +2631,24 @@ var customLabels = {
         _this2.$parent.$data.message = err.response.data;
       });
     },
+    sendPay: function sendPay(orderId) {
+      var _this3 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_3___default().post('/rePay/order', {
+        'id': orderId
+      }).then(function (res) {
+        console.log(resp.data);
+
+        if (res.status === 200) {
+          _this3.$parent.$data.message = res.data;
+
+          _this3.loadOrders();
+        }
+      })["catch"](function (err) {
+        console.log(err.response.data);
+        _this3.$parent.$data.message = err.response.data;
+      });
+    },
     setLoading: function setLoading(isLoading) {
       if (isLoading) {
         this.$parent.$data.refCount++;
@@ -2626,14 +2679,14 @@ var customLabels = {
   },
   watch: {
     typeOfStatus: function typeOfStatus(newUrl) {
-      var _this3 = this;
+      var _this4 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_3___default().get(this.searchOrderUrl + newUrl).then(function (res) {
         if (res.status === 200) {
-          _this3.orders = res.data;
+          _this4.orders = res.data;
         }
       })["catch"](function (err) {
-        _this3.$parent.$data.message = err.response.data;
+        _this4.$parent.$data.message = err.response.data;
 
         if (err.response.status === 500) {
           window.location = '/logout';
@@ -2642,23 +2695,23 @@ var customLabels = {
     }
   },
   created: function created() {
-    var _this4 = this;
+    var _this5 = this;
 
     axios__WEBPACK_IMPORTED_MODULE_3___default().interceptors.request.use(function (config) {
-      _this4.setLoading(true);
+      _this5.setLoading(true);
 
       return config;
     }, function (error) {
-      _this4.setLoading(false);
+      _this5.setLoading(false);
 
       return Promise.reject(error);
     });
     axios__WEBPACK_IMPORTED_MODULE_3___default().interceptors.response.use(function (response) {
-      _this4.setLoading(false);
+      _this5.setLoading(false);
 
       return response;
     }, function (error) {
-      _this4.setLoading(false);
+      _this5.setLoading(false);
 
       return Promise.reject(error);
     });
@@ -43356,7 +43409,7 @@ var render = function() {
           on: {
             submit: function($event) {
               $event.preventDefault()
-              return _vm.submit($event)
+              return _vm.sendProducts($event)
             }
           }
         },
@@ -43376,7 +43429,7 @@ var render = function() {
                     "\n                    " +
                       _vm._s(item.name) +
                       " x" +
-                      _vm._s(item.numberOfSelect ? item.numberOfSelect : "1") +
+                      _vm._s(item.quantity ? item.quantity : "1") +
                       "\n                "
                   )
                 ])
@@ -44110,13 +44163,20 @@ var render = function() {
                                   },
                                   [_vm._v("Compléter\n                    ")]
                                 )
-                              : _vm.typeOfStatus === "?type=processing" &&
+                              : (_vm.typeOfStatus === "?type=processing" &&
+                                  order.status === 7 &&
+                                  order.payment.pay === 0) ||
                                 order.payment.pay === 0
                               ? _c(
                                   "button",
                                   {
                                     staticClass:
-                                      "btn waves-effect waves-light btn-warning"
+                                      "btn waves-effect waves-light btn-warning",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.sendPay(order.id)
+                                      }
+                                    }
                                   },
                                   [
                                     _vm._v(

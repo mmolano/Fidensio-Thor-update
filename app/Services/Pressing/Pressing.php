@@ -3,11 +3,25 @@
 
 namespace App\Services\Pressing;
 
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class Pressing
 {
+    private static function sendLogs(Response $response, string $function)
+    {
+        if (!$response->successful()) {
+            Log::error($response->status() === 404 ? 'Route url not found' : $response->body(), [
+                'className' => class_basename(self::class),
+                'functionName' => $function,
+                'codeStatus' => $response->status(),
+            ]);
+
+            return null;
+        }
+    }
+
     private static function checkIfExist(array $providers, string $email, string $password): ?array
     {
         foreach ($providers as $provider) {
@@ -27,15 +41,7 @@ class Pressing
         $response = Http::withToken(env('MIX_OURANOS_KEY'))
             ->get(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'provider');
 
-        if (!$response->successful()) {
-            Log::error($response->status() === 404 ? 'Route url not found' : $response->body(), [
-                'className' => class_basename(self::class),
-                'functionName' => __FUNCTION__,
-                'codeStatus' => $response->status(),
-            ]);
-
-            return null;
-        }
+        self::sendLogs($response, __FUNCTION__);
 
         if (!$user = self::checkIfExist($response->json(), $email, $password)) {
             Log::error('Could not log user ' . $email, [
@@ -49,40 +55,12 @@ class Pressing
         return $user;
     }
 
-    public static function changeStatus(int $orderId, int $statusId): ?array
-    {
-        $response = Http::withToken(env('MIX_OURANOS_KEY'))
-            ->put(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'order/' . $orderId, [
-                'status' => $statusId
-            ]);
-
-        if (!$response->successful()) {
-            Log::error($response->status() === 404 ? 'Route url not found' : $response->body(), [
-                'className' => class_basename(self::class),
-                'functionName' => __FUNCTION__,
-                'codeStatus' => $response->status(),
-            ]);
-
-            return null;
-        }
-
-        return $response->json();
-    }
-
     public static function getProviderOrder(int $id, string $status): ?array
     {
         $response = Http::withToken(env('MIX_OURANOS_KEY'))
             ->get(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'provider/' . $id . '/order/' . $status);
 
-        if (!$response->successful()) {
-            Log::error($response->status() === 404 ? 'Route url not found' : $response->body(), [
-                'className' => class_basename(self::class),
-                'functionName' => __FUNCTION__,
-                'codeStatus' => $response->status(),
-            ]);
-
-            return null;
-        }
+        self::sendLogs($response, __FUNCTION__);
 
         return $response->json();
     }
@@ -92,15 +70,17 @@ class Pressing
         $response = Http::withToken(env('MIX_OURANOS_KEY'))
             ->get(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'order/' . $orderId);
 
-        if (!$response->successful()) {
-            Log::error($response->status() === 404 ? 'Route url not found' : $response->body(), [
-                'className' => class_basename(self::class),
-                'functionName' => __FUNCTION__,
-                'codeStatus' => $response->status(),
-            ]);
+        self::sendLogs($response, __FUNCTION__);
 
-            return null;
-        }
+        return $response->json();
+    }
+
+    public static function getUser(int $userId): ?array
+    {
+        $response = Http::withToken(env('MIX_OURANOS_KEY'))
+            ->get(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'user/' . $userId);
+
+        self::sendLogs($response, __FUNCTION__);
 
         return $response->json();
     }
@@ -112,15 +92,7 @@ class Pressing
                 'userId' => $userId
             ]);
 
-        if (!$response->successful()) {
-            Log::error($response->status() === 404 ? 'Route url not found' : $response->body(), [
-                'className' => class_basename(self::class),
-                'functionName' => __FUNCTION__,
-                'codeStatus' => $response->status(),
-            ]);
-
-            return null;
-        }
+        self::sendLogs($response, __FUNCTION__);
 
         return $response->json();
     }
@@ -128,24 +100,31 @@ class Pressing
     public static function postDetail(int $orderId, array $data): ?array
     {
         $response = Http::withToken(env('MIX_OURANOS_KEY'))
-            ->post(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'order/' . $orderId . '/detail', [
-                'name' => $data['name'],
-                'isNegative' => $data['isNegative'],
-                'isPercent' => $data['isPercent'],
-                'quantity' => $data['quantity'],
-                'price' => $data['price'],
-                'total' => $data['total'],
+            ->post(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'order/' . $orderId . '/detail', $data);
+
+        self::sendLogs($response, __FUNCTION__);
+
+        return $response->json();
+    }
+
+    public static function changeStatus(int $orderId, int $statusId): ?array
+    {
+        $response = Http::withToken(env('MIX_OURANOS_KEY'))
+            ->put(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'order/' . $orderId, [
+                'status' => $statusId
             ]);
 
-        if (!$response->successful()) {
-            Log::error($response->status() === 404 ? 'Route url not found' : $response->body(), [
-                'className' => class_basename(self::class),
-                'functionName' => __FUNCTION__,
-                'codeStatus' => $response->status(),
-            ]);
+        self::sendLogs($response, __FUNCTION__);
 
-            return null;
-        }
+        return $response->json();
+    }
+
+    public static function updatePayment(int $orderId, array $data): ?array
+    {
+        $response = Http::withToken(env('MIX_OURANOS_KEY'))
+            ->put(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'order/' . $orderId . '/payment', $data);
+
+        self::sendLogs($response, __FUNCTION__);
 
         return $response->json();
     }
