@@ -24,12 +24,12 @@
                         </button>
                     </td>
                     <td data-label="Début" class="Debut"><span
-                        v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"
+                        v-bind:style="{'background-color': getDateDiff(order.deliveryDate, order.status)[0], 'color': getDateDiff(order.deliveryDate, order.status)[1]}"
                         :inner-html.prop="dateFormat(order.createdAt) | highlight(search)"></span>
                     </td>
                     <td data-label="Retour" class="Retour">
                         <span
-                            v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"
+                            v-bind:style="{'background-color': getDateDiff(order.deliveryDate, order.status)[0], 'color': getDateDiff(order.deliveryDate, order.status)[1]}"
                             :inner-html.prop="dateFormat(order.deliveryDate) | highlight(search)"
                         ></span>
                     </td>
@@ -55,16 +55,22 @@
                                 class="btn waves-effect waves-light">Payer
                         </button>
 
-                        <button v-else-if="typeOfStatus === '?type=processing' && order.payment.pay === 1"
+                        <button v-else-if="typeOfStatus === '?type=processing' && order.payment.pay === 1 || order.amount === 0"
                                 @click="sendProcessing(order.id, 5)"
                                 v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"
                                 class="btn waves-effect waves-light">Compléter
                         </button>
 
-                        <button v-else-if="typeOfStatus === '?type=processing' && order.status === 7 && order.payment.pay === 0 || order.payment.pay === 0"
-                                class="btn waves-effect waves-light btn-warning" @click="sendPay(order.id)">Ré-encaisser
-                            <!--                                TODO: faire que au clique on récup le prix de l'order et on fait un pay stripe           -->
+                        <button v-else-if="typeOfStatus === '?type=processing' && order.status === 7"
+                                v-bind:style="{'background-color': getDateDiff(order.deliveryDate, order.status)[0], 'color': getDateDiff(order.deliveryDate, order.status)[1]}"
+                                class="btn waves-effect waves-light disabled" disabled>Attente de paiement
                         </button>
+
+                        <button v-else-if="typeOfStatus === '?type=processing' && order.payment.pay === 0"
+                                v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"
+                                class="btn waves-effect waves-light" @click="sendPay(order.id)">Ré-encaisser
+                        </button>
+
                     </td>
                 </tr>
                 </tbody>
@@ -134,13 +140,15 @@ export default {
         dateFormat: function (date) {
             return moment(date, 'YYYY-MM-DD').format('DD-MM-YYYY');
         },
-        getDateDiff: function (date) {
-            if (moment(date).isSame(moment().startOf('day'), 'd')) {
-                return this.colors = ['#96E4A0', '#0b4a00']
-            } else if (moment(date).isSame(moment().subtract(1, 'days').startOf('day'), 'd')) {
+        getDateDiff: function (date, status) {
+            if (status === 7) {
+                return this.colors = ['#4ab4ff', '#193c8e']
+            } else if (moment(date).isSame(moment().startOf('day'), 'd')) {
+                return this.colors = ['#ff9d38', '#674508']
+            } else if (moment(date).isBefore(moment().startOf('day'), 'd')) {
                 return this.colors = ['#ffa8a8', '#d00000']
-            } else {
-                return this.colors = ['#7bc6f9', '#005c9a']
+            } else if (moment(date).isAfter(moment().startOf('day'), 'd')) {
+                return this.colors = ['#fbed4e', '#4a4100']
             }
         },
         loadOrders: function () {
@@ -169,13 +177,11 @@ export default {
             axios.post('/rePay/order', {
                 'id': orderId,
             }).then(res => {
-                console.log(resp.data);
-                if (res.status === 200) {
-                    this.$parent.$data.message = res.data
-                    this.loadOrders();
-                }
+                console.log(res);
+                this.$parent.$data.message = res.data
+                this.loadOrders();
             }).catch(err => {
-                console.log(err.response.data)
+                console.log(err.response.data);
                 this.$parent.$data.message = err.response.data
             });
         },
@@ -377,9 +383,9 @@ thead {
         text-transform: uppercase;
         font-weight: bold;
 
-        &.btn-warning {
-            background-color: $warning-btn !important;
-            color: $warning-btn-text !important;
+        &.disabled {
+            cursor: not-allowed !important;
+            background-color: #dbf0ff !important;
         }
     }
 }

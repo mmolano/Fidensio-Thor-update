@@ -1,5 +1,6 @@
 <?php
 
+use App\Facades\Mailjet;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PressingController;
 use App\Http\Middleware\SessionAuth;
@@ -15,6 +16,21 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+//TODO: remove ça
+
+Route::get('email-test', function(){
+
+    $details = [
+        'email' => 'miguel@fidensio.com',
+        'name' => 'Miguel'
+    ];
+
+    dd(Mailjet::sendWithTemplate($details, 'payment_refused', 'hi'));
+
+    dd('done');
+
+});
 
 Route::get('/login', [AuthController::class, 'index']);
 Route::post('/login', [AuthController::class, 'login']);

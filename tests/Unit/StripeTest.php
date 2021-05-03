@@ -19,6 +19,7 @@ class StripeTest extends TestCase
     {
         $cardType = 'test_token';
 
+        //TODO: create client stripe
         $user = [
             'userId' => 1,
             'stripeId' => $cardType,

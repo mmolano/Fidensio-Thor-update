@@ -229,6 +229,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Stripe' => App\Facades\Stripe::class,
+        'Mailjet' => App\Facades\Mailjet::class,
         'Pressing' => App\Facades\Service\Pressing::class,
 
     ],

@@ -29,7 +29,7 @@ export default {
             let messages = document.getElementsByClassName('alert');
             let messageDiv = document.getElementById('alert-row');
             let customMessage = document.getElementById('messageBox');
-            let secondes = 200;
+            let secondes = 300;
             for (let i = 0; i < messages.length; i++) {
                 let message = messages[i];
 

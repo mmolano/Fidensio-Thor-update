@@ -95,6 +95,13 @@ export default {
             });
         },
         sendProducts: function () {
+            if (this.gift) {
+                this.selectedProduct.forEach((element, index) => {
+                    element.name = 'Cadeau: ' + element.name
+                    element.finalPrice = 0;
+                    element.price = 0;
+                });
+            }
             axios.post('/pay/order', {
                 'id': this.orderData.id,
                 'details': this.selectedProduct

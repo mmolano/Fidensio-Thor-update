@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\Mailjet;
 use App\Facades\Stripe;
 use App\Services\Pressing\Pressing;
 use Illuminate\Http\JsonResponse;
@@ -67,7 +68,7 @@ class PressingController extends Controller
                 ]);
                 break;
             case 8:
-                $message = 'Impossible de finaliser la procédure de paiement mais détails ajoutés';
+                $message = 'Impossible de finaliser la procédure de paiement';
                 Log::error('MyError', [
                     'Class' => class_basename(self::class),
                     'Code' => $this->error,
@@ -113,6 +114,15 @@ class PressingController extends Controller
                     'Comment' => 'Impossible d\'update le statut du paiement'
                 ]);
                 break;
+            case 15:
+                $message = 'Impossible d\'envoyer un mail au client';
+                Log::error('MyError', [
+                    'Class' => class_basename(self::class),
+                    'Code' => $this->error,
+                    'OrderId' => $infos,
+                    'Comment' => 'Could not send email to customer'
+                ]);
+                break;
             default:
                 $message ?: $message = 'Undefined error';
         }
@@ -144,53 +154,60 @@ class PressingController extends Controller
         ]);
     }
 
-    public function pay(array $order, array $user, bool $changeStatus = false)
+    //TODO: voir pourquoi aucun mail est send
+    public function pay(array $order, array $user, bool $changeStatus = false): JsonResponse
     {
-        if ($order['payment']['pay'] !== 1) {
-            if (!$payment = Stripe::pay($order, $user)) {
-                if ($changeStatus === true) {
+        if ($order['amount'] > 0) {
+            if ($order['payment']['pay'] !== 1) {
+                if (!$payment = Stripe::pay($order, $user)) {
                     if (!Pressing::changeStatus($order['id'], $this->status['processing'])) {
                         return $this->error(4);
+                        //TODO: mettre bon mail
+                    } elseif (!Mailjet::sendWithTemplate(['email' => 'miguel@fidensio.com', 'name' => 'miguel'], 'payment_refused', 'hi')) {
+                        return $this->error(15, $order['id'], 'warning');
                     }
 
                     return $this->error(8, $order['id'], 'warning', 200);
-                }
-                return $payment;
-                return $this->error(8, $order['id']);
-            } elseif ($payment['status'] === 2) {
-                if (!Pressing::updatePayment($order['id'], [
-                    'status' => $payment['status'],
-                    'intentStripeId' => $payment['intentId'],
-                    'paymentToken3ds' => $payment['paymentToken'],
-                ])) {
-                    if ($changeStatus === true) {
-                        if (!Pressing::changeStatus($order['id'], $this->status['waitingForPayment'])) {
-                            return $this->error(4);
-                        }
-                        return $this->error(9, $order['id'], 'warning', 200);
+                } elseif ($payment['status'] === 2) {
+                    if (!Pressing::updatePayment($order['id'], [
+                        'status' => $payment['status'],
+                        'intentStripeId' => $payment['intentId'],
+                        'paymentToken3ds' => $payment['paymentToken'],
+                    ])) {
+                        return $this->error(9, $order['id'], 'warning');
+                    } elseif (!Pressing::changeStatus($order['id'], $this->status['waitingForPayment'])) {
+                        return $this->error(4);
+                        //TODO: changer le nom du email
+                    } elseif (!Mailjet::sendWithTemplate(['email' => 'miguel@fidensio.com', 'name' => 'miguel'], 'payment_3DSecure', 'hi')) {
+                        return $this->error(15, $order['id'], 'warning');
                     }
-
-                    // TODO: send email
-
                     return $this->error(9, $order['id'], 'warning');
+                } elseif ($payment['status'] === 1) {
+                    if (!Pressing::updatePayment($order['id'], [
+                        'status' => $payment['status'],
+                        'intentStripeId' => $payment['intentId']
+                    ])) {
+                        return $this->error(13, $order['id'], 'warning');
+                        //TODO: change email name
+                    } elseif (!Mailjet::sendWithTemplate(['email' => 'miguel@fidensio.com', 'name' => 'miguel'], 'payment_confirmed', 'hi')) {
+                        return $this->error(15, $order['id'], 'warning');
+                    }
                 }
-            } elseif ($payment['status'] === 1) {
-                if (!Pressing::updatePayment($order['id'], [
-                    'status' => $payment['status'],
-                    'intentStripeId' => $payment['intentId']
-                ])) {
-                    return $this->error(13, null, 'warning');
-                }
+            } else {
+                return response()->json([
+                    'status' => 'warning',
+                    'message' => 'Le paiement a déjà été effectué',
+                ]);
+            }
+        }
 
-                if ($changeStatus === true) {
-                    if (!Pressing::changeStatus($order['id'], $this->status['processing'])) {
-                        return $this->error(4);
-                    }
-                } else {
-                    if (!Pressing::changeStatus($order['id'], $this->status['finished'])) {
-                        return $this->error(4);
-                    }
-                }
+        if ($changeStatus === true) {
+            if (!Pressing::changeStatus($order['id'], $this->status['processing'])) {
+                return $this->error(4);
+            }
+        } else {
+            if (!Pressing::changeStatus($order['id'], $this->status['finished'])) {
+                return $this->error(4);
             }
         }
 
@@ -271,9 +288,7 @@ class PressingController extends Controller
                     return $this->error(6, $detail['name']);
                 } elseif ($detail['quantity'] < 1) {
                     return $this->error(6, $detail['name']);
-                }
-
-                if (!Pressing::postDetail($order['id'], [
+                } elseif (!Pressing::postDetail($order['id'], [
                     'name' => $detail['name'],
                     'isNegative' => 0,
                     'isPercent' => 0,
@@ -292,7 +307,9 @@ class PressingController extends Controller
 //            ]);
         }
 
-        //TODO HANDLE le gift
+        if (!$order = Pressing::getOrder($request->id)) {
+            return $this->error(5);
+        }
 
         return self::pay($order, $user, true);
     }
