@@ -148,7 +148,6 @@ class PressingController extends Controller
     {
         if ($order['payment']['pay'] !== 1) {
             if (!$payment = Stripe::pay($order, $user)) {
-        return $payment;
                 if ($changeStatus === true) {
                     if (!Pressing::changeStatus($order['id'], $this->status['processing'])) {
                         return $this->error(4);
