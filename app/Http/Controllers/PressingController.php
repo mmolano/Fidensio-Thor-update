@@ -121,7 +121,7 @@ class PressingController extends Controller
                 Log::error('MyError', [
                     'Class' => class_basename(self::class),
                     'Code' => $this->error,
-                    'OrderId' => $infos,
+                    'Infos' => $infos,
                     'Comment' => 'Erreur lors de la modification du commentaire et du numéro'
                 ]);
                 break;
@@ -165,7 +165,7 @@ class PressingController extends Controller
             return $this->error(10);
         }
 
-        // TODO mettre bon name
+        // TODO mettre bon name et vérif si bon url
         // $userData = ['email' => $user['email'], 'name' => $user['data']['firstName']];
         $userData = ['email' => 'miguel@fidensio.com', 'name' => $user['data']['firstName']];
 
@@ -365,11 +365,11 @@ class PressingController extends Controller
         }
 
         if ($request->comment || $request->numberPress) {
-            if (!Pressing::updateOrderAttributes($order['id'], [
+            if (!Pressing::updateOrderAttributes($request->id, [
                 'providerOrderNumber' => isset($request->numberPress) ? $request->numberPress : '',
                 'providerComment' => isset($request->comment) ? $request->comment : '',
             ])) {
-                return $this->error(14, json_encode('code: ' . $request->numberPress . ', comment:' . $request->comment));
+                return $this->error(14, json_encode('code: ' . $request->numberPress . ', comment:' . $request->comment . ', orderId: ' . $request->id));
             }
         }
 

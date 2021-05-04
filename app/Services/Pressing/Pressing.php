@@ -132,7 +132,7 @@ class Pressing
     public static function updateOrderAttributes(int $orderId, array $data): ?array
     {
         $response = Http::withToken(env('MIX_OURANOS_KEY'))
-            ->put(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'order/' . $orderId, $data);
+            ->put(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'order/' . $orderId . '/attribute', $data);
 
         self::sendLogs($response, __FUNCTION__);
 

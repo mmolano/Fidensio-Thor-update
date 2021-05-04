@@ -47,11 +47,11 @@
                     </div>
                     <div class="input-container">
                         <label for="comment"></label><input id="comment" type="text" v-model="comment"
-                                                            placeholder="Commentaire Pressing"/>
+                                                            placeholder="Commentaire Pressing" :class="{'input-colored': comment}"/>
                     </div>
                     <div class="input-container">
-                        <label for="numberPress"></label><input id="numberPress" type="text" v-model="comment"
-                                                                placeholder="Numéro de pressing"/>
+                        <label for="numberPress"></label><input id="numberPress" type="text" v-model="numberPress"
+                                                                placeholder="Numéro de pressing" :class="{'input-colored': numberPress}"/>
                     </div>
                     <div class="input-container">
                         <input id="one" type="checkbox" v-model="gift"/>
@@ -218,12 +218,22 @@ input[type='checkbox'] {
 }
 
 input[type='text'] {
+    cursor: initial !important;
     min-width: 180px;
     width: 100%;
     padding: 10px 6px 5px;
     margin: 10px auto;
     border: unset;
     border-bottom: 1px solid black;
+
+    &:focus {
+        outline: none;
+        border-bottom: 1px solid $mainBtnBack;
+    }
+
+    &.input-colored {
+        border-bottom: 1px solid $mainBtnBack;
+    }
 }
 
 ins {
