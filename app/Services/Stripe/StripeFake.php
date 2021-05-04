@@ -3,52 +3,81 @@
 namespace App\Services\Stripe;
 
 use Carbon\Carbon;
+use Faker\Factory;
+use Faker\Generator;
 
 class StripeFake
 {
+    private Generator $faker;
     private Carbon $carbonExpire;
-    private array $cardsLast4 = [
+    private array $createUserHistory = [];
+    private bool $defaultCardSet = false;
+    private array $cards = [
         'tok_visa' => 4242,
         'tok_mastercard' => 4444,
         'tok_amex' => 8431,
         'tok_chargeCustomerFail' => 9995,
         'tok_threeDSecure2Required' => 3220
     ];
+    private array $createCardHistory = [];
     private array $defaultCard;
+
 
     public function __construct()
     {
         $this->carbonExpire = Carbon::now()->addYear();
+        $this->faker = Factory::create('fr_FR');
     }
 
-    public function setCardId(string $card)
+    public function createUser(array $user, array $userData): ?string
     {
-        if (empty($this->cardsLast4[$card])) {
+        if (!empty($this->createUserHistory[$user['email']])) {
+            return $this->createUserHistory[$user['email']];
+        }
+        $this->createUserHistory[$user['email']] = 'test_cus_' . $this->faker->password;
+
+        return $this->createUserHistory[$user['email']];
+    }
+
+    public function newCard(array $userIntegration, string $stripeCardToken): ?array
+    {
+        if (empty($this->cards[$stripeCardToken])) {
             return null;
         }
-
-        $this->defaultCard = [
-            'id' => $card,
-            'name' => $card,
-            'default' => true,
-            'last4' => $this->cardsLast4[$card],
+        $card = [
+            'id' => $stripeCardToken,
+            'name' => $stripeCardToken,
+            'default' => !$this->defaultCardSet,
+            'last4' => $this->cards[$stripeCardToken],
             'expireMonth' => $this->carbonExpire->format('m'),
             'expireYear' => $this->carbonExpire->format('Y'),
         ];
+        if (!$this->defaultCardSet) {
+            $this->defaultCardSet = true;
+        }
+        array_push($this->createCardHistory, $card);
+
+        return $card;
     }
 
-    public function getDefaultCard(array $user): ?array
+    public function getDefaultCard(array $userIntegration): ?array
     {
-        if (empty($this->cardsLast4[$user['stripeId']])) {
+        if (empty($this->createCardHistory)) {
             return null;
         }
 
-        return $this->defaultCard;
+        foreach ($this->createCardHistory as $card) {
+            if ($card['default']) {
+                return $card;
+            }
+        }
+
+        return null;
     }
 
     public function pay(array $order, array $user): ?array
     {
-        if (!$card = $this->getDefaultCard($user['userIntegration'])) {
+        if (!$card = $this->getDefaultCard($user['integration'])) {
             return null;
         }
 

@@ -154,54 +154,56 @@ class PressingController extends Controller
         ]);
     }
 
-    //TODO: voir pourquoi aucun mail est send
     public function pay(array $order, array $user, bool $changeStatus = false): JsonResponse
     {
+        //TODO: changer le nom du email
+        $userData = ['email' => 'miguel@fidensio.com', 'name' => 'miguel'];
+
         if ($order['amount'] > 0) {
             if ($order['payment']['pay'] !== 1) {
                 if (!$payment = Stripe::pay($order, $user)) {
                     if (!Pressing::changeStatus($order['id'], $this->status['processing'])) {
                         return $this->error(4);
-                        //TODO: mettre bon mail
-                    } elseif (!Mailjet::sendWithTemplate(['email' => 'miguel@fidensio.com', 'name' => 'miguel'], 'payment_refused', 'hi')) {
+                    } elseif (!Mailjet::sendWithTemplate($userData, 'payment_refused', 'Le paiement pour votre commande n°' . $order['id'] . ' a été refusé')) {
                         return $this->error(15, $order['id'], 'warning');
                     }
-
                     return $this->error(8, $order['id'], 'warning', 200);
-                } elseif ($payment['status'] === 2) {
-                    if (!Pressing::updatePayment($order['id'], [
-                        'status' => $payment['status'],
-                        'intentStripeId' => $payment['intentId'],
-                        'paymentToken3ds' => $payment['paymentToken'],
-                    ])) {
-                        return $this->error(9, $order['id'], 'warning');
-                    } elseif (!Pressing::changeStatus($order['id'], $this->status['waitingForPayment'])) {
-                        return $this->error(4);
-                        //TODO: changer le nom du email
-                    } elseif (!Mailjet::sendWithTemplate(['email' => 'miguel@fidensio.com', 'name' => 'miguel'], 'payment_3DSecure', 'hi')) {
-                        return $this->error(15, $order['id'], 'warning');
-                    }
-                    return $this->error(9, $order['id'], 'warning');
-                } elseif ($payment['status'] === 1) {
-                    if (!Pressing::updatePayment($order['id'], [
-                        'status' => $payment['status'],
-                        'intentStripeId' => $payment['intentId']
-                    ])) {
-                        return $this->error(13, $order['id'], 'warning');
-                        //TODO: change email name
-                    } elseif (!Mailjet::sendWithTemplate(['email' => 'miguel@fidensio.com', 'name' => 'miguel'], 'payment_confirmed', 'hi')) {
-                        return $this->error(15, $order['id'], 'warning');
-                    }
                 }
-            } else {
-                return response()->json([
-                    'status' => 'warning',
-                    'message' => 'Le paiement a déjà été effectué',
-                ]);
+
+                switch ($payment['status']) {
+                    case 1:
+                        if (!Pressing::updatePayment($order['id'], [
+                            'status' => $payment['status'],
+                            'intentStripeId' => $payment['intentId']
+                        ])) {
+                            return $this->error(13, $order['id'], 'warning');
+                        } elseif (!Mailjet::sendWithTemplate($userData, 'payment_confirmed', 'hi')) {
+                            return $this->error(15, $order['id'], 'warning');
+                        }
+                        break;
+                    case 2:
+                        if (!Pressing::updatePayment($order['id'], [
+                            'status' => $payment['status'],
+                            'intentStripeId' => $payment['intentId'],
+                            'paymentToken3ds' => $payment['paymentToken'],
+                        ])) {
+                            return $this->error(9, $order['id'], 'warning');
+                        } elseif (!Pressing::changeStatus($order['id'], $this->status['waitingForPayment'])) {
+                            return $this->error(4);
+                        } elseif (!Mailjet::sendWithTemplate($userData, 'payment_3DSecure', 'Le paiement pour votre commande n°' . $order['id'] . ' nécessite votre intervention')) {
+                            return $this->error(15, $order['id'], 'warning');
+                        }
+                        return $this->error(9, $order['id'], 'warning');
+                    default:
+                        return response()->json([
+                            'status' => 'warning',
+                            'message' => 'Le paiement a déjà été effectué',
+                        ]);
+                }
             }
         }
 
-        if ($changeStatus === true) {
+        if ($changeStatus) {
             if (!Pressing::changeStatus($order['id'], $this->status['processing'])) {
                 return $this->error(4);
             }

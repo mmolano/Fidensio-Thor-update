@@ -1,0 +1,31 @@
+image: registry.gitlab.com/fidensio/docker/tests/php/ci-cd:latest
+
+stages:
+  - tests
+  - quality
+
+phpTest :
+  stage: tests
+  before_script:
+    - npm run pipeline
+  cache:
+    paths:
+      - vendor/
+      - node_modules/
+    policy: push
+  script:
+    - php vendor/bin/phpunit --coverage-text --colors=never
+  except:
+    - tags
+
+phpQuality :
+  stage: quality
+  cache:
+    paths:
+      - vendor/
+      - node_modules/
+    policy: pull
+  script:
+    - php vendor/bin/phpcs
+  except:
+    - tags

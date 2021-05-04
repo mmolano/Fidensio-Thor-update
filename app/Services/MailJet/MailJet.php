@@ -24,7 +24,7 @@ class MailJet
         $this->resources = Resources::$Email;
     }
 
-    public function sendWithTemplate(array $contact, string $templateId, string $subject, array $variables = null)
+    public function sendWithTemplate(array $contact, string $templateId, string $subject, array $variables = null): bool
     {
         if (empty($contact['email']) || empty($contact['name'])) {
             return false;
@@ -50,9 +50,9 @@ class MailJet
                                 'Name' => "Archives"
                             ]
                         ],
+                        'Subject' => $subject,
                         'TemplateID' => $this->templateId[$templateId],
                         'TemplateLanguage' => true,
-                        'Subject' => $subject,
                         'Variables' => $variables
                     ]
                 ],
@@ -60,7 +60,6 @@ class MailJet
             ]
         ]);
 
-        return $email;
         return $email->success();
     }
 }

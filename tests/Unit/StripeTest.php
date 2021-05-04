@@ -3,7 +3,6 @@
 namespace Tests\Unit;
 
 use App\Facades\Stripe;
-use Carbon\Carbon;
 use Tests\TestCase;
 
 class StripeTest extends TestCase
@@ -11,23 +10,24 @@ class StripeTest extends TestCase
     /*
      * Methode getDefaultCard
      */
-
     /**
      * @test
      */
     public function getDefaultCardWithBadStripeCardId()
     {
-        $cardType = 'test_token';
-
-        //TODO: create client stripe
         $user = [
-            'userId' => 1,
-            'stripeId' => $cardType,
-            'crispId' => 'cus_token'
+            'email' => $this->faker->email
+        ];
+        $userData = [
+            'firstName' => $this->faker->firstName,
+            'lastName' => $this->faker->lastName
+        ];
+        $userIntegration = [
+            'stripeId' => Stripe::createUser($user, $userData)
         ];
 
-        Stripe::setCardId($cardType);
-        $response = Stripe::getDefaultCard($user);
+        Stripe::newCard($userIntegration, $this->faker->password);
+        $response = Stripe::getDefaultCard($userIntegration);
 
         $this->assertNull($response);
     }
@@ -35,110 +35,112 @@ class StripeTest extends TestCase
     /**
      * @test
      */
-    public function getDefaultCardVisa()
+    public function getDefaultCardWithoutCard()
     {
-        $cardType = 'tok_visa';
-
         $user = [
-            'userId' => 1,
-            'stripeId' => $cardType,
-            'crispId' => 'cus_token'
+            'email' => $this->faker->email
+        ];
+        $userData = [
+            'firstName' => $this->faker->firstName,
+            'lastName' => $this->faker->lastName
+        ];
+        $userIntegration = [
+            'stripeId' => Stripe::createUser($user, $userData)
         ];
 
-        Stripe::setCardId($cardType);
-        $response = Stripe::getDefaultCard($user);
+        $response = Stripe::getDefaultCard($userIntegration);
 
-        $this->assertNotNull($response);
-        $this->assertEquals($cardType, $response['id']);
-        $this->assertEquals($cardType, $response['name']);
-        $this->assertEquals(true, $response['default']);
-        $this->assertEquals(4242, $response['last4']);
+        $this->assertNull($response);
     }
 
     /**
      * @test
      */
-    public function getDefaultCardMasterCard()
+    public function getDefaultCard()
     {
-        $cardType = 'tok_mastercard';
-
         $user = [
-            'userId' => 1,
-            'stripeId' => $cardType,
-            'crispId' => 'cus_token'
+            'email' => $this->faker->email
+        ];
+        $userData = [
+            'firstName' => $this->faker->firstName,
+            'lastName' => $this->faker->lastName
+        ];
+        $userIntegration = [
+            'stripeId' => Stripe::createUser($user, $userData)
         ];
 
-        Stripe::setCardId($cardType);
-        $response = Stripe::getDefaultCard($user);
+        $card = Stripe::newCard($userIntegration, 'tok_visa');
+        $response = Stripe::getDefaultCard($userIntegration);
 
         $this->assertNotNull($response);
-        $this->assertEquals($cardType, $response['id']);
-        $this->assertEquals($cardType, $response['name']);
-        $this->assertEquals(true, $response['default']);
-        $this->assertEquals(4444, $response['last4']);
-    }
-
-    /**
-     * @test
-     */
-    public function getDefaultCardAmex()
-    {
-        $cardType = 'tok_amex';
-
-        $user = [
-            'userId' => 1,
-            'stripeId' => $cardType,
-            'crispId' => 'cus_token'
-        ];
-
-        Stripe::setCardId($cardType);
-        $response = Stripe::getDefaultCard($user);
-
-        $this->assertNotNull($response);
-        $this->assertEquals($cardType, $response['id']);
-        $this->assertEquals($cardType, $response['name']);
-        $this->assertEquals(true, $response['default']);
-        $this->assertEquals(8431, $response['last4']);
+        $this->assertEquals($card['id'], $response['id']);
+        $this->assertEquals($card['name'], $response['name']);
+        $this->assertEquals($card['default'], $response['default']);
+        $this->assertEquals($card['last4'], $response['last4']);
+        $this->assertEquals($card['expireMonth'], $response['expireMonth']);
+        $this->assertEquals($card['expireYear'], $response['expireYear']);
     }
 
     /*
      * Methode pay
      */
+    /**
+     * @test
+     */
+    public function createPaymentWithoutCard()
+    {
+        $user = [
+            'email' => $this->faker->email
+        ];
+        $userData = [
+            'firstName' => $this->faker->firstName,
+            'lastName' => $this->faker->lastName
+        ];
+        $userIntegration = [
+            'stripeId' => Stripe::createUser($user, $userData)
+        ];
+        $order = [
+            'id' => $this->faker->numberBetween(100, 999999),
+            'amount' => 1000
+        ];
+        $user = [
+            'integration' => [
+                'stripeId' => $userIntegration['stripeId']
+            ]
+        ];
+
+        $response = Stripe::pay($order, $user);
+
+        $this->assertNull($response);
+    }
 
     /**
      * @test
      */
     public function createPaymentWithFailurePayment()
     {
-        $cardType = 'tok_chargeCustomerFail';
-
         $user = [
-            'userIntegration' => [
-                'userId' => 1,
-                'stripeId' => $cardType,
-                'crispId' => 'cus_token'
+            'email' => $this->faker->email
+        ];
+        $userData = [
+            'firstName' => $this->faker->firstName,
+            'lastName' => $this->faker->lastName
+        ];
+        $userIntegration = [
+            'stripeId' => Stripe::createUser($user, $userData)
+        ];
+        $order = [
+            'id' => $this->faker->numberBetween(100, 999999),
+            'amount' => $this->faker->numberBetween(100, 300)
+        ];
+        $user = [
+            'integration' => [
+                'stripeId' => $userIntegration['stripeId']
             ]
         ];
 
-        $order = [
-            'id' => 1,
-            'amount' => 200,
-            'companyId' => 2,
-            'providerId' => 1,
-            'service' => [
-                'id' => 2,
-                'name' => 'Pressing, Retouche, Cordonnerie, Blanchisserie en entreprise',
-                'categoryId' => 2,
-                'className' => 'PressingAtCompany',
-                'externalLink' => null,
-                'createdAt' => Carbon::now(),
-                'updatedAt' => Carbon::now()
-            ],
-            'status' => 2,
-            'userId' => 2
-        ];
+        Stripe::newCard($userIntegration, 'tok_chargeDeclinedInsufficientFunds');
 
-        Stripe::setCardId($cardType);
         $response = Stripe::pay($order, $user);
 
         $this->assertNull($response);
@@ -149,35 +151,28 @@ class StripeTest extends TestCase
      */
     public function createPaymentWith3ds()
     {
-        $cardType = 'tok_threeDSecure2Required';
-
         $user = [
-            'userIntegration' => [
-                'userId' => 1,
-                'stripeId' => $cardType,
-                'crispId' => 'cus_token'
+            'email' => $this->faker->email
+        ];
+        $userData = [
+            'firstName' => $this->faker->firstName,
+            'lastName' => $this->faker->lastName
+        ];
+        $userIntegration = [
+            'stripeId' => Stripe::createUser($user, $userData)
+        ];
+        $order = [
+            'id' => $this->faker->numberBetween(100, 999999),
+            'amount' => $this->faker->numberBetween(100, 300)
+        ];
+        $user = [
+            'integration' => [
+                'stripeId' => $userIntegration['stripeId']
             ]
         ];
 
-        $order = [
-            'id' => 1,
-            'amount' => 200,
-            'companyId' => 2,
-            'providerId' => 1,
-            'service' => [
-                'id' => 2,
-                'name' => 'Pressing, Retouche, Cordonnerie, Blanchisserie en entreprise',
-                'categoryId' => 2,
-                'className' => 'PressingAtCompany',
-                'externalLink' => null,
-                'createdAt' => Carbon::now(),
-                'updatedAt' => Carbon::now()
-            ],
-            'status' => 2,
-            'userId' => 2
-        ];
+        Stripe::newCard($userIntegration, 'tok_threeDSecure2Required');
 
-        Stripe::setCardId($cardType);
         $response = Stripe::pay($order, $user);
 
         $this->assertNotNull($response);
@@ -188,37 +183,30 @@ class StripeTest extends TestCase
     /**
      * @test
      */
-    public function createPayment()
+    public function payOrder()
     {
-        $cardType = 'tok_visa';
-
         $user = [
-            'userIntegration' => [
-                'userId' => 1,
-                'stripeId' => $cardType,
-                'crispId' => 'cus_token'
+            'email' => $this->faker->email
+        ];
+        $userData = [
+            'firstName' => $this->faker->firstName,
+            'lastName' => $this->faker->lastName
+        ];
+        $userIntegration = [
+            'stripeId' => Stripe::createUser($user, $userData)
+        ];
+        $order = [
+            'id' => $this->faker->numberBetween(100, 999999),
+            'amount' => $this->faker->numberBetween(100, 300)
+        ];
+        $user = [
+            'integration' => [
+                'stripeId' => $userIntegration['stripeId']
             ]
         ];
 
-        $order = [
-            'id' => 1,
-            'amount' => 200,
-            'companyId' => 2,
-            'providerId' => 1,
-            'service' => [
-                'id' => 2,
-                'name' => 'Pressing, Retouche, Cordonnerie, Blanchisserie en entreprise',
-                'categoryId' => 2,
-                'className' => 'PressingAtCompany',
-                'externalLink' => null,
-                'createdAt' => Carbon::now(),
-                'updatedAt' => Carbon::now()
-            ],
-            'status' => 2,
-            'userId' => 2
-        ];
+        Stripe::newCard($userIntegration, 'tok_visa');
 
-        Stripe::setCardId($cardType);
         $response = Stripe::pay($order, $user);
 
         $this->assertNotNull($response);
