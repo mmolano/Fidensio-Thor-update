@@ -392,14 +392,14 @@ thead {
 
 @media only screen and (min-width: 900px) {
     .Debut, .Retour {
-        min-width: 140px;
+        min-width: 150px;
     }
 }
 
 @media screen and (max-width: 900px) {
     .Debut,
     .Retour,
-    .Service {
+    .Service, .Consigne {
         display: none;
     }
 }

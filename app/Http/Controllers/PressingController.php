@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\Crisp;
 use App\Facades\Mailjet;
 use App\Facades\Stripe;
 use App\Services\Pressing\Pressing;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -114,6 +116,15 @@ class PressingController extends Controller
                     'Comment' => 'Impossible d\'update le statut du paiement'
                 ]);
                 break;
+            case 14:
+                $message = 'Une erreur est survenue';
+                Log::error('MyError', [
+                    'Class' => class_basename(self::class),
+                    'Code' => $this->error,
+                    'OrderId' => $infos,
+                    'Comment' => 'Erreur lors de la modification du commentaire et du numéro'
+                ]);
+                break;
             case 15:
                 $message = 'Impossible d\'envoyer un mail au client';
                 Log::error('MyError', [
@@ -137,7 +148,7 @@ class PressingController extends Controller
     {
         $validation = Validator::make($request->all(), [
             'orderId' => ['required', 'integer'],
-            'status' => ['required', 'integer']
+            'status' => ['required', 'integer'],
         ]);
 
         if ($validation->fails()) {
@@ -148,13 +159,61 @@ class PressingController extends Controller
             return $this->error(4);
         }
 
+        if (!$order = Pressing::getOrder($request->orderId)) {
+            return $this->error(5);
+        } elseif (!$user = Pressing::getUser($order['userId'])) {
+            return $this->error(10);
+        }
+
+        // TODO mettre bon name
+        // $userData = ['email' => $user['email'], 'name' => $user['data']['firstName']];
+        $userData = ['email' => 'miguel@fidensio.com', 'name' => $user['data']['firstName']];
+
+        switch ($request->status) {
+            case 2:
+                Crisp::newEvent($user, 'received', session('authName'), $order);
+                break;
+            case 5:
+                if (!empty($order['lockers'])) {
+                    $subject = 'Votre commande Fidensio n°' . $order['id'] . ' est disponible dans le casier ' .
+                        $order['lockers']['number'] .
+                        ' avec le code C' .
+                        $order['lockers']['code'] .
+                        ' pour l’ouvrir.';
+                    $templateType = 'order_completed_oldLockers';
+                    $variables = [
+                        'orderId' => $order['id'],
+                        'service' => $order['service']['name'],
+                        'lockerNumber' => $order['locker']['number'],
+                        'lockerCode' => 'C' . $order['locker']['code'],
+                        'url' => 'https://www.' . $order['company']['url'] . '.com',
+                        'deliveryDate' => Carbon::create($order['deliveryDate'])->format('d/m/Y')
+                    ];
+                } else {
+                    $subject = 'Votre commande Fidensio n°' . $order['id'] . ' est disponible dans votre lockers Bringme. Scannez le QR code reçu par mail.';
+                    $templateType = 'order_completed_bringMe';
+                    $variables = [
+                        'orderId' => $order['id'],
+                        'service' => $order['service']['name'],
+                        'url' => 'https://www.' . $order['company']['url'] . '.com',
+                        'deliveryDate' => Carbon::create($order['deliveryDate'])->format('d/m/Y')
+                    ];
+                }
+                if (!Mailjet::sendWithTemplate($userData, $templateType, $subject, $variables)) {
+                    return $this->error(15, $order['id'], 'warning');
+                }
+
+                Crisp::newEvent($user, 'delivered', session('authName'), $order);
+                break;
+        }
+
         return response()->json([
             'status' => 'success',
             'message' => 'La commande a été mis à jour',
         ]);
     }
 
-    public function pay(array $order, array $user, bool $changeStatus = false): JsonResponse
+    public function pay(array $order, array $user, int $finalPrice = 0, bool $changeStatus = false): JsonResponse
     {
         //TODO: changer le nom du email
         $userData = ['email' => 'miguel@fidensio.com', 'name' => 'miguel'];
@@ -177,9 +236,11 @@ class PressingController extends Controller
                             'intentStripeId' => $payment['intentId']
                         ])) {
                             return $this->error(13, $order['id'], 'warning');
-                        } elseif (!Mailjet::sendWithTemplate($userData, 'payment_confirmed', 'hi')) {
+                        } elseif (!Mailjet::sendWithTemplate($userData, 'payment_confirmed', 'Le paiement pour votre commande n°' . $order['id'] . ' a été validé')) {
                             return $this->error(15, $order['id'], 'warning');
                         }
+
+                        Crisp::newEvent($user, 'payment', session('authName'), $order, $finalPrice);
                         break;
                     case 2:
                         if (!Pressing::updatePayment($order['id'], [
@@ -301,18 +362,21 @@ class PressingController extends Controller
                     return $this->error(7, $detail['name']);
                 }
             }
+        }
 
-            //TODO: faire une route sur ouranos qui update ça: + champ dans le front
-//            $order->Pressing()->update([
-//                'providerComment' => $request->comment,
-//                'providerOrderNumber' => $request->numberPress
-//            ]);
+        if ($request->comment || $request->numberPress) {
+            if (!Pressing::updateOrderAttributes($order['id'], [
+                'providerOrderNumber' => isset($request->numberPress) ? $request->numberPress : '',
+                'providerComment' => isset($request->comment) ? $request->comment : '',
+            ])) {
+                return $this->error(14, json_encode('code: ' . $request->numberPress . ', comment:' . $request->comment));
+            }
         }
 
         if (!$order = Pressing::getOrder($request->id)) {
             return $this->error(5);
         }
 
-        return self::pay($order, $user, true);
+        return self::pay($order, $user, $request->finalPrice, true);
     }
 }

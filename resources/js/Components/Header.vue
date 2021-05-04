@@ -6,7 +6,6 @@
                     <span class="las la-bars"></span>
                     Bienvenue {{ userName }}
                 </label>
-                <!--                TODO: mettre le nom du mec qui est log   -->
             </h1>
         </header>
     </section>
@@ -37,6 +36,10 @@ header {
     background-color: white;
     box-shadow: 0 14px 38px 6px rgb(74 74 74 / 13%);
     transition: width 300ms;
+
+    & h1 {
+        overflow: hidden;
+    }
 
     & h1, label {
         cursor: pointer;

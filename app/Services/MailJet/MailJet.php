@@ -14,6 +14,8 @@ class MailJet
         'payment_refused' => 2352392,
         'payment_3DSecure' => 2352557,
         'payment_confirmed' => 2840989,
+        'order_completed_bringMe' => 2352530,
+        'order_completed_oldLockers' => 1029154,
     ];
 
     public function __construct()

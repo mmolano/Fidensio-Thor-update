@@ -5,8 +5,7 @@
         </div>
         <div class="card-price">
             <h4>Prix: </h4>
-            <p :inner-html.prop="product.price / 100 | highlight(this.$parent.search)"></p>
-            <span>&euro;</span>
+            <p :inner-html.prop="product.price / 100 + ' €'| highlight(this.$parent.search)"></p>
         </div>
         <div class="card-quantity">
             <h4>Quantité: </h4>
@@ -25,7 +24,8 @@
 export default {
     name: "CardSelection",
     props: {
-        product: Object
+        product: Object,
+        selectedProduct: Array
     },
     data() {
         return {
@@ -33,45 +33,46 @@ export default {
         }
     },
     methods: {
+        checkProduct(product) {
+            return this.selectedProduct.filter(
+                function (element) {
+                    return element.name === product.name
+                }
+            ).length > 0;
+        },
         iteration(type, price, product) {
             if (type === 'add') {
                 this.productCount += 1;
                 this.$parent.finalPrice += price;
-                if (this.$parent.selectedProduct.length > 0) {
-                    this.$parent.selectedProduct.filter((element, index) => {
-                            if (product.name === element.name) {
-                                //TODO voir pourquoi le element.name ne correspond pas à celui lorsqu'on clique
-                                element.finalPrice += price;
-                                element.quantity += 1;
-                                return true;
-                            } else {
-                                product.quantity = 1;
-                                element.finalPrice = price;
-                                return this.$parent.selectedProduct.push(product);
-                            }
-                        }
-                    )
+                if (this.selectedProduct.length > 0) {
+                    if (!this.checkProduct(product, price)) {
+                        product.quantity = 1;
+                        product.finalPrice = price;
+                        this.$parent.selectedProduct.push(product);
+                    } else {
+                        product.quantity += 1;
+                        product.finalPrice += price;
+                    }
                 } else {
                     product.quantity = 1;
                     product.finalPrice = price;
-                    this.$parent.selectedProduct.push(product);
+                    return this.$parent.selectedProduct.push(product);
                 }
 
             } else if (this.productCount > 0 && type === 'decrease') {
                 this.productCount -= 1;
                 this.$parent.finalPrice -= price;
 
-                // TODO: mettre autre chose qu'un forEach car impossible de break la fonction
-
-                this.$parent.selectedProduct.filter((element, index) => {
-                        if (element.quantity > 1) {
-                            return element.quantity -= 1;
-                        } else {
-                            return this.$parent.selectedProduct.splice(index, 1);
-                        }
+                if (this.checkProduct(product, price)) {
+                    if (product.quantity > 1) {
+                        product.quantity -= 1;
+                        product.finalPrice -= price;
+                    } else {
+                        const getElement = (element) => element.name === product.name;
+                        const index = this.selectedProduct.findIndex(getElement)
+                        this.$parent.selectedProduct.splice(index, 1)
                     }
-                )
-
+                }
             }
         },
     }

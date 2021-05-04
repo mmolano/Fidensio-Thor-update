@@ -28,10 +28,17 @@
             </div>
             <div class="main-content">
                 <CardSelection v-for="(item, index) in filteredProduct" :key="index"
-                               :product="item"></CardSelection>
+                               :product="item" :selected-product="selectedProduct"></CardSelection>
             </div>
         </div>
-        <div class="secondary-container">
+        <!--        TODO: faire qu'au clique on affiche ou non le truc-->
+        <div class="secondary-container-opener" v-bind:style="{'display': isMobileDisplay ? 'none': ''}">
+            <div>hi</div>
+        </div>
+        <div class="secondary-container" v-bind:style="{'bottom': isMobileDisplay ? '15px': ''}">
+            <div class="close-toggle">
+                mdr
+            </div>
             <form method="POST" @submit.prevent="sendProducts">
                 <input type="hidden" name="_token" :value="csrf">
                 <div class="bottom-informations">
@@ -39,8 +46,16 @@
                         {{ item.name }} x{{ item.quantity ? item.quantity : '1' }}
                     </div>
                     <div class="input-container">
-                        <input id='one' type='checkbox' v-model="gift"/>
-                        <label for='one'>
+                        <label for="comment"></label><input id="comment" type="text" v-model="comment"
+                                                            placeholder="Commentaire Pressing"/>
+                    </div>
+                    <div class="input-container">
+                        <label for="numberPress"></label><input id="numberPress" type="text" v-model="comment"
+                                                                placeholder="Numéro de pressing"/>
+                    </div>
+                    <div class="input-container">
+                        <input id="one" type="checkbox" v-model="gift"/>
+                        <label for="one">
                             <span></span>
                             Offrir au client
                             <ins><i>Offrir au client</i></ins>
@@ -48,7 +63,7 @@
                     </div>
                     <div class="total-price">
                         <h4>Total: </h4>
-                        <p :inner-html.prop="gift === false ? (finalPrice / 100) + ' €' : 0 + ' €'"></p>
+                        <p :inner-html.prop="gift === false ? (finalPrice / 100) +  ' €' : 0 + ' €'"></p>
                     </div>
                     <button type="submit" name="action" id="login-button">
                         Confirmer la commande
@@ -80,7 +95,10 @@ export default {
             productData: [],
             finalPrice: 0,
             selectedProduct: [],
-            gift: false
+            gift: false,
+            comment: '',
+            numberPress: '',
+            isMobileDisplay: false
         }
     },
     methods: {
@@ -104,7 +122,10 @@ export default {
             }
             axios.post('/pay/order', {
                 'id': this.orderData.id,
-                'details': this.selectedProduct
+                'details': this.selectedProduct,
+                'finalPrice': this.finalPrice,
+                'comment': this.comment,
+                'numberPress': this.numberPress
             }).then(res => {
                 if (res.status === 200) {
                     this.$parent.$data.message = res.data
@@ -194,6 +215,15 @@ thead {
 input[type='checkbox'] {
     height: 0;
     width: 0;
+}
+
+input[type='text'] {
+    min-width: 180px;
+    width: 100%;
+    padding: 10px 6px 5px;
+    margin: 10px auto;
+    border: unset;
+    border-bottom: 1px solid black;
 }
 
 ins {
@@ -325,6 +355,10 @@ input[type='checkbox']:checked + label > span:before {
     margin: auto;
 }
 
+.secondary-container-opener {
+    display: none;
+}
+
 .main-container {
     width: 83%;
 }
@@ -333,10 +367,14 @@ input[type='checkbox']:checked + label > span:before {
     width: 90%;
     margin: auto;
     display: flex;
-    justify-content: space-evenly;
     padding: 20px;
     background: white;
     border-radius: 20px;
+    flex-wrap: wrap;
+
+    & .row {
+        margin: 20px;
+    }
 }
 
 .secondary-container {
@@ -485,6 +523,31 @@ input[type='checkbox']:checked + label > span:before {
     .Retour,
     .Service {
         display: none;
+    }
+}
+
+@media only screen and (max-width: 790px) {
+    .secondary-container {
+        bottom: -100%;
+        width: 100%;
+        right: 0;
+        transition: bottom 300ms;
+        border-radius: 0;
+        padding: 101px;
+        z-index: 999;
+    }
+    .secondary-container-opener {
+        display: block;
+        position: fixed;
+        bottom: 22px;
+        right: 22px;
+        height: 70px;
+        text-align: center;
+        width: 70px;
+        border-radius: 177px;
+        background-color: white;
+        padding: 24px;
+        box-shadow: 0 14px 38px 6px rgb(123 123 123 / 13%);
     }
 }
 

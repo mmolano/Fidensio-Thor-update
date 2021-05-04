@@ -3,6 +3,7 @@
         <div class="sidebar-brand">
             <img src="/img/logo.png" id="icon" alt="logo"/>
         </div>
+<!--        TODO: faire que sur mobile au clique dispairait-->
         <div class="sidebar-menu">
             <ul>
                 <li>
