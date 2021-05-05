@@ -60,12 +60,21 @@
                             +
                         </button>
                     </td>
-                    <td data-label="Début" class="Debut"><span
+                    <td data-label="Début" class="Debut">
+                        <span v-if="typeOfStatus === '?type=processing' && order.payment.pay === 0"
+                              v-bind:style="{'background-color': getDateDiff(order.deliveryDate, 7)[0], 'color': getDateDiff(order.deliveryDate, 7)[1]}"
+                              :inner-html.prop="dateFormat(order.createdAt) | highlight(search)"
+                        ></span>
+                        <span v-else
                         v-bind:style="{'background-color': getDateDiff(order.deliveryDate, order.status)[0], 'color': getDateDiff(order.deliveryDate, order.status)[1]}"
                         :inner-html.prop="dateFormat(order.createdAt) | highlight(search)"></span>
                     </td>
                     <td data-label="Retour" class="Retour">
-                        <span
+                        <span v-if="typeOfStatus === '?type=processing' && order.payment.pay === 0"
+                            v-bind:style="{'background-color': getDateDiff(order.deliveryDate, 7)[0], 'color': getDateDiff(order.deliveryDate, 7)[1]}"
+                            :inner-html.prop="dateFormat(order.deliveryDate) | highlight(search)"
+                        ></span>
+                        <span v-else
                             v-bind:style="{'background-color': getDateDiff(order.deliveryDate, order.status)[0], 'color': getDateDiff(order.deliveryDate, order.status)[1]}"
                             :inner-html.prop="dateFormat(order.deliveryDate) | highlight(search)"
                         ></span>

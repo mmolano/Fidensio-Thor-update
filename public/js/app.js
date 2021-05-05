@@ -2695,6 +2695,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -44527,24 +44536,41 @@ var render = function() {
                         attrs: { "data-label": "Début" }
                       },
                       [
-                        _c("span", {
-                          style: {
-                            "background-color": _vm.getDateDiff(
-                              order.deliveryDate,
-                              order.status
-                            )[0],
-                            color: _vm.getDateDiff(
-                              order.deliveryDate,
-                              order.status
-                            )[1]
-                          },
-                          domProps: {
-                            innerHTML: _vm._f("highlight")(
-                              _vm.dateFormat(order.createdAt),
-                              _vm.search
-                            )
-                          }
-                        })
+                        _vm.typeOfStatus === "?type=processing" &&
+                        order.payment.pay === 0
+                          ? _c("span", {
+                              style: {
+                                "background-color": _vm.getDateDiff(
+                                  order.deliveryDate,
+                                  7
+                                )[0],
+                                color: _vm.getDateDiff(order.deliveryDate, 7)[1]
+                              },
+                              domProps: {
+                                innerHTML: _vm._f("highlight")(
+                                  _vm.dateFormat(order.createdAt),
+                                  _vm.search
+                                )
+                              }
+                            })
+                          : _c("span", {
+                              style: {
+                                "background-color": _vm.getDateDiff(
+                                  order.deliveryDate,
+                                  order.status
+                                )[0],
+                                color: _vm.getDateDiff(
+                                  order.deliveryDate,
+                                  order.status
+                                )[1]
+                              },
+                              domProps: {
+                                innerHTML: _vm._f("highlight")(
+                                  _vm.dateFormat(order.createdAt),
+                                  _vm.search
+                                )
+                              }
+                            })
                       ]
                     ),
                     _vm._v(" "),
@@ -44555,24 +44581,41 @@ var render = function() {
                         attrs: { "data-label": "Retour" }
                       },
                       [
-                        _c("span", {
-                          style: {
-                            "background-color": _vm.getDateDiff(
-                              order.deliveryDate,
-                              order.status
-                            )[0],
-                            color: _vm.getDateDiff(
-                              order.deliveryDate,
-                              order.status
-                            )[1]
-                          },
-                          domProps: {
-                            innerHTML: _vm._f("highlight")(
-                              _vm.dateFormat(order.deliveryDate),
-                              _vm.search
-                            )
-                          }
-                        })
+                        _vm.typeOfStatus === "?type=processing" &&
+                        order.payment.pay === 0
+                          ? _c("span", {
+                              style: {
+                                "background-color": _vm.getDateDiff(
+                                  order.deliveryDate,
+                                  7
+                                )[0],
+                                color: _vm.getDateDiff(order.deliveryDate, 7)[1]
+                              },
+                              domProps: {
+                                innerHTML: _vm._f("highlight")(
+                                  _vm.dateFormat(order.deliveryDate),
+                                  _vm.search
+                                )
+                              }
+                            })
+                          : _c("span", {
+                              style: {
+                                "background-color": _vm.getDateDiff(
+                                  order.deliveryDate,
+                                  order.status
+                                )[0],
+                                color: _vm.getDateDiff(
+                                  order.deliveryDate,
+                                  order.status
+                                )[1]
+                              },
+                              domProps: {
+                                innerHTML: _vm._f("highlight")(
+                                  _vm.dateFormat(order.deliveryDate),
+                                  _vm.search
+                                )
+                              }
+                            })
                       ]
                     ),
                     _vm._v(" "),
