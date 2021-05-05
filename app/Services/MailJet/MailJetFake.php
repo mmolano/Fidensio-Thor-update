@@ -4,7 +4,7 @@ namespace App\Services\MailJet;
 
 class MailJetFake
 {
-    public function sendWithTemplate(array $contact, int $templateId, array $variables = null): bool
+    public function sendWithTemplate(array $contact, string $templateId, string $subject, array $variables = null): bool
     {
         if (empty($contact['email']) || empty($contact['name'])) {
             return false;
@@ -12,11 +12,6 @@ class MailJetFake
             return false;
         }
 
-        return true;
-    }
-
-    public function sendSms(string $mobile, string $message): bool
-    {
         return true;
     }
 }

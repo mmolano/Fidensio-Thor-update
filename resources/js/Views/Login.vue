@@ -51,7 +51,6 @@ export default {
             }).catch(err => {
                 if (err.response) {
                     e.preventDefault()
-                    console.log(err.response.data);
                     this.message = err.response.data
                 }
             });

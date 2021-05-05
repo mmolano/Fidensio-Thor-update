@@ -165,20 +165,18 @@ class PressingController extends Controller
             return $this->error(10);
         }
 
-        // TODO mettre bon name et vérif si bon url
-        // $userData = ['email' => $user['email'], 'name' => $user['data']['firstName']];
-        $userData = ['email' => 'miguel@fidensio.com', 'name' => $user['data']['firstName']];
+        $userData = ['email' => $user['email'], 'name' => $user['data']['firstName']];
 
         switch ($request->status) {
             case 2:
                 Crisp::newEvent($user, 'received', session('authName'), $order);
                 break;
             case 5:
-                if (!empty($order['lockers'])) {
+                if (!empty($order['locker'])) {
                     $subject = 'Votre commande Fidensio n°' . $order['id'] . ' est disponible dans le casier ' .
-                        $order['lockers']['number'] .
+                        $order['locker']['number'] .
                         ' avec le code C' .
-                        $order['lockers']['code'] .
+                        $order['locker']['code'] .
                         ' pour l’ouvrir.';
                     $templateType = 'order_completed_oldLockers';
                     $variables = [
@@ -215,8 +213,7 @@ class PressingController extends Controller
 
     public function pay(array $order, array $user, int $finalPrice = 0, bool $changeStatus = false): JsonResponse
     {
-        //TODO: changer le nom du email
-        $userData = ['email' => 'miguel@fidensio.com', 'name' => 'miguel'];
+        $userData = ['email' => $user['email'], 'name' => $user['data']['firstName']];
 
         if ($order['amount'] > 0) {
             if ($order['payment']['pay'] !== 1) {

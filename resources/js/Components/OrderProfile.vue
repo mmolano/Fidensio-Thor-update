@@ -31,19 +31,21 @@
                                :product="item" :selected-product="selectedProduct"></CardSelection>
             </div>
         </div>
-        <!--        TODO: faire qu'au clique on affiche ou non le truc-->
-        <div class="secondary-container-opener" v-bind:style="{'display': isMobileDisplay ? 'none': ''}">
-            <div>hi</div>
+        <div class="secondary-container-opener" @click="isMobileDisplay = !isMobileDisplay" v-bind:style="{'display': isMobileDisplay ? 'none': ''}">
+            <div class="chart-counter">{{ totalSelection }}</div>
+            <span class="las la-shopping-cart"></span>
         </div>
-        <div class="secondary-container" v-bind:style="{'bottom': isMobileDisplay ? '15px': ''}">
-            <div class="close-toggle">
-                mdr
+        <div class="secondary-container" v-bind:style="{'bottom': isMobileDisplay ? '0px': ''}">
+            <div class="close-toggle" @click="isMobileDisplay = !isMobileDisplay">
+                <span class="las la-times"></span>
             </div>
             <form method="POST" @submit.prevent="sendProducts">
                 <input type="hidden" name="_token" :value="csrf">
                 <div class="bottom-informations">
-                    <div v-for="(item, index) in selectedProduct">
-                        {{ item.name }} x{{ item.quantity ? item.quantity : '1' }}
+                    <div class="selected-times-wrapper">
+                        <div class="selected-times-row" v-for="(item, index) in selectedProduct">
+                            {{ item.name }} x{{ item.quantity ? item.quantity : '1' }}
+                        </div>
                     </div>
                     <div class="input-container">
                         <label for="comment"></label><input id="comment" type="text" v-model="comment"
@@ -98,6 +100,7 @@ export default {
             gift: false,
             comment: '',
             numberPress: '',
+            totalSelection: 0,
             isMobileDisplay: false
         }
     },
@@ -132,7 +135,6 @@ export default {
                     this.$parent.$data.viewOrderProfile = false;
                 }
             }).catch(err => {
-                console.log(err.response.data)
                 this.$parent.$data.message = err.response.data
             });
         },
@@ -182,36 +184,6 @@ section {
     background: #F0F0F0
 }
 
-tbody tr td {
-    padding: 20px;
-    border-bottom: none;
-    text-align: center;
-
-    & span {
-        padding: 9px;
-        border-radius: 6px;
-        font-weight: bold;
-    }
-}
-
-thead {
-    box-shadow: 0 2px 31px 0 rgb(123 123 123 / 20%);
-
-    & tr {
-        color: #232222;
-        height: 50px;
-
-        & th {
-            top: 0;
-            z-index: 2;
-            position: sticky;
-            background-color: white;
-            padding: 20px;
-            box-shadow: 20px 9px 31px 0 rgb(123 123 123 / 20%);
-        }
-    }
-}
-
 input[type='checkbox'] {
     height: 0;
     width: 0;
@@ -234,6 +206,10 @@ input[type='text'] {
     &.input-colored {
         border-bottom: 1px solid $mainBtnBack;
     }
+}
+
+.close-toggle {
+    display: none;
 }
 
 ins {
@@ -365,6 +341,22 @@ input[type='checkbox']:checked + label > span:before {
     margin: auto;
 }
 
+.selected-times-row {
+    padding: 0 0 8px 18px;
+}
+
+.chart-counter {
+    font-size: 20px;
+    position: absolute;
+    top: -6px;
+    right: -3px;
+    background-color: #ee7ca6;
+    border-radius: 50px;
+    color: white;
+    height: 30px;
+    width: 30px;
+}
+
 .secondary-container-opener {
     display: none;
 }
@@ -427,70 +419,6 @@ input[type='checkbox']:checked + label > span:before {
     }
 }
 
-#main-table {
-    border-collapse: collapse;
-    border-radius: 20px;
-    overflow-y: scroll;
-    width: 100%;
-    height: 100%;
-    margin: auto;
-    box-shadow: 0 14px 38px 6px rgb(123 123 123 / 13%);
-
-    & tbody tr {
-        &:nth-child(even) {
-            background-color: #f5f5f5;
-        }
-
-        &:hover {
-            background-color: #ffe4e4;
-        }
-
-        width: 100%;
-    }
-
-    & .btn {
-        cursor: pointer;
-        width: 100%;
-        background-color: $btnBackground;
-        color: #fff;
-        border: unset;
-        padding: 6px;
-        border-radius: 10px;
-    }
-}
-
-.search-wrapper {
-    width: 90%;
-    margin: 20px auto;
-
-    & .search-input-contain {
-        display: flex;
-        background: white;
-        width: 288px;
-        height: 55px;
-        border-radius: 20px;
-        padding: 20px;
-        border: none;
-        align-items: center;
-        overflow: hidden;
-        box-shadow: 0 14px 38px 6px rgb(123 123 123 / 13%);
-
-        & span {
-            display: inline-block;
-            padding: 0 0.2rem;
-            font-size: 1.2rem;
-        }
-
-        & input {
-            width: 100%;
-            height: 100%;
-            padding: .5rem;
-            border: none;
-            outline: none;
-        }
-    }
-}
-
 .search_result {
     text-align: center;
     font-size: 18px;
@@ -522,17 +450,15 @@ input[type='checkbox']:checked + label > span:before {
     font-size: 24px;
 }
 
-@media only screen and (min-width: 900px) {
-    .Debut, .Retour {
-        min-width: 140px;
+@media only screen and (max-width: 1434px) {
+    .secondary-container {
+        width: 28%;
     }
 }
 
-@media screen and (max-width: 900px) {
-    .Debut,
-    .Retour,
-    .Service {
-        display: none;
+@media only screen and (max-width: 900px) {
+    .secondary-container {
+        width: 38%;
     }
 }
 
@@ -543,8 +469,9 @@ input[type='checkbox']:checked + label > span:before {
         right: 0;
         transition: bottom 300ms;
         border-radius: 0;
-        padding: 101px;
+        padding: 70px;
         z-index: 999;
+        max-height: 100%;
     }
     .secondary-container-opener {
         display: block;
@@ -554,10 +481,30 @@ input[type='checkbox']:checked + label > span:before {
         height: 70px;
         text-align: center;
         width: 70px;
+        padding: 10px;
+        font-size: 35px;
         border-radius: 177px;
         background-color: white;
-        padding: 24px;
         box-shadow: 0 14px 38px 6px rgb(123 123 123 / 13%);
+    }
+
+    .selected-times-wrapper {
+        max-height: 280px;
+        overflow: scroll;
+    }
+
+    .close-toggle {
+        display: flex;
+        width: 50px;
+        height: 50px;
+        border-radius: 50px;
+        background-color: #ee7ca6;
+        font-size: 30px;
+        padding: 9px;
+        color: white;
+        top: 6px;
+        right: 11px;
+        position: absolute;
     }
 }
 
@@ -566,28 +513,12 @@ input[type='checkbox']:checked + label > span:before {
         font-size: 12px;
     }
 
-    table {
-        height: unset !important;
-        margin-left: 10px;
-    }
-
     .refSearch {
         height: unset;
     }
 
-    #main-table tbody tr {
-        display: flex;
-        flex-direction: column;
-    }
-    .Infos {
-        width: 30%;
-        margin: auto;
-    }
-
-    .Commande {
-        & a {
-            position: relative;
-        }
+    .main-container {
+        width: 100%;
     }
 
     .pastille-info {
@@ -598,30 +529,13 @@ input[type='checkbox']:checked + label > span:before {
         border-radius: 50px;
     }
 
-    tbody tr td a {
-        width: 20px;
+    .secondary-container {
+        padding: 39px;
     }
 
-    .Emplacement::before {
-        content: 'Emplacement: ';
-        color: grey;
-        font-weight: bold;
-    }
-
-    .Nom::before {
-        content: 'Nom: ';
-        color: grey;
-        font-weight: bold;
-    }
-
-    .Consigne::before {
-        content: 'Consigne: ';
-        color: grey;
-        font-weight: bold;
-    }
-
-    #main-table thead {
-        display: none;
+    .card-container {
+        max-width: 100%;
+        margin-right: 0;
     }
 }
 

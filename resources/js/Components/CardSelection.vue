@@ -43,6 +43,7 @@ export default {
         iteration(type, price, product) {
             if (type === 'add') {
                 this.productCount += 1;
+                this.$parent.totalSelection += 1;
                 this.$parent.finalPrice += price;
                 if (this.selectedProduct.length > 0) {
                     if (!this.checkProduct(product, price)) {
@@ -62,6 +63,7 @@ export default {
             } else if (this.productCount > 0 && type === 'decrease') {
                 this.productCount -= 1;
                 this.$parent.finalPrice -= price;
+                this.$parent.totalSelection -= 1;
 
                 if (this.checkProduct(product, price)) {
                     if (product.quantity > 1) {

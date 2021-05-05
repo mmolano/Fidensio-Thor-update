@@ -68,7 +68,7 @@
 
                         <button v-else-if="typeOfStatus === '?type=processing' && order.payment.pay === 0"
                                 v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"
-                                class="btn waves-effect waves-light" @click="sendPay(order.id)">Ré-encaisser
+                                class="btn waves-effect waves-light pay-warning" @click="sendPay(order.id)">Ré-encaisser
                         </button>
 
                     </td>
@@ -177,11 +177,9 @@ export default {
             axios.post('/rePay/order', {
                 'id': orderId,
             }).then(res => {
-                console.log(res);
                 this.$parent.$data.message = res.data
                 this.loadOrders();
             }).catch(err => {
-                console.log(err.response.data);
                 this.$parent.$data.message = err.response.data
             });
         },
@@ -382,6 +380,11 @@ thead {
     & button {
         text-transform: uppercase;
         font-weight: bold;
+
+        &.pay-warning {
+            background-color: #4ab4ff !important;
+            color: #193c8e !important;
+        }
 
         &.disabled {
             cursor: not-allowed !important;

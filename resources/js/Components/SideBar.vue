@@ -3,7 +3,6 @@
         <div class="sidebar-brand">
             <img src="/img/logo.png" id="icon" alt="logo"/>
         </div>
-<!--        TODO: faire que sur mobile au clique dispairait-->
         <div class="sidebar-menu">
             <ul>
                 <li>
@@ -13,19 +12,22 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#?type=pickupDone" v-on:click="getOrders('?type=pickupDone')" v-bind:class="getActiveUrl('?type=pickupDone')">
+                    <a href="#?type=pickupDone" v-on:click="getOrders('?type=pickupDone')"
+                       v-bind:class="getActiveUrl('?type=pickupDone')">
                         <span class="las la-truck"></span>
                         <span>Récupérée</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#?type=processing" v-on:click="getOrders('?type=processing')" v-bind:class="getActiveUrl('?type=processing')">
+                    <a href="#?type=processing" v-on:click="getOrders('?type=processing')"
+                       v-bind:class="getActiveUrl('?type=processing')">
                         <span class="las la-hourglass-half"></span>
                         <span>En cours de traitement</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#?type=finished" v-on:click="getOrders('?type=finished')" v-bind:class="getActiveUrl('?type=finished')">
+                    <a href="#?type=finished" v-on:click="getOrders('?type=finished')"
+                       v-bind:class="getActiveUrl('?type=finished')">
                         <span class="las la-thumbs-up"></span>
                         <span>Commande terminé</span>
                     </a>
@@ -54,11 +56,17 @@ export default {
     },
     methods: {
         getOrders: function (url) {
+            this.hide();
             this.$parent.$data.viewOrderProfile = false;
             this.$parent.$data.typeOfStatus = url;
         },
         getActiveUrl: function (url) {
             return this.activeUrl === url ? 'active' : '';
+        },
+        hide: function () {
+            if (document.documentElement.clientWidth < 491) {
+                document.getElementById("nav-toggle").checked = false;
+            }
         }
     }
 }

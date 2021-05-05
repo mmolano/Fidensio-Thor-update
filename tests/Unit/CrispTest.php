@@ -3,7 +3,6 @@
 namespace Tests\Unit;
 
 use App\Facades\Crisp;
-use Carbon\Carbon;
 use Tests\TestCase;
 
 class CrispTest extends TestCase
@@ -228,7 +227,7 @@ class CrispTest extends TestCase
 
         $user = array_merge($user, $userIntegration);
 
-        $this->assertTrue(Crisp::newEvent($user, 'Event de test', 'Pressing'));
+        $this->assertTrue(Crisp::newEvent($user, 'delivered', 'Pressing'));
     }
 
     /**

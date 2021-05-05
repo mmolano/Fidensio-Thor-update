@@ -1887,6 +1887,7 @@ __webpack_require__.r(__webpack_exports__);
     iteration: function iteration(type, price, product) {
       if (type === 'add') {
         this.productCount += 1;
+        this.$parent.totalSelection += 1;
         this.$parent.finalPrice += price;
 
         if (this.selectedProduct.length > 0) {
@@ -1906,6 +1907,7 @@ __webpack_require__.r(__webpack_exports__);
       } else if (this.productCount > 0 && type === 'decrease') {
         this.productCount -= 1;
         this.$parent.finalPrice -= price;
+        this.$parent.totalSelection -= 1;
 
         if (this.checkProduct(product, price)) {
           if (product.quantity > 1) {
@@ -2179,6 +2181,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 
@@ -2201,6 +2205,7 @@ __webpack_require__.r(__webpack_exports__);
       gift: false,
       comment: '',
       numberPress: '',
+      totalSelection: 0,
       isMobileDisplay: false
     };
   },
@@ -2240,7 +2245,6 @@ __webpack_require__.r(__webpack_exports__);
           _this2.$parent.$data.viewOrderProfile = false;
         }
       })["catch"](function (err) {
-        console.log(err.response.data);
         _this2.$parent.$data.message = err.response.data;
       });
     },
@@ -2456,6 +2460,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "SideBar",
   props: {
@@ -2468,11 +2474,17 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     getOrders: function getOrders(url) {
+      this.hide();
       this.$parent.$data.viewOrderProfile = false;
       this.$parent.$data.typeOfStatus = url;
     },
     getActiveUrl: function getActiveUrl(url) {
       return this.activeUrl === url ? 'active' : '';
+    },
+    hide: function hide() {
+      if (document.documentElement.clientWidth < 491) {
+        document.getElementById("nav-toggle").checked = false;
+      }
     }
   }
 });
@@ -2679,12 +2691,10 @@ var customLabels = {
       axios__WEBPACK_IMPORTED_MODULE_3___default().post('/rePay/order', {
         'id': orderId
       }).then(function (res) {
-        console.log(res);
         _this3.$parent.$data.message = res.data;
 
         _this3.loadOrders();
       })["catch"](function (err) {
-        console.log(err.response.data);
         _this3.$parent.$data.message = err.response.data;
       });
     },
@@ -2896,7 +2906,6 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (err) {
         if (err.response) {
           e.preventDefault();
-          console.log(err.response.data);
           _this.message = err.response.data;
         }
       });
@@ -3058,7 +3067,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "html[data-v-420f0cc6],\nbody[data-v-420f0cc6] {\n  height: 100%;\n  width: 100%;\n  display: flex;\n  flex-flow: column;\n}\nsection[data-v-420f0cc6] {\n  display: flex;\n  padding: 2rem 1.5rem;\n  background: #F0F0F0;\n}\ntbody tr td[data-v-420f0cc6] {\n  padding: 20px;\n  border-bottom: none;\n  text-align: center;\n}\ntbody tr td span[data-v-420f0cc6] {\n  padding: 9px;\n  border-radius: 6px;\n  font-weight: bold;\n}\nthead[data-v-420f0cc6] {\n  box-shadow: 0 2px 31px 0 rgba(123, 123, 123, 0.2);\n}\nthead tr[data-v-420f0cc6] {\n  color: #232222;\n  height: 50px;\n}\nthead tr th[data-v-420f0cc6] {\n  top: 0;\n  z-index: 2;\n  position: sticky;\n  background-color: white;\n  padding: 20px;\n  box-shadow: 20px 9px 31px 0 rgba(123, 123, 123, 0.2);\n}\ninput[type=checkbox][data-v-420f0cc6] {\n  height: 0;\n  width: 0;\n}\ninput[type=text][data-v-420f0cc6] {\n  cursor: initial !important;\n  min-width: 180px;\n  width: 100%;\n  padding: 10px 6px 5px;\n  margin: 10px auto;\n  border: unset;\n  border-bottom: 1px solid black;\n}\ninput[type=text][data-v-420f0cc6]:focus {\n  outline: none;\n  border-bottom: 1px solid #ef7ca6;\n}\ninput[type=text].input-colored[data-v-420f0cc6] {\n  border-bottom: 1px solid #ef7ca6;\n}\nins[data-v-420f0cc6] {\n  margin-left: 10px;\n}\ninput[type=checkbox] + label[data-v-420f0cc6] {\n  position: relative;\n  display: flex;\n  margin: 0.6em 0;\n  align-items: center;\n  color: #9e9e9e;\n  transition: color 250ms cubic-bezier(0.4, 0, 0.23, 1);\n}\ninput[type=checkbox] + label > ins[data-v-420f0cc6] {\n  position: absolute;\n  display: block;\n  bottom: 0;\n  left: 2em;\n  height: 0;\n  width: 100%;\n  overflow: hidden;\n  text-decoration: none;\n  transition: height 300ms cubic-bezier(0.4, 0, 0.23, 1);\n}\ninput[type=checkbox] + label > ins > i[data-v-420f0cc6] {\n  position: absolute;\n  bottom: 0;\n  font-style: normal;\n  color: #ef7ca6;\n}\ninput[type=checkbox] + label > span[data-v-420f0cc6] {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  margin-right: 1em;\n  width: 1em;\n  height: 1em;\n  background: transparent;\n  border: 2px solid #9E9E9E;\n  border-radius: 2px;\n  cursor: pointer;\n  transition: all 250ms cubic-bezier(0.4, 0, 0.23, 1);\n}\ninput[type=checkbox] + label[data-v-420f0cc6]:hover, input[type=checkbox]:focus + label[data-v-420f0cc6] {\n  color: black;\n}\ninput[type=checkbox] + label:hover > span[data-v-420f0cc6], input[type=checkbox]:focus + label > span[data-v-420f0cc6] {\n  background: rgba(255, 255, 255, 0.1);\n}\ninput[type=checkbox]:checked + label > ins[data-v-420f0cc6] {\n  height: 100%;\n}\ninput[type=checkbox]:checked + label > span[data-v-420f0cc6] {\n  border: 0.5em solid #ef7ca6;\n  -webkit-animation: shrink-bounce-data-v-420f0cc6 200ms cubic-bezier(0.4, 0, 0.23, 1);\n          animation: shrink-bounce-data-v-420f0cc6 200ms cubic-bezier(0.4, 0, 0.23, 1);\n}\ninput[type=checkbox]:checked + label > span[data-v-420f0cc6]:before {\n  content: \"\";\n  position: absolute;\n  top: 0.6em;\n  left: 0.8em;\n  border-right: 3px solid transparent;\n  border-bottom: 3px solid transparent;\n  transform: rotate(45deg);\n  transform-origin: 0% 100%;\n  -webkit-animation: checkbox-check-data-v-420f0cc6 125ms 250ms cubic-bezier(0.4, 0, 0.23, 1) forwards;\n          animation: checkbox-check-data-v-420f0cc6 125ms 250ms cubic-bezier(0.4, 0, 0.23, 1) forwards;\n}\n@-webkit-keyframes shrink-bounce-data-v-420f0cc6 {\n0% {\n    transform: scale(1);\n}\n33% {\n    transform: scale(0.85);\n}\n100% {\n    transform: scale(1);\n}\n}\n@keyframes shrink-bounce-data-v-420f0cc6 {\n0% {\n    transform: scale(1);\n}\n33% {\n    transform: scale(0.85);\n}\n100% {\n    transform: scale(1);\n}\n}\n@-webkit-keyframes checkbox-check-data-v-420f0cc6 {\n0% {\n    width: 0;\n    height: 0;\n    border-color: #212121;\n    transform: translate3d(0, 0, 0) rotate(45deg);\n}\n33% {\n    width: 0.2em;\n    height: 0;\n    transform: translate3d(0, 0, 0) rotate(45deg);\n}\n100% {\n    width: 0.2em;\n    height: 0.5em;\n    border-color: #212121;\n    transform: translate3d(0, -0.5em, 0) rotate(45deg);\n}\n}\n@keyframes checkbox-check-data-v-420f0cc6 {\n0% {\n    width: 0;\n    height: 0;\n    border-color: #212121;\n    transform: translate3d(0, 0, 0) rotate(45deg);\n}\n33% {\n    width: 0.2em;\n    height: 0;\n    transform: translate3d(0, 0, 0) rotate(45deg);\n}\n100% {\n    width: 0.2em;\n    height: 0.5em;\n    border-color: #212121;\n    transform: translate3d(0, -0.5em, 0) rotate(45deg);\n}\n}\n.responsive-table[data-v-420f0cc6] {\n  display: block;\n  background-color: white;\n  border-radius: 20px;\n  max-height: 858px;\n  height: 100%;\n  width: 90%;\n  margin: auto;\n  overflow: scroll;\n}\n.pastille-info[data-v-420f0cc6] {\n  display: none;\n}\n.main-content[data-v-420f0cc6] {\n  display: flex;\n  flex-wrap: wrap;\n  width: 90%;\n  margin: auto;\n}\n.secondary-container-opener[data-v-420f0cc6] {\n  display: none;\n}\n.main-container[data-v-420f0cc6] {\n  width: 83%;\n}\n.user-informations[data-v-420f0cc6] {\n  width: 90%;\n  margin: auto;\n  display: flex;\n  padding: 20px;\n  background: white;\n  border-radius: 20px;\n  flex-wrap: wrap;\n}\n.user-informations .row[data-v-420f0cc6] {\n  margin: 20px;\n}\n.secondary-container[data-v-420f0cc6] {\n  width: 17%;\n  background: white;\n  border-radius: 20px;\n  position: fixed;\n  padding: 40px;\n  height: unset;\n  right: 22px;\n  bottom: 15px;\n  box-shadow: 0 14px 38px 6px rgba(123, 123, 123, 0.13);\n}\n.secondary-container .bottom-informations[data-v-420f0cc6] {\n  display: flex;\n  flex-direction: column;\n}\n.secondary-container .input-container[data-v-420f0cc6], .secondary-container .total-price[data-v-420f0cc6] {\n  display: flex;\n  justify-content: flex-end;\n}\n.secondary-container label[data-v-420f0cc6], .secondary-container .total-price p[data-v-420f0cc6] {\n  padding-left: 10px;\n}\n.secondary-container button[data-v-420f0cc6] {\n  border: none;\n  cursor: pointer;\n  background-color: #ef7ca6;\n  color: white;\n  padding: 6px;\n  border-radius: 6px;\n  height: 43px;\n}\n.secondary-container input[data-v-420f0cc6], .secondary-container label[data-v-420f0cc6] {\n  cursor: pointer;\n}\n#main-table[data-v-420f0cc6] {\n  border-collapse: collapse;\n  border-radius: 20px;\n  overflow-y: scroll;\n  width: 100%;\n  height: 100%;\n  margin: auto;\n  box-shadow: 0 14px 38px 6px rgba(123, 123, 123, 0.13);\n}\n#main-table tbody tr[data-v-420f0cc6] {\n  width: 100%;\n}\n#main-table tbody tr[data-v-420f0cc6]:nth-child(even) {\n  background-color: #f5f5f5;\n}\n#main-table tbody tr[data-v-420f0cc6]:hover {\n  background-color: #ffe4e4;\n}\n#main-table .btn[data-v-420f0cc6] {\n  cursor: pointer;\n  width: 100%;\n  background-color: #a4c3e8;\n  color: #fff;\n  border: unset;\n  padding: 6px;\n  border-radius: 10px;\n}\n.search-wrapper[data-v-420f0cc6] {\n  width: 90%;\n  margin: 20px auto;\n}\n.search-wrapper .search-input-contain[data-v-420f0cc6] {\n  display: flex;\n  background: white;\n  width: 288px;\n  height: 55px;\n  border-radius: 20px;\n  padding: 20px;\n  border: none;\n  align-items: center;\n  overflow: hidden;\n  box-shadow: 0 14px 38px 6px rgba(123, 123, 123, 0.13);\n}\n.search-wrapper .search-input-contain span[data-v-420f0cc6] {\n  display: inline-block;\n  padding: 0 0.2rem;\n  font-size: 1.2rem;\n}\n.search-wrapper .search-input-contain input[data-v-420f0cc6] {\n  width: 100%;\n  height: 100%;\n  padding: 0.5rem;\n  border: none;\n  outline: none;\n}\n.search_result[data-v-420f0cc6] {\n  text-align: center;\n  font-size: 18px;\n  color: #ff5b5b;\n  background-color: white;\n  padding: 20px;\n  border-radius: 20px;\n  width: 90%;\n  margin: auto auto 20px;\n}\n.rows_number[data-v-420f0cc6] {\n  margin: 10px;\n  text-align: center;\n  opacity: 0.6;\n}\n.refSearch[data-v-420f0cc6] {\n  height: 70px;\n  min-height: 100%;\n}\n.btn[data-v-420f0cc6] {\n  margin-top: 0;\n  margin-bottom: 0;\n}\n.infos-buttons[data-v-420f0cc6] {\n  font-size: 24px;\n}\n@media only screen and (min-width: 900px) {\n.Debut[data-v-420f0cc6], .Retour[data-v-420f0cc6] {\n    min-width: 140px;\n}\n}\n@media screen and (max-width: 900px) {\n.Debut[data-v-420f0cc6],\n.Retour[data-v-420f0cc6],\n.Service[data-v-420f0cc6] {\n    display: none;\n}\n}\n@media only screen and (max-width: 790px) {\n.secondary-container[data-v-420f0cc6] {\n    bottom: -100%;\n    width: 100%;\n    right: 0;\n    transition: bottom 300ms;\n    border-radius: 0;\n    padding: 101px;\n    z-index: 999;\n}\n.secondary-container-opener[data-v-420f0cc6] {\n    display: block;\n    position: fixed;\n    bottom: 22px;\n    right: 22px;\n    height: 70px;\n    text-align: center;\n    width: 70px;\n    border-radius: 177px;\n    background-color: white;\n    padding: 24px;\n    box-shadow: 0 14px 38px 6px rgba(123, 123, 123, 0.13);\n}\n}\n@media screen and (max-width: 500px) {\nbody[data-v-420f0cc6] {\n    font-size: 12px;\n}\ntable[data-v-420f0cc6] {\n    height: unset !important;\n    margin-left: 10px;\n}\n.refSearch[data-v-420f0cc6] {\n    height: unset;\n}\n#main-table tbody tr[data-v-420f0cc6] {\n    display: flex;\n    flex-direction: column;\n}\n.Infos[data-v-420f0cc6] {\n    width: 30%;\n    margin: auto;\n}\n.Commande a[data-v-420f0cc6] {\n    position: relative;\n}\n.pastille-info[data-v-420f0cc6] {\n    position: absolute;\n    display: block;\n    height: 25px;\n    width: 25px;\n    border-radius: 50px;\n}\ntbody tr td a[data-v-420f0cc6] {\n    width: 20px;\n}\n.Emplacement[data-v-420f0cc6]::before {\n    content: \"Emplacement: \";\n    color: grey;\n    font-weight: bold;\n}\n.Nom[data-v-420f0cc6]::before {\n    content: \"Nom: \";\n    color: grey;\n    font-weight: bold;\n}\n.Consigne[data-v-420f0cc6]::before {\n    content: \"Consigne: \";\n    color: grey;\n    font-weight: bold;\n}\n#main-table thead[data-v-420f0cc6] {\n    display: none;\n}\n}\n@media only screen and (max-width: 380px) {\nsection[data-v-420f0cc6] {\n    padding: 5px !important;\n}\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "html[data-v-420f0cc6],\nbody[data-v-420f0cc6] {\n  height: 100%;\n  width: 100%;\n  display: flex;\n  flex-flow: column;\n}\nsection[data-v-420f0cc6] {\n  display: flex;\n  padding: 2rem 1.5rem;\n  background: #F0F0F0;\n}\ninput[type=checkbox][data-v-420f0cc6] {\n  height: 0;\n  width: 0;\n}\ninput[type=text][data-v-420f0cc6] {\n  cursor: initial !important;\n  min-width: 180px;\n  width: 100%;\n  padding: 10px 6px 5px;\n  margin: 10px auto;\n  border: unset;\n  border-bottom: 1px solid black;\n}\ninput[type=text][data-v-420f0cc6]:focus {\n  outline: none;\n  border-bottom: 1px solid #ef7ca6;\n}\ninput[type=text].input-colored[data-v-420f0cc6] {\n  border-bottom: 1px solid #ef7ca6;\n}\n.close-toggle[data-v-420f0cc6] {\n  display: none;\n}\nins[data-v-420f0cc6] {\n  margin-left: 10px;\n}\ninput[type=checkbox] + label[data-v-420f0cc6] {\n  position: relative;\n  display: flex;\n  margin: 0.6em 0;\n  align-items: center;\n  color: #9e9e9e;\n  transition: color 250ms cubic-bezier(0.4, 0, 0.23, 1);\n}\ninput[type=checkbox] + label > ins[data-v-420f0cc6] {\n  position: absolute;\n  display: block;\n  bottom: 0;\n  left: 2em;\n  height: 0;\n  width: 100%;\n  overflow: hidden;\n  text-decoration: none;\n  transition: height 300ms cubic-bezier(0.4, 0, 0.23, 1);\n}\ninput[type=checkbox] + label > ins > i[data-v-420f0cc6] {\n  position: absolute;\n  bottom: 0;\n  font-style: normal;\n  color: #ef7ca6;\n}\ninput[type=checkbox] + label > span[data-v-420f0cc6] {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  margin-right: 1em;\n  width: 1em;\n  height: 1em;\n  background: transparent;\n  border: 2px solid #9E9E9E;\n  border-radius: 2px;\n  cursor: pointer;\n  transition: all 250ms cubic-bezier(0.4, 0, 0.23, 1);\n}\ninput[type=checkbox] + label[data-v-420f0cc6]:hover, input[type=checkbox]:focus + label[data-v-420f0cc6] {\n  color: black;\n}\ninput[type=checkbox] + label:hover > span[data-v-420f0cc6], input[type=checkbox]:focus + label > span[data-v-420f0cc6] {\n  background: rgba(255, 255, 255, 0.1);\n}\ninput[type=checkbox]:checked + label > ins[data-v-420f0cc6] {\n  height: 100%;\n}\ninput[type=checkbox]:checked + label > span[data-v-420f0cc6] {\n  border: 0.5em solid #ef7ca6;\n  -webkit-animation: shrink-bounce-data-v-420f0cc6 200ms cubic-bezier(0.4, 0, 0.23, 1);\n          animation: shrink-bounce-data-v-420f0cc6 200ms cubic-bezier(0.4, 0, 0.23, 1);\n}\ninput[type=checkbox]:checked + label > span[data-v-420f0cc6]:before {\n  content: \"\";\n  position: absolute;\n  top: 0.6em;\n  left: 0.8em;\n  border-right: 3px solid transparent;\n  border-bottom: 3px solid transparent;\n  transform: rotate(45deg);\n  transform-origin: 0% 100%;\n  -webkit-animation: checkbox-check-data-v-420f0cc6 125ms 250ms cubic-bezier(0.4, 0, 0.23, 1) forwards;\n          animation: checkbox-check-data-v-420f0cc6 125ms 250ms cubic-bezier(0.4, 0, 0.23, 1) forwards;\n}\n@-webkit-keyframes shrink-bounce-data-v-420f0cc6 {\n0% {\n    transform: scale(1);\n}\n33% {\n    transform: scale(0.85);\n}\n100% {\n    transform: scale(1);\n}\n}\n@keyframes shrink-bounce-data-v-420f0cc6 {\n0% {\n    transform: scale(1);\n}\n33% {\n    transform: scale(0.85);\n}\n100% {\n    transform: scale(1);\n}\n}\n@-webkit-keyframes checkbox-check-data-v-420f0cc6 {\n0% {\n    width: 0;\n    height: 0;\n    border-color: #212121;\n    transform: translate3d(0, 0, 0) rotate(45deg);\n}\n33% {\n    width: 0.2em;\n    height: 0;\n    transform: translate3d(0, 0, 0) rotate(45deg);\n}\n100% {\n    width: 0.2em;\n    height: 0.5em;\n    border-color: #212121;\n    transform: translate3d(0, -0.5em, 0) rotate(45deg);\n}\n}\n@keyframes checkbox-check-data-v-420f0cc6 {\n0% {\n    width: 0;\n    height: 0;\n    border-color: #212121;\n    transform: translate3d(0, 0, 0) rotate(45deg);\n}\n33% {\n    width: 0.2em;\n    height: 0;\n    transform: translate3d(0, 0, 0) rotate(45deg);\n}\n100% {\n    width: 0.2em;\n    height: 0.5em;\n    border-color: #212121;\n    transform: translate3d(0, -0.5em, 0) rotate(45deg);\n}\n}\n.responsive-table[data-v-420f0cc6] {\n  display: block;\n  background-color: white;\n  border-radius: 20px;\n  max-height: 858px;\n  height: 100%;\n  width: 90%;\n  margin: auto;\n  overflow: scroll;\n}\n.pastille-info[data-v-420f0cc6] {\n  display: none;\n}\n.main-content[data-v-420f0cc6] {\n  display: flex;\n  flex-wrap: wrap;\n  width: 90%;\n  margin: auto;\n}\n.selected-times-row[data-v-420f0cc6] {\n  padding: 0 0 8px 18px;\n}\n.chart-counter[data-v-420f0cc6] {\n  font-size: 20px;\n  position: absolute;\n  top: -6px;\n  right: -3px;\n  background-color: #ee7ca6;\n  border-radius: 50px;\n  color: white;\n  height: 30px;\n  width: 30px;\n}\n.secondary-container-opener[data-v-420f0cc6] {\n  display: none;\n}\n.main-container[data-v-420f0cc6] {\n  width: 83%;\n}\n.user-informations[data-v-420f0cc6] {\n  width: 90%;\n  margin: auto;\n  display: flex;\n  padding: 20px;\n  background: white;\n  border-radius: 20px;\n  flex-wrap: wrap;\n}\n.user-informations .row[data-v-420f0cc6] {\n  margin: 20px;\n}\n.secondary-container[data-v-420f0cc6] {\n  width: 17%;\n  background: white;\n  border-radius: 20px;\n  position: fixed;\n  padding: 40px;\n  height: unset;\n  right: 22px;\n  bottom: 15px;\n  box-shadow: 0 14px 38px 6px rgba(123, 123, 123, 0.13);\n}\n.secondary-container .bottom-informations[data-v-420f0cc6] {\n  display: flex;\n  flex-direction: column;\n}\n.secondary-container .input-container[data-v-420f0cc6], .secondary-container .total-price[data-v-420f0cc6] {\n  display: flex;\n  justify-content: flex-end;\n}\n.secondary-container label[data-v-420f0cc6], .secondary-container .total-price p[data-v-420f0cc6] {\n  padding-left: 10px;\n}\n.secondary-container button[data-v-420f0cc6] {\n  border: none;\n  cursor: pointer;\n  background-color: #ef7ca6;\n  color: white;\n  padding: 6px;\n  border-radius: 6px;\n  height: 43px;\n}\n.secondary-container input[data-v-420f0cc6], .secondary-container label[data-v-420f0cc6] {\n  cursor: pointer;\n}\n.search_result[data-v-420f0cc6] {\n  text-align: center;\n  font-size: 18px;\n  color: #ff5b5b;\n  background-color: white;\n  padding: 20px;\n  border-radius: 20px;\n  width: 90%;\n  margin: auto auto 20px;\n}\n.rows_number[data-v-420f0cc6] {\n  margin: 10px;\n  text-align: center;\n  opacity: 0.6;\n}\n.refSearch[data-v-420f0cc6] {\n  height: 70px;\n  min-height: 100%;\n}\n.btn[data-v-420f0cc6] {\n  margin-top: 0;\n  margin-bottom: 0;\n}\n.infos-buttons[data-v-420f0cc6] {\n  font-size: 24px;\n}\n@media only screen and (max-width: 1434px) {\n.secondary-container[data-v-420f0cc6] {\n    width: 28%;\n}\n}\n@media only screen and (max-width: 900px) {\n.secondary-container[data-v-420f0cc6] {\n    width: 38%;\n}\n}\n@media only screen and (max-width: 790px) {\n.secondary-container[data-v-420f0cc6] {\n    bottom: -100%;\n    width: 100%;\n    right: 0;\n    transition: bottom 300ms;\n    border-radius: 0;\n    padding: 70px;\n    z-index: 999;\n    max-height: 100%;\n}\n.secondary-container-opener[data-v-420f0cc6] {\n    display: block;\n    position: fixed;\n    bottom: 22px;\n    right: 22px;\n    height: 70px;\n    text-align: center;\n    width: 70px;\n    padding: 10px;\n    font-size: 35px;\n    border-radius: 177px;\n    background-color: white;\n    box-shadow: 0 14px 38px 6px rgba(123, 123, 123, 0.13);\n}\n.selected-times-wrapper[data-v-420f0cc6] {\n    max-height: 280px;\n    overflow: scroll;\n}\n.close-toggle[data-v-420f0cc6] {\n    display: flex;\n    width: 50px;\n    height: 50px;\n    border-radius: 50px;\n    background-color: #ee7ca6;\n    font-size: 30px;\n    padding: 9px;\n    color: white;\n    top: 6px;\n    right: 11px;\n    position: absolute;\n}\n}\n@media screen and (max-width: 500px) {\nbody[data-v-420f0cc6] {\n    font-size: 12px;\n}\n.refSearch[data-v-420f0cc6] {\n    height: unset;\n}\n.main-container[data-v-420f0cc6] {\n    width: 100%;\n}\n.pastille-info[data-v-420f0cc6] {\n    position: absolute;\n    display: block;\n    height: 25px;\n    width: 25px;\n    border-radius: 50px;\n}\n.secondary-container[data-v-420f0cc6] {\n    padding: 39px;\n}\n.card-container[data-v-420f0cc6] {\n    max-width: 100%;\n    margin-right: 0;\n}\n}\n@media only screen and (max-width: 380px) {\nsection[data-v-420f0cc6] {\n    padding: 5px !important;\n}\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3154,7 +3163,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "html[data-v-4040ad8c],\nbody[data-v-4040ad8c] {\n  height: 100%;\n  width: 100%;\n  display: flex;\n  flex-flow: column;\n}\nsection[data-v-4040ad8c] {\n  padding: 2rem 1.5rem;\n  background: #F0F0F0;\n}\ntbody tr td[data-v-4040ad8c] {\n  padding: 20px;\n  border-bottom: none;\n  text-align: center;\n}\ntbody tr td span[data-v-4040ad8c] {\n  padding: 9px;\n  border-radius: 6px;\n  font-weight: bold;\n}\nthead[data-v-4040ad8c] {\n  box-shadow: 0 2px 31px 0 rgba(123, 123, 123, 0.2);\n}\nthead tr[data-v-4040ad8c] {\n  color: #232222;\n  height: 50px;\n}\nthead tr th[data-v-4040ad8c] {\n  top: 0;\n  z-index: 2;\n  position: sticky;\n  background-color: white;\n  padding: 20px;\n  box-shadow: 20px 9px 31px 0 rgba(123, 123, 123, 0.2);\n}\n.responsive-table[data-v-4040ad8c] {\n  display: block;\n  background-color: white;\n  border-radius: 20px;\n  max-height: 858px;\n  height: 100%;\n  width: 90%;\n  margin: auto;\n  overflow: scroll;\n}\n.pastille-info[data-v-4040ad8c] {\n  display: none;\n}\n#main-table[data-v-4040ad8c] {\n  border-collapse: collapse;\n  border-radius: 20px;\n  overflow-y: scroll;\n  width: 100%;\n  height: 100%;\n  margin: auto;\n  box-shadow: 0 14px 38px 6px rgba(123, 123, 123, 0.13);\n}\n#main-table tbody tr[data-v-4040ad8c] {\n  width: 100%;\n}\n#main-table tbody tr[data-v-4040ad8c]:nth-child(even) {\n  background-color: #f5f5f5;\n}\n#main-table tbody tr[data-v-4040ad8c]:hover {\n  background-color: #ffe4e4;\n}\n#main-table .btn[data-v-4040ad8c] {\n  cursor: pointer;\n  width: 100%;\n  background-color: #a4c3e8;\n  color: #fff;\n  border: unset;\n  padding: 6px;\n  border-radius: 10px;\n}\n.search_result[data-v-4040ad8c] {\n  text-align: center;\n  font-size: 18px;\n  color: #ff5b5b;\n  background-color: white;\n  padding: 20px;\n  border-radius: 20px;\n  width: 90%;\n  margin: auto auto 20px;\n}\n.rows_number[data-v-4040ad8c] {\n  margin: 10px;\n  text-align: center;\n  opacity: 0.6;\n}\n.refSearch[data-v-4040ad8c] {\n  height: 70px;\n  min-height: 100%;\n}\n.btn[data-v-4040ad8c] {\n  margin-top: 0;\n  margin-bottom: 0;\n}\n.infos-buttons[data-v-4040ad8c] {\n  font-size: 24px;\n}\n.Commande button[data-v-4040ad8c] {\n  text-transform: uppercase;\n  font-weight: bold;\n}\n.Commande button.disabled[data-v-4040ad8c] {\n  cursor: not-allowed !important;\n  background-color: #dbf0ff !important;\n}\n@media only screen and (min-width: 900px) {\n.Debut[data-v-4040ad8c], .Retour[data-v-4040ad8c] {\n    min-width: 150px;\n}\n}\n@media screen and (max-width: 900px) {\n.Debut[data-v-4040ad8c],\n.Retour[data-v-4040ad8c],\n.Service[data-v-4040ad8c], .Consigne[data-v-4040ad8c] {\n    display: none;\n}\n}\n@media screen and (max-width: 500px) {\nbody[data-v-4040ad8c] {\n    font-size: 12px;\n}\ntable[data-v-4040ad8c] {\n    height: unset !important;\n    margin-left: 10px;\n}\n.refSearch[data-v-4040ad8c] {\n    height: unset;\n}\n#main-table tbody tr[data-v-4040ad8c] {\n    display: flex;\n    flex-direction: column;\n}\n.Infos[data-v-4040ad8c] {\n    width: 30%;\n    margin: auto;\n}\n.Commande a[data-v-4040ad8c] {\n    position: relative;\n}\n.pastille-info[data-v-4040ad8c] {\n    display: block;\n    height: 25px;\n    width: 25px;\n    margin: auto auto 10px;\n    border-radius: 50px;\n}\ntbody tr td a[data-v-4040ad8c] {\n    width: 20px;\n}\n.Emplacement[data-v-4040ad8c]::before {\n    content: \"Emplacement: \";\n    color: grey;\n    font-weight: bold;\n}\n.Nom[data-v-4040ad8c]::before {\n    content: \"Nom: \";\n    color: grey;\n    font-weight: bold;\n}\n.Consigne[data-v-4040ad8c]::before {\n    content: \"Consigne: \";\n    color: grey;\n    font-weight: bold;\n}\n#main-table thead[data-v-4040ad8c] {\n    display: none;\n}\n}\n@media only screen and (max-width: 380px) {\nsection[data-v-4040ad8c] {\n    padding: 5px !important;\n}\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "html[data-v-4040ad8c],\nbody[data-v-4040ad8c] {\n  height: 100%;\n  width: 100%;\n  display: flex;\n  flex-flow: column;\n}\nsection[data-v-4040ad8c] {\n  padding: 2rem 1.5rem;\n  background: #F0F0F0;\n}\ntbody tr td[data-v-4040ad8c] {\n  padding: 20px;\n  border-bottom: none;\n  text-align: center;\n}\ntbody tr td span[data-v-4040ad8c] {\n  padding: 9px;\n  border-radius: 6px;\n  font-weight: bold;\n}\nthead[data-v-4040ad8c] {\n  box-shadow: 0 2px 31px 0 rgba(123, 123, 123, 0.2);\n}\nthead tr[data-v-4040ad8c] {\n  color: #232222;\n  height: 50px;\n}\nthead tr th[data-v-4040ad8c] {\n  top: 0;\n  z-index: 2;\n  position: sticky;\n  background-color: white;\n  padding: 20px;\n  box-shadow: 20px 9px 31px 0 rgba(123, 123, 123, 0.2);\n}\n.responsive-table[data-v-4040ad8c] {\n  display: block;\n  background-color: white;\n  border-radius: 20px;\n  max-height: 858px;\n  height: 100%;\n  width: 90%;\n  margin: auto;\n  overflow: scroll;\n}\n.pastille-info[data-v-4040ad8c] {\n  display: none;\n}\n#main-table[data-v-4040ad8c] {\n  border-collapse: collapse;\n  border-radius: 20px;\n  overflow-y: scroll;\n  width: 100%;\n  height: 100%;\n  margin: auto;\n  box-shadow: 0 14px 38px 6px rgba(123, 123, 123, 0.13);\n}\n#main-table tbody tr[data-v-4040ad8c] {\n  width: 100%;\n}\n#main-table tbody tr[data-v-4040ad8c]:nth-child(even) {\n  background-color: #f5f5f5;\n}\n#main-table tbody tr[data-v-4040ad8c]:hover {\n  background-color: #ffe4e4;\n}\n#main-table .btn[data-v-4040ad8c] {\n  cursor: pointer;\n  width: 100%;\n  background-color: #a4c3e8;\n  color: #fff;\n  border: unset;\n  padding: 6px;\n  border-radius: 10px;\n}\n.search_result[data-v-4040ad8c] {\n  text-align: center;\n  font-size: 18px;\n  color: #ff5b5b;\n  background-color: white;\n  padding: 20px;\n  border-radius: 20px;\n  width: 90%;\n  margin: auto auto 20px;\n}\n.rows_number[data-v-4040ad8c] {\n  margin: 10px;\n  text-align: center;\n  opacity: 0.6;\n}\n.refSearch[data-v-4040ad8c] {\n  height: 70px;\n  min-height: 100%;\n}\n.btn[data-v-4040ad8c] {\n  margin-top: 0;\n  margin-bottom: 0;\n}\n.infos-buttons[data-v-4040ad8c] {\n  font-size: 24px;\n}\n.Commande button[data-v-4040ad8c] {\n  text-transform: uppercase;\n  font-weight: bold;\n}\n.Commande button.pay-warning[data-v-4040ad8c] {\n  background-color: #4ab4ff !important;\n  color: #193c8e !important;\n}\n.Commande button.disabled[data-v-4040ad8c] {\n  cursor: not-allowed !important;\n  background-color: #dbf0ff !important;\n}\n@media only screen and (min-width: 900px) {\n.Debut[data-v-4040ad8c], .Retour[data-v-4040ad8c] {\n    min-width: 150px;\n}\n}\n@media screen and (max-width: 900px) {\n.Debut[data-v-4040ad8c],\n.Retour[data-v-4040ad8c],\n.Service[data-v-4040ad8c], .Consigne[data-v-4040ad8c] {\n    display: none;\n}\n}\n@media screen and (max-width: 500px) {\nbody[data-v-4040ad8c] {\n    font-size: 12px;\n}\ntable[data-v-4040ad8c] {\n    height: unset !important;\n    margin-left: 10px;\n}\n.refSearch[data-v-4040ad8c] {\n    height: unset;\n}\n#main-table tbody tr[data-v-4040ad8c] {\n    display: flex;\n    flex-direction: column;\n}\n.Infos[data-v-4040ad8c] {\n    width: 30%;\n    margin: auto;\n}\n.Commande a[data-v-4040ad8c] {\n    position: relative;\n}\n.pastille-info[data-v-4040ad8c] {\n    display: block;\n    height: 25px;\n    width: 25px;\n    margin: auto auto 10px;\n    border-radius: 50px;\n}\ntbody tr td a[data-v-4040ad8c] {\n    width: 20px;\n}\n.Emplacement[data-v-4040ad8c]::before {\n    content: \"Emplacement: \";\n    color: grey;\n    font-weight: bold;\n}\n.Nom[data-v-4040ad8c]::before {\n    content: \"Nom: \";\n    color: grey;\n    font-weight: bold;\n}\n.Consigne[data-v-4040ad8c]::before {\n    content: \"Consigne: \";\n    color: grey;\n    font-weight: bold;\n}\n#main-table thead[data-v-4040ad8c] {\n    display: none;\n}\n}\n@media only screen and (max-width: 380px) {\nsection[data-v-4040ad8c] {\n    padding: 5px !important;\n}\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -43445,21 +43454,41 @@ var render = function() {
       "div",
       {
         staticClass: "secondary-container-opener",
-        style: { display: _vm.isMobileDisplay ? "none" : "" }
+        style: { display: _vm.isMobileDisplay ? "none" : "" },
+        on: {
+          click: function($event) {
+            _vm.isMobileDisplay = !_vm.isMobileDisplay
+          }
+        }
       },
-      [_c("div", [_vm._v("hi")])]
+      [
+        _c("div", { staticClass: "chart-counter" }, [
+          _vm._v(_vm._s(_vm.totalSelection))
+        ]),
+        _vm._v(" "),
+        _c("span", { staticClass: "las la-shopping-cart" })
+      ]
     ),
     _vm._v(" "),
     _c(
       "div",
       {
         staticClass: "secondary-container",
-        style: { bottom: _vm.isMobileDisplay ? "15px" : "" }
+        style: { bottom: _vm.isMobileDisplay ? "0px" : "" }
       },
       [
-        _c("div", { staticClass: "close-toggle" }, [
-          _vm._v("\n            mdr\n        ")
-        ]),
+        _c(
+          "div",
+          {
+            staticClass: "close-toggle",
+            on: {
+              click: function($event) {
+                _vm.isMobileDisplay = !_vm.isMobileDisplay
+              }
+            }
+          },
+          [_c("span", { staticClass: "las la-times" })]
+        ),
         _vm._v(" "),
         _c(
           "form",
@@ -43478,153 +43507,149 @@ var render = function() {
               domProps: { value: _vm.csrf }
             }),
             _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "bottom-informations" },
-              [
+            _c("div", { staticClass: "bottom-informations" }, [
+              _c(
+                "div",
+                { staticClass: "selected-times-wrapper" },
                 _vm._l(_vm.selectedProduct, function(item, index) {
-                  return _c("div", [
+                  return _c("div", { staticClass: "selected-times-row" }, [
                     _vm._v(
-                      "\n                    " +
+                      "\n                        " +
                         _vm._s(item.name) +
                         " x" +
                         _vm._s(item.quantity ? item.quantity : "1") +
-                        "\n                "
+                        "\n                    "
                     )
                   ])
                 }),
-                _vm._v(" "),
-                _c("div", { staticClass: "input-container" }, [
-                  _c("label", { attrs: { for: "comment" } }),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.comment,
-                        expression: "comment"
-                      }
-                    ],
-                    class: { "input-colored": _vm.comment },
-                    attrs: {
-                      id: "comment",
-                      type: "text",
-                      placeholder: "Commentaire Pressing"
-                    },
-                    domProps: { value: _vm.comment },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.comment = $event.target.value
-                      }
+                0
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "input-container" }, [
+                _c("label", { attrs: { for: "comment" } }),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.comment,
+                      expression: "comment"
                     }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "input-container" }, [
-                  _c("label", { attrs: { for: "numberPress" } }),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.numberPress,
-                        expression: "numberPress"
-                      }
-                    ],
-                    class: { "input-colored": _vm.numberPress },
-                    attrs: {
-                      id: "numberPress",
-                      type: "text",
-                      placeholder: "Numéro de pressing"
-                    },
-                    domProps: { value: _vm.numberPress },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.numberPress = $event.target.value
-                      }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "input-container" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.gift,
-                        expression: "gift"
-                      }
-                    ],
-                    attrs: { id: "one", type: "checkbox" },
-                    domProps: {
-                      checked: Array.isArray(_vm.gift)
-                        ? _vm._i(_vm.gift, null) > -1
-                        : _vm.gift
-                    },
-                    on: {
-                      change: function($event) {
-                        var $$a = _vm.gift,
-                          $$el = $event.target,
-                          $$c = $$el.checked ? true : false
-                        if (Array.isArray($$a)) {
-                          var $$v = null,
-                            $$i = _vm._i($$a, $$v)
-                          if ($$el.checked) {
-                            $$i < 0 && (_vm.gift = $$a.concat([$$v]))
-                          } else {
-                            $$i > -1 &&
-                              (_vm.gift = $$a
-                                .slice(0, $$i)
-                                .concat($$a.slice($$i + 1)))
-                          }
-                        } else {
-                          _vm.gift = $$c
-                        }
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm._m(0)
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "total-price" }, [
-                  _c("h4", [_vm._v("Total: ")]),
-                  _vm._v(" "),
-                  _c("p", {
-                    domProps: {
-                      innerHTML:
-                        _vm.gift === false
-                          ? _vm.finalPrice / 100 + " €"
-                          : 0 + " €"
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    attrs: {
-                      type: "submit",
-                      name: "action",
-                      id: "login-button"
-                    }
+                  ],
+                  class: { "input-colored": _vm.comment },
+                  attrs: {
+                    id: "comment",
+                    type: "text",
+                    placeholder: "Commentaire Pressing"
                   },
-                  [
-                    _vm._v(
-                      "\n                    Confirmer la commande\n                "
-                    )
-                  ]
-                )
-              ],
-              2
-            )
+                  domProps: { value: _vm.comment },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.comment = $event.target.value
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "input-container" }, [
+                _c("label", { attrs: { for: "numberPress" } }),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.numberPress,
+                      expression: "numberPress"
+                    }
+                  ],
+                  class: { "input-colored": _vm.numberPress },
+                  attrs: {
+                    id: "numberPress",
+                    type: "text",
+                    placeholder: "Numéro de pressing"
+                  },
+                  domProps: { value: _vm.numberPress },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.numberPress = $event.target.value
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "input-container" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.gift,
+                      expression: "gift"
+                    }
+                  ],
+                  attrs: { id: "one", type: "checkbox" },
+                  domProps: {
+                    checked: Array.isArray(_vm.gift)
+                      ? _vm._i(_vm.gift, null) > -1
+                      : _vm.gift
+                  },
+                  on: {
+                    change: function($event) {
+                      var $$a = _vm.gift,
+                        $$el = $event.target,
+                        $$c = $$el.checked ? true : false
+                      if (Array.isArray($$a)) {
+                        var $$v = null,
+                          $$i = _vm._i($$a, $$v)
+                        if ($$el.checked) {
+                          $$i < 0 && (_vm.gift = $$a.concat([$$v]))
+                        } else {
+                          $$i > -1 &&
+                            (_vm.gift = $$a
+                              .slice(0, $$i)
+                              .concat($$a.slice($$i + 1)))
+                        }
+                      } else {
+                        _vm.gift = $$c
+                      }
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm._m(0)
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "total-price" }, [
+                _c("h4", [_vm._v("Total: ")]),
+                _vm._v(" "),
+                _c("p", {
+                  domProps: {
+                    innerHTML:
+                      _vm.gift === false
+                        ? _vm.finalPrice / 100 + " €"
+                        : 0 + " €"
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  attrs: { type: "submit", name: "action", id: "login-button" }
+                },
+                [
+                  _vm._v(
+                    "\n                    Confirmer la commande\n                "
+                  )
+                ]
+              )
+            ])
           ]
         )
       ]
@@ -44324,7 +44349,8 @@ var render = function() {
                               ? _c(
                                   "button",
                                   {
-                                    staticClass: "btn waves-effect waves-light",
+                                    staticClass:
+                                      "btn waves-effect waves-light pay-warning",
                                     style: {
                                       "background-color": _vm.getDateDiff(
                                         order.deliveryDate
