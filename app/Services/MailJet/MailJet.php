@@ -9,11 +9,10 @@ class MailJet
 {
     private Client $client;
     private array $resources;
-    //TODO: mettre bon template pour validation du paiement
     private array $templateId = [
         'payment_refused' => 2352392,
         'payment_3DSecure' => 2352557,
-        'payment_confirmed' => 2840989,
+        'payment_confirmed' => 2755436,
         'order_completed_bringMe' => 2352530,
         'order_completed_oldLockers' => 1029154,
     ];

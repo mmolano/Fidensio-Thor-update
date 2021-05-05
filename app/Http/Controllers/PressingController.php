@@ -134,6 +134,14 @@ class PressingController extends Controller
                     'Comment' => 'Could not send email to customer'
                 ]);
                 break;
+            case 16:
+                $message = 'Impossible d\'obtenir les produits, veuillez nous contacter';
+                Log::error('MyError', [
+                    'Class' => class_basename(self::class),
+                    'Code' => $this->error,
+                    'Comment' => 'Could not get products'
+                ]);
+                break;
             default:
                 $message ?: $message = 'Undefined error';
         }
@@ -215,6 +223,29 @@ class PressingController extends Controller
     {
         $userData = ['email' => $user['email'], 'name' => $user['data']['firstName']];
 
+        $params = [
+            'orderId' => $order['id'],
+            'service' => $order['service']['name'],
+            'firstName' => $user['data']['firstName'],
+            'lastName' => $user['data']['lastName'],
+            'email' => $user['email'],
+            'mobile' => '+' . $user['indicMobile'] . $user['mobile'],
+            'amountWithoutVAT' => $order['amount'] / 100,
+            'amount' => $order['amount'] / 100,
+            'products' => [],
+        ];
+
+        if (!empty($order['details'])) {
+            foreach ($order['details'] as $key => $value) {
+                $values[] = [
+                    'name' => $value['name'],
+                    'quantity' => $value['quantity'],
+                    'total' => $value['total'],
+                ];
+                $params['products'] = array_replace_recursive($values, $params['products']);
+            }
+        }
+
         if ($order['amount'] > 0) {
             if ($order['payment']['pay'] !== 1) {
                 if (!$payment = Stripe::pay($order, $user)) {
@@ -230,20 +261,20 @@ class PressingController extends Controller
                     case 1:
                         if (!Pressing::updatePayment($order['id'], [
                             'status' => $payment['status'],
-                            'intentStripeId' => $payment['intentId']
+                            'intentId' => $payment['intentId']
                         ])) {
                             return $this->error(13, $order['id'], 'warning');
-                        } elseif (!Mailjet::sendWithTemplate($userData, 'payment_confirmed', 'Le paiement pour votre commande n°' . $order['id'] . ' a été validé')) {
+                        } elseif (!Mailjet::sendWithTemplate($userData, 'payment_confirmed', 'Le paiement pour votre commande n°' . $order['id'] . ' a été validé', $params)) {
                             return $this->error(15, $order['id'], 'warning');
                         }
 
-                        Crisp::newEvent($user, 'payment', session('authName'), $order, $finalPrice);
+                        Crisp::newEvent($user, 'payment', session('authName'), $order, $finalPrice / 100);
                         break;
                     case 2:
                         if (!Pressing::updatePayment($order['id'], [
                             'status' => $payment['status'],
-                            'intentStripeId' => $payment['intentId'],
-                            'paymentToken3ds' => $payment['paymentToken'],
+                            'intentId' => $payment['intentId'],
+                            'paymentToken' => $payment['paymentToken'],
                         ])) {
                             return $this->error(9, $order['id'], 'warning');
                         } elseif (!Pressing::changeStatus($order['id'], $this->status['waitingForPayment'])) {
@@ -312,7 +343,7 @@ class PressingController extends Controller
     {
         $products = Pressing::getProviderProduct($request->id);
 
-        return isset($products) ? $products : $this->error(5);
+        return isset($products) ? $products : $this->error(16);
     }
 
     public function reHandlePayment(Request $request): JsonResponse

@@ -147,17 +147,13 @@ class Crisp
                     $event['data'] = array_merge($event['data'], $mergeData);
                     break;
                 case 'payment':
-                    $dataUserCrisp = $this->getUserData($user);
                     $mergeData = [
                         'IncrementationOrderTotal' => $finalPrice !== 0 ? $finalPrice : 'Null',
                         'DateDeLaCommande' => Carbon::now()->format('d-m-Y H:i:s')
                     ];
                     $event['data'] = array_merge($event['data'], $mergeData);
-
                     $this->updateUserData($user, [
-                        'MontantDesCommandes' . $order['serviceCategory']['name'] => isset($dataUserCrisp['MontantDesCommandes' . $order['serviceCategory']['name']])? $dataUserCrisp['MontantDesCommandes' . $order['serviceCategory']['name']] + $finalPrice: $finalPrice,
-                        'MontantDesCommandesTotal' => isset($dataUserCrisp['MontantDesCommandes' . $order['serviceCategory']['name']]) ? $dataUserCrisp['MontantDesCommandesTotal'] + $finalPrice : $finalPrice,
-                        'DateDerniereCommande' => Carbon::now()->format('d-m-Y H:i:s'),
+                        'lastOrderDateCount' => Carbon::now()->format('d-m-Y H:i:s'),
                     ]);
                     break;
                 default:

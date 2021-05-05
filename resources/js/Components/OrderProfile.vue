@@ -126,7 +126,7 @@ export default {
             axios.post('/pay/order', {
                 'id': this.orderData.id,
                 'details': this.selectedProduct,
-                'finalPrice': this.finalPrice,
+                'finalPrice': this.gift !== true ? this.finalPrice : 0,
                 'comment': this.comment,
                 'numberPress': this.numberPress
             }).then(res => {

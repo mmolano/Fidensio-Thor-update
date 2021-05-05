@@ -2236,7 +2236,7 @@ __webpack_require__.r(__webpack_exports__);
       axios__WEBPACK_IMPORTED_MODULE_2___default().post('/pay/order', {
         'id': this.orderData.id,
         'details': this.selectedProduct,
-        'finalPrice': this.finalPrice,
+        'finalPrice': this.gift !== true ? this.finalPrice : 0,
         'comment': this.comment,
         'numberPress': this.numberPress
       }).then(function (res) {

@@ -122,7 +122,11 @@ class Pressing
     public static function updatePayment(int $orderId, array $data): ?array
     {
         $response = Http::withToken(env('MIX_OURANOS_KEY'))
-            ->put(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'order/' . $orderId . '/payment', $data);
+            ->put(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'order/' . $orderId . '/payment', [
+                'status' => $data['status'],
+                'intentId' => $data['intentId'],
+                'paymentToken' => isset($data['paymentToken']) ? $data['paymentToken'] : 'NULL',
+            ]);
 
         self::sendLogs($response, __FUNCTION__);
 
@@ -132,7 +136,10 @@ class Pressing
     public static function updateOrderAttributes(int $orderId, array $data): ?array
     {
         $response = Http::withToken(env('MIX_OURANOS_KEY'))
-            ->put(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'order/' . $orderId . '/attribute', $data);
+            ->put(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'order/' . $orderId . '/attribute', [
+                'providerOrderNumber' => $data['providerOrderNumber'],
+                'providerComment' => $data['providerComment'],
+            ]);
 
         self::sendLogs($response, __FUNCTION__);
 
