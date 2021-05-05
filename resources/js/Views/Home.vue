@@ -45,7 +45,7 @@ export default {
             typeOfStatus: '',
             message: Object,
             refCount: 0,
-            isLoading: false
+            isLoading: false,
         }
     },
 };

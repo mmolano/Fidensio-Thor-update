@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Facades\MailJet;
+use App\Facades\Mailjet;
 use Tests\TestCase;
 
 class MailJetTest extends TestCase

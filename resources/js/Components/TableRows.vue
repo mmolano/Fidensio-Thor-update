@@ -1,5 +1,42 @@
 <template>
     <section>
+        <section v-if="showLockers">
+            <div id="popup-container">
+                <div id="popup" class="card z-depth-4">
+                    <div class="card-content">
+                        <div class="popup-tables-container">
+                            <div id="popup-div-one">
+                                <div class="popup-row">
+                                    <label for="code">Code du casier: </label>
+                                    <input id="code" type="number" v-model="lockerCode">
+                                </div>
+                                <div class="popup-row">
+                                    <label for="number">Numéro du casier: </label>
+                                    <input id="number" type="number" v-model="number">
+                                </div>
+                            </div>
+                            <div id="popup-div-two">
+                                <div id="popup-commande-div">
+                                    <div id="popup-commande"
+                                         v-on:click="sendLockers(selection[0], selection[1])">
+                                        <button>
+                                            Confirmer
+                                        </button>
+                                    </div>
+                                </div>
+                                <div v-on:click="hidePopup()">
+                                    <div>
+                                        <button class="hideBtn">
+                                            Annuler
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
         <SearchComponent v-model="search"></SearchComponent>
         <div class="responsive-table" v-if="filteredOrder.length !== 0">
             <table id="main-table">
@@ -55,10 +92,11 @@
                                 class="btn waves-effect waves-light">Payer
                         </button>
 
-                        <button v-else-if="typeOfStatus === '?type=processing' && order.payment.pay === 1 || order.amount === 0"
-                                @click="sendProcessing(order.id, 5)"
-                                v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"
-                                class="btn waves-effect waves-light">Compléter
+                        <button
+                            v-else-if="typeOfStatus === '?type=processing' && order.payment.pay === 1 || order.amount === 0"
+                            @click="sendProcessing(order.id, 5, order.locker.length === 0 ? 'Bring me' : 'Classic', false)"
+                            v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"
+                            class="btn waves-effect waves-light">Compléter
                         </button>
 
                         <button v-else-if="typeOfStatus === '?type=processing' && order.status === 7"
@@ -95,6 +133,8 @@
 
 import JwPagination from 'jw-vue-pagination';
 import SearchComponent from "./SearchComponent";
+import LockersPopup from "../Components/LockersPopup";
+
 import moment from "moment";
 import axios from "axios";
 
@@ -109,10 +149,11 @@ export default {
     name: "Table",
     components: {
         JwPagination,
-        SearchComponent
+        SearchComponent,
+        LockersPopup
     },
     props: {
-        typeOfStatus: String
+        typeOfStatus: String,
     },
     data() {
         return {
@@ -122,7 +163,11 @@ export default {
             pageSize: 9,
             pagination: [],
             orders: [],
-            searchOrderUrl: 'getData'
+            searchOrderUrl: 'getData',
+            showLockers: false,
+            selection: [],
+            lockerCode: 0,
+            number: 0
         }
     },
     methods: {
@@ -133,6 +178,9 @@ export default {
         viewOrder(order) {
             this.$parent.$data.orderData = order;
             this.$parent.$data.viewOrderProfile = true;
+        },
+        hidePopup() {
+            this.showLockers = false;
         },
         onChangePage(pageOfItems) {
             this.pagination = pageOfItems;
@@ -160,18 +208,40 @@ export default {
                 this.$parent.$data.message = err.response.data
             });
         },
-        sendProcessing: function (orderId, status) {
-            axios.post('/update', {
-                'orderId': orderId,
-                'status': status
-            }).then(res => {
-                if (res.status === 200) {
+        sendProcessing: function (orderId, status, type, pass) {
+            if (type !== 'Bring me' && pass !== true) {
+                this.selection = [orderId, status]
+                this.showLockers = true
+            } else {
+                axios.post('/update', {
+                    'orderId': orderId,
+                    'status': status
+                }).then(res => {
+                    if (res.status === 200) {
+                        this.$parent.$data.message = res.data
+                        this.loadOrders();
+                    }
+                }).catch(err => {
+                    this.$parent.$data.message = err.response.data
+                });
+            }
+        },
+        sendLockers: function (orderId, status) {
+            if (this.lockerCode !== 0 && this.number !== 0) {
+                axios.post('/update', {
+                    'orderId': orderId,
+                    'status': status,
+                    'lockerCode': this.lockerCode,
+                    'number': this.number
+                }).then(res => {
                     this.$parent.$data.message = res.data
+                    this.hidePopup();
                     this.loadOrders();
-                }
-            }).catch(err => {
-                this.$parent.$data.message = err.response.data
-            });
+                }).catch(err => {
+                    this.hidePopup()
+                    this.$parent.$data.message = err.response.data
+                });
+            }
         },
         sendPay: function (orderId) {
             axios.post('/rePay/order', {
@@ -390,6 +460,149 @@ thead {
             cursor: not-allowed !important;
             background-color: #dbf0ff !important;
         }
+    }
+}
+
+#popup-container {
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    display: flex;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #80808047;
+
+    & .hideBtn {
+        text-align: center;
+        margin: 10px auto;
+        width: 100%;
+        border-radius: 20px;
+        height: 45px;
+        border: unset;
+        background-color: #ff5a5a;
+        color: white;
+        cursor: pointer;
+    }
+}
+
+#popup {
+    position: fixed;
+    margin: 0 auto;
+    z-index: 1000;
+    width: 100%;
+    max-width: 340px;
+    max-height: 80%;
+    border-radius: 20px;
+    background-color: white;
+    padding: 29px;
+}
+
+.popup-row {
+    & label {
+        padding: 12px 0;
+    }
+
+    & input {
+        width: 100%;
+        padding: 8px;
+        height: 30px;
+    }
+}
+
+#popup-commande {
+    width: 100%;
+
+    & button {
+        width: 100%;
+        border-radius: 20px;
+        height: 45px;
+        border: unset;
+        background-color: $mainBtnBack;
+        color: white;
+        cursor: pointer;
+        margin: 10px auto;
+    }
+}
+
+#popup-commentaire {
+    overflow-y: auto;
+    padding: 10px;
+    height: 90px;
+}
+
+#popup-commentaire-div {
+    background-color: #F6F6F6;
+    border-radius: 2px;
+}
+
+.popup-row {
+    margin: 5px;
+    padding-right: 5px;
+    padding-left: 10px;
+    border-radius: 5px;
+    background-color: #F6F6F6;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.popup-commentaire-title {
+    margin-top: 5px;
+}
+
+.popup-contenu {
+    font-weight: bold;
+    color: grey;
+    background-color: white;
+    border-radius: 5px;
+    padding: 3px;
+    margin: 5px;
+}
+
+.popup-contenu-comment {
+    font-weight: bold;
+    color: grey;
+}
+
+@media screen and (max-width: 900px) {
+    #popup {
+        max-width: 80%;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    #popup {
+        max-width: 100%;
+    }
+}
+
+@media screen and (max-height: 500px) {
+    #popup {
+        max-width: 90%;
+        max-height: 95%;
+    }
+
+    #popup-container {
+        width: 100%;
+    }
+
+    .popup-tables-container {
+        display: flex;
+    }
+
+    #popup-div-one,
+    #popup-div-two {
+        flex: 1;
+    }
+
+    #popup-commentaire {
+        height: 70px;
     }
 }
 

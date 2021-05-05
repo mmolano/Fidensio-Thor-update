@@ -142,6 +142,14 @@ class PressingController extends Controller
                     'Comment' => 'Could not get products'
                 ]);
                 break;
+            case 17:
+                $message = 'Impossible de mettre à jour les informations du casier';
+                Log::error('MyError', [
+                    'Class' => class_basename(self::class),
+                    'Code' => $this->error,
+                    'Comment' => 'Could not get locker'
+                ]);
+                break;
             default:
                 $message ?: $message = 'Undefined error';
         }
@@ -181,17 +189,25 @@ class PressingController extends Controller
                 break;
             case 5:
                 if (!empty($order['locker'])) {
+                    if (!$locker = Pressing::updateLocker($order['companyId'], [
+                        'orderId' => $order['id'],
+                        'lockerCode' => $request->lockerCode,
+                        'number' => $request->number
+                    ])) {
+                        return $this->error(17);
+                    }
+
                     $subject = 'Votre commande Fidensio n°' . $order['id'] . ' est disponible dans le casier ' .
-                        $order['locker']['number'] .
+                        $locker['number'] .
                         ' avec le code C' .
-                        $order['locker']['code'] .
+                        $locker['code'] .
                         ' pour l’ouvrir.';
                     $templateType = 'order_completed_oldLockers';
                     $variables = [
                         'orderId' => $order['id'],
                         'service' => $order['service']['name'],
-                        'lockerNumber' => $order['locker']['number'],
-                        'lockerCode' => 'C' . $order['locker']['code'],
+                        'lockerNumber' => $locker['number'],
+                        'lockerCode' => 'C' . $locker['code'],
                         'url' => 'https://www.' . $order['company']['url'] . '.com',
                         'deliveryDate' => Carbon::create($order['deliveryDate'])->format('d/m/Y')
                     ];

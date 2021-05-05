@@ -76,7 +76,7 @@ section {
 #popup-container {
     z-index: 9999;
     display: flex;
-    position: absolute;
+    position: fixed;
     height: 100%;
     width: 100%;
     flex-flow: column;

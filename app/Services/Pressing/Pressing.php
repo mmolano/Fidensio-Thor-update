@@ -133,6 +133,20 @@ class Pressing
         return $response->json();
     }
 
+    public static function updateLocker(int $companyId, array $data): ?array
+    {
+        $response = Http::withToken(env('MIX_OURANOS_KEY'))
+            ->put(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'company/'. $companyId .'/oldLocker', [
+                'orderId' => $data['orderId'],
+                'code' => $data['lockerCode'],
+                'number' => $data['number'],
+            ]);
+
+        self::sendLogs($response, __FUNCTION__);
+
+        return $response->json();
+    }
+
     public static function updateOrderAttributes(int $orderId, array $data): ?array
     {
         $response = Http::withToken(env('MIX_OURANOS_KEY'))
