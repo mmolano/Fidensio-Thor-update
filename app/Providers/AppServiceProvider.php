@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Services\Crisp\Crisp;
-use App\Services\Crisp\CrispFake;
 use App\Services\MailJet\MailJet;
 use App\Services\MailJet\MailJetFake;
 use App\Services\Pressing\Pressing;
@@ -25,9 +23,6 @@ class AppServiceProvider extends ServiceProvider
             $this->app->singleton(StripeFake::class);
             $this->app->alias(StripeFake::class, 'stripe');
 
-            $this->app->singleton(CrispFake::class);
-            $this->app->alias(CrispFake::class, 'crisp');
-
             $this->app->singleton(MailJetFake::class);
             $this->app->alias(MailJetFake::class, 'mailjet');
 
@@ -36,9 +31,6 @@ class AppServiceProvider extends ServiceProvider
         } else {
             $this->app->singleton(Stripe::class);
             $this->app->alias(Stripe::class, 'stripe');
-
-            $this->app->singleton(Crisp::class);
-            $this->app->alias(Crisp::class, 'crisp');
 
             $this->app->singleton(MailJet::class);
             $this->app->alias(MailJet::class, 'mailjet');

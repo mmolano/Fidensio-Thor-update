@@ -2704,6 +2704,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 
@@ -2762,11 +2764,11 @@ var customLabels = {
       if (status === 7) {
         return this.colors = ['#4ab4ff', '#193c8e'];
       } else if (moment__WEBPACK_IMPORTED_MODULE_3___default()(date).isSame(moment__WEBPACK_IMPORTED_MODULE_3___default()().startOf('day'), 'd')) {
-        return this.colors = ['#ff9d38', '#674508'];
+        return this.colors = ['#96E4A0', '#0b4a00'];
       } else if (moment__WEBPACK_IMPORTED_MODULE_3___default()(date).isBefore(moment__WEBPACK_IMPORTED_MODULE_3___default()().startOf('day'), 'd')) {
         return this.colors = ['#ffa8a8', '#d00000'];
       } else if (moment__WEBPACK_IMPORTED_MODULE_3___default()(date).isAfter(moment__WEBPACK_IMPORTED_MODULE_3___default()().startOf('day'), 'd')) {
-        return this.colors = ['#fbed4e', '#4a4100'];
+        return this.colors = ['#ff9d38', '#674508'];
       }
     },
     loadOrders: function loadOrders() {
@@ -2783,7 +2785,7 @@ var customLabels = {
     sendProcessing: function sendProcessing(orderId, status, type, pass) {
       var _this2 = this;
 
-      if (type !== 'Bring me' && pass !== true) {
+      if (type && type !== 'Bring me' && pass !== true) {
         this.selection = [orderId, status];
         this.showLockers = true;
       } else {
@@ -2823,7 +2825,7 @@ var customLabels = {
         });
       }
     },
-    sendPay: function sendPay(orderId) {
+    sendPayProcess: function sendPayProcess(orderId) {
       var _this4 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_4___default().post('/rePay/order', {
@@ -2835,6 +2837,15 @@ var customLabels = {
       })["catch"](function (err) {
         _this4.$parent.$data.message = err.response.data;
       });
+    },
+    sendPay: function sendPay(orderId, status, type, pass) {
+      if (type && type !== 'Bring me' && pass !== true) {
+        this.selection = [orderId, status];
+        this.showLockers = true;
+        this.repay = true;
+      } else {
+        this.sendPayProcess(orderId);
+      }
     },
     setLoading: function setLoading(isLoading) {
       if (isLoading) {
@@ -44414,40 +44425,48 @@ var render = function() {
                       _vm._v(" "),
                       _c("div", { attrs: { id: "popup-div-two" } }, [
                         _c("div", { attrs: { id: "popup-commande-div" } }, [
-                          _c(
-                            "div",
-                            {
-                              attrs: { id: "popup-commande" },
-                              on: {
-                                click: function($event) {
-                                  return _vm.sendLockers(
-                                    _vm.selection[0],
-                                    _vm.selection[1]
-                                  )
+                          _c("div", { attrs: { id: "popup-commande" } }, [
+                            _c(
+                              "button",
+                              {
+                                on: {
+                                  click: function($event) {
+                                    return _vm.sendLockers(
+                                      _vm.selection[0],
+                                      _vm.selection[1]
+                                    )
+                                  }
                                 }
-                              }
-                            },
-                            [
-                              _c("button", [
+                              },
+                              [
                                 _vm._v(
                                   "\n                                        Confirmer\n                                    "
                                 )
-                              ])
-                            ]
-                          )
+                              ]
+                            )
+                          ])
                         ]),
                         _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            on: {
-                              click: function($event) {
-                                return _vm.hidePopup()
-                              }
-                            }
-                          },
-                          [_vm._m(0)]
-                        )
+                        _c("div", [
+                          _c("div", [
+                            _c(
+                              "button",
+                              {
+                                staticClass: "hideBtn",
+                                on: {
+                                  click: function($event) {
+                                    return _vm.hidePopup()
+                                  }
+                                }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                        Annuler\n                                    "
+                                )
+                              ]
+                            )
+                          ])
+                        ])
                       ])
                     ])
                   ])
@@ -44790,11 +44809,22 @@ var render = function() {
                                     },
                                     on: {
                                       click: function($event) {
-                                        return _vm.sendPay(order.id)
+                                        return _vm.sendPay(
+                                          order.id,
+                                          5,
+                                          order.locker.length === 0
+                                            ? "Bring me"
+                                            : "Classic",
+                                          false
+                                        )
                                       }
                                     }
                                   },
-                                  [_vm._v("Ré-encaisser\n                    ")]
+                                  [
+                                    _vm._v(
+                                      "\n                        Ré-encaisser\n                    "
+                                    )
+                                  ]
                                 )
                               : _vm._e()
                           ]
@@ -44858,20 +44888,7 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("button", { staticClass: "hideBtn" }, [
-        _vm._v(
-          "\n                                        Annuler\n                                    "
-        )
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

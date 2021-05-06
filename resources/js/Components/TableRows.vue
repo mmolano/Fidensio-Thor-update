@@ -17,16 +17,16 @@
                             </div>
                             <div id="popup-div-two">
                                 <div id="popup-commande-div">
-                                    <div id="popup-commande"
-                                         v-on:click="sendLockers(selection[0], selection[1])">
-                                        <button>
+                                    <div id="popup-commande">
+                                        <button
+                                                v-on:click="sendLockers(selection[0], selection[1])">
                                             Confirmer
                                         </button>
                                     </div>
                                 </div>
-                                <div v-on:click="hidePopup()">
+                                <div>
                                     <div>
-                                        <button class="hideBtn">
+                                        <button class="hideBtn" v-on:click="hidePopup()">
                                             Annuler
                                         </button>
                                     </div>
@@ -66,17 +66,17 @@
                               :inner-html.prop="dateFormat(order.createdAt) | highlight(search)"
                         ></span>
                         <span v-else
-                        v-bind:style="{'background-color': getDateDiff(order.deliveryDate, order.status)[0], 'color': getDateDiff(order.deliveryDate, order.status)[1]}"
-                        :inner-html.prop="dateFormat(order.createdAt) | highlight(search)"></span>
+                              v-bind:style="{'background-color': getDateDiff(order.deliveryDate, order.status)[0], 'color': getDateDiff(order.deliveryDate, order.status)[1]}"
+                              :inner-html.prop="dateFormat(order.createdAt) | highlight(search)"></span>
                     </td>
                     <td data-label="Retour" class="Retour">
                         <span v-if="typeOfStatus === '?type=processing' && order.payment.pay === 0"
-                            v-bind:style="{'background-color': getDateDiff(order.deliveryDate, 7)[0], 'color': getDateDiff(order.deliveryDate, 7)[1]}"
-                            :inner-html.prop="dateFormat(order.deliveryDate) | highlight(search)"
+                              v-bind:style="{'background-color': getDateDiff(order.deliveryDate, 7)[0], 'color': getDateDiff(order.deliveryDate, 7)[1]}"
+                              :inner-html.prop="dateFormat(order.deliveryDate) | highlight(search)"
                         ></span>
                         <span v-else
-                            v-bind:style="{'background-color': getDateDiff(order.deliveryDate, order.status)[0], 'color': getDateDiff(order.deliveryDate, order.status)[1]}"
-                            :inner-html.prop="dateFormat(order.deliveryDate) | highlight(search)"
+                              v-bind:style="{'background-color': getDateDiff(order.deliveryDate, order.status)[0], 'color': getDateDiff(order.deliveryDate, order.status)[1]}"
+                              :inner-html.prop="dateFormat(order.deliveryDate) | highlight(search)"
                         ></span>
                     </td>
                     <td data-label="Emplacement" class="Emplacement"
@@ -115,7 +115,9 @@
 
                         <button v-else-if="typeOfStatus === '?type=processing' && order.payment.pay === 0"
                                 v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"
-                                class="btn waves-effect waves-light pay-warning" @click="sendPay(order.id)">Ré-encaisser
+                                class="btn waves-effect waves-light pay-warning"
+                                @click="sendPay(order.id,5, order.locker.length === 0 ? 'Bring me' : 'Classic', false)">
+                            Ré-encaisser
                         </button>
 
                     </td>
@@ -201,11 +203,11 @@ export default {
             if (status === 7) {
                 return this.colors = ['#4ab4ff', '#193c8e']
             } else if (moment(date).isSame(moment().startOf('day'), 'd')) {
-                return this.colors = ['#ff9d38', '#674508']
+                return this.colors = ['#96E4A0', '#0b4a00']
             } else if (moment(date).isBefore(moment().startOf('day'), 'd')) {
                 return this.colors = ['#ffa8a8', '#d00000']
             } else if (moment(date).isAfter(moment().startOf('day'), 'd')) {
-                return this.colors = ['#fbed4e', '#4a4100']
+                return this.colors = ['#ff9d38', '#674508']
             }
         },
         loadOrders: function () {
@@ -218,7 +220,7 @@ export default {
             });
         },
         sendProcessing: function (orderId, status, type, pass) {
-            if (type !== 'Bring me' && pass !== true) {
+            if (type && type !== 'Bring me' && pass !== true) {
                 this.selection = [orderId, status]
                 this.showLockers = true
             } else {
@@ -252,7 +254,7 @@ export default {
                 });
             }
         },
-        sendPay: function (orderId) {
+        sendPayProcess: function (orderId) {
             axios.post('/rePay/order', {
                 'id': orderId,
             }).then(res => {
@@ -261,6 +263,14 @@ export default {
             }).catch(err => {
                 this.$parent.$data.message = err.response.data
             });
+        },
+        sendPay: function (orderId, status, type, pass) {
+            if (type && type !== 'Bring me' && pass !== true) {
+                this.selection = [orderId, status]
+                this.showLockers = true
+            } else {
+                this.sendPayProcess(orderId);
+            }
         },
         setLoading(isLoading) {
             if (isLoading) {

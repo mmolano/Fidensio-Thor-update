@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Facades\Crisp;
 use App\Facades\Mailjet;
 use App\Facades\Stripe;
 use App\Services\Pressing\Pressing;
@@ -184,10 +183,10 @@ class PressingController extends Controller
         $userData = ['email' => $user['email'], 'name' => $user['data']['firstName']];
 
         switch ($request->status) {
-            case 2:
-                Crisp::newEvent($user, 'received', session('authName'), $order);
-                break;
             case 5:
+                if ($order['payment']['pay'] === 0) {
+                    self::pay($order, $user);
+                }
                 if (!empty($order['locker'])) {
                     if (!$locker = Pressing::updateLocker($order['companyId'], [
                         'orderId' => $order['id'],
@@ -208,7 +207,7 @@ class PressingController extends Controller
                         'service' => $order['service']['name'],
                         'lockerNumber' => $locker['number'],
                         'lockerCode' => 'C' . $locker['code'],
-                        'url' => 'https://www.' . $order['company']['url'] . '.com',
+                        'url' => 'https://www.connexion.fidensio.com/',
                         'deliveryDate' => Carbon::create($order['deliveryDate'])->format('d/m/Y')
                     ];
                 } else {
@@ -217,7 +216,7 @@ class PressingController extends Controller
                     $variables = [
                         'orderId' => $order['id'],
                         'service' => $order['service']['name'],
-                        'url' => 'https://www.' . $order['company']['url'] . '.com',
+                        'url' => 'https://www.connexion.fidensio.com/',
                         'deliveryDate' => Carbon::create($order['deliveryDate'])->format('d/m/Y')
                     ];
                 }
@@ -225,7 +224,6 @@ class PressingController extends Controller
                     return $this->error(15, $order['id'], 'warning');
                 }
 
-                Crisp::newEvent($user, 'delivered', session('authName'), $order);
                 break;
         }
 
@@ -284,7 +282,6 @@ class PressingController extends Controller
                             return $this->error(15, $order['id'], 'warning');
                         }
 
-                        Crisp::newEvent($user, 'payment', session('authName'), $order, $finalPrice / 100);
                         break;
                     case 2:
                         if (!Pressing::updatePayment($order['id'], [
