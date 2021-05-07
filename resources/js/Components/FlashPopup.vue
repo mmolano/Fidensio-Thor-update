@@ -13,7 +13,7 @@
 
 <script>
 export default {
-    name: "FlashPopup.vue",
+    name: "FlashPopup",
     props: {
         myMessage: {
             required: true
@@ -30,13 +30,15 @@ export default {
             let messageDiv = document.getElementById('alert-row');
             let customMessage = document.getElementById('messageBox');
             let secondes = 300;
+            let leftStyl = "";
+            let cleanPerc = "";
             for (let i = 0; i < messages.length; i++) {
                 let message = messages[i];
 
                 let popupDelete = document.getElementById('alert-data-dissmiss');
 
                 popupDelete.addEventListener('click', e => {
-                    message.style.left = "-100%";
+                    message.style.left = "-200%";
                 }, {passive: true});
 
                 if (value.exception) {
@@ -59,14 +61,22 @@ export default {
                     messageDiv.classList.add("alert-info");
                 }
 
+                if (document.documentElement.clientWidth < 491) {
+                     leftStyl = "8px";
+                    cleanPerc = "-200%"
+                } else {
+                    leftStyl = "42px"
+                    cleanPerc = "-100%"
+                }
+
                 setTimeout(() => {
-                    message.style.left = "42px";
+                    message.style.left = leftStyl;
                 }, secondes);
 
                 secondes += 2800;
                 if (!message.classList.contains('alert-important')) {
                     setTimeout(() => {
-                        message.style.left = "-100%";
+                        message.style.left = cleanPerc;
                     }, secondes);
                 }
                 secondes -= 1000;

@@ -19,7 +19,7 @@
                                 <div id="popup-commande-div">
                                     <div id="popup-commande">
                                         <button
-                                                v-on:click="sendLockers(selection[0], selection[1])">
+                                            v-on:click="sendLockers(selection[0], selection[1])">
                                             Confirmer
                                         </button>
                                     </div>
@@ -37,7 +37,7 @@
                 </div>
             </div>
         </section>
-        <SearchComponent v-model="search"></SearchComponent>
+        <SearchComponent v-if="typeOfStatus !== '?type=finished'" v-model="search"></SearchComponent>
         <div class="responsive-table" v-if="filteredOrder.length !== 0">
             <table id="main-table">
                 <thead>
@@ -116,7 +116,7 @@
                         <button v-else-if="typeOfStatus === '?type=processing' && order.payment.pay === 0"
                                 v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"
                                 class="btn waves-effect waves-light pay-warning"
-                                @click="sendPay(order.id,5, order.locker.length === 0 ? 'Bring me' : 'Classic', false)">
+                                @click="sendPay(order.id)">
                             Ré-encaisser
                         </button>
 
@@ -130,12 +130,25 @@
         </div>
         <div class="rows_number">
             <span v-if="search">Affichage de {{ filteredOrder.length }} résultats</span>
-            <span v-if="!search">Affichage de {{ filteredOrder.length }} résultats sur {{ orders.length }}</span>
+            <span v-if="!search">Affichage de {{ filteredOrder.length }} résultats sur {{ orders.totalItems }}</span>
         </div>
-        <div class="pagination_container" v-if="!search">
-            <jw-pagination :pageSize="pageSize" :items="orders" @changePage="onChangePage"
+
+        <div class="pagination_container" v-if="!search && updateDynamic">
+            <Pagination v-if="orders.data" :pageSize="pageSize" :number-of-items="orders.totalItems"
+                        :first-page-of-items="pageId"
+                        :type-of-status="typeOfStatus"
+                        :items="orders.data" @changePage="onChangePage" :next-page-of-items="orders.nextPage"
+                        :previous-page-of-items="orders.previousPage"
+                        :last-page-of-items="orders.lastPage"></Pagination>
+        </div>
+
+        <div class="pagination_container" v-else-if="!search">
+            <jw-pagination v-if="orders.data" :pageSize="pageSize" :items="orders.data"
+                           @changePage="onChangePage"
                            :labels="customLabels"></jw-pagination>
         </div>
+
+
     </section>
 
 </template>
@@ -145,6 +158,7 @@
 import JwPagination from 'jw-vue-pagination';
 import SearchComponent from "./SearchComponent";
 import LockersPopup from "../Components/LockersPopup";
+import Pagination from "./Pagination";
 
 import moment from "moment";
 import axios from "axios";
@@ -159,6 +173,7 @@ const customLabels = {
 export default {
     name: "Table",
     components: {
+        Pagination,
         JwPagination,
         SearchComponent,
         LockersPopup
@@ -170,12 +185,14 @@ export default {
         return {
             colors: [],
             search: '',
-            customLabels,
             pageSize: 9,
             pagination: [],
+            pageId: 1,
+            customLabels,
             orders: [],
             searchOrderUrl: 'getData',
             showLockers: false,
+            updateDynamic: false,
             selection: [],
             lockerCode: 0,
             number: 0
@@ -193,8 +210,9 @@ export default {
         hidePopup() {
             this.showLockers = false;
         },
-        onChangePage(pageOfItems) {
+        onChangePage(pageOfItems, pageId) {
             this.pagination = pageOfItems;
+            this.pageId = pageId;
         },
         dateFormat: function (date) {
             return moment(date, 'YYYY-MM-DD').format('DD-MM-YYYY');
@@ -211,13 +229,15 @@ export default {
             }
         },
         loadOrders: function () {
-            axios.get(this.searchOrderUrl + this.typeOfStatus).then(res => {
-                if (res.status === 200) {
-                    this.orders = res.data;
-                }
-            }).catch(err => {
-                this.$parent.$data.message = err.response.data
-            });
+            if (this.typeOfStatus !== '?type=finished') {
+                axios.get(this.searchOrderUrl + this.typeOfStatus).then(res => {
+                    if (res.status === 200) {
+                        this.orders = res.data;
+                    }
+                }).catch(err => {
+                    this.$parent.$data.message = err.response.data
+                });
+            }
         },
         sendProcessing: function (orderId, status, type, pass) {
             if (type && type !== 'Bring me' && pass !== true) {
@@ -254,7 +274,7 @@ export default {
                 });
             }
         },
-        sendPayProcess: function (orderId) {
+        sendPay: function (orderId) {
             axios.post('/rePay/order', {
                 'id': orderId,
             }).then(res => {
@@ -263,14 +283,6 @@ export default {
             }).catch(err => {
                 this.$parent.$data.message = err.response.data
             });
-        },
-        sendPay: function (orderId, status, type, pass) {
-            if (type && type !== 'Bring me' && pass !== true) {
-                this.selection = [orderId, status]
-                this.showLockers = true
-            } else {
-                this.sendPayProcess(orderId);
-            }
         },
         setLoading(isLoading) {
             if (isLoading) {
@@ -298,7 +310,7 @@ export default {
                 moment(event.deliveryDate).format('DD-MM-YYYY').toLowerCase().includes(filterValue) ||
                 moment(event.createdAt).format('DD-MM-YYYY').toLowerCase().includes(filterValue)
 
-            return this.orders.filter(filter)
+            return this.orders['data'].filter(filter)
         }
     },
     mounted() {
@@ -312,12 +324,11 @@ export default {
                     if (res.status === 200) {
                         this.orders = res.data;
                     }
+                    this.updateDynamic = newUrl === '?type=finished';
                 })
                 .catch(err => {
-                    this.$parent.$data.message = err.response.data
-                    if (err.response.status === 500) {
-                        window.location = '/logout';
-                    }
+                    this.updateDynamic = newUrl === '?type=finished';
+                    this.$parent.$data.message = err.response.data;
                 });
         }
     },

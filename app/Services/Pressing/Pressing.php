@@ -55,10 +55,12 @@ class Pressing
         return $user;
     }
 
-    public static function getProviderOrder(int $id, string $status): ?array
+    public static function getProviderOrder(int $id, string $status, ?int $page = 1, bool $finished = false): ?array
     {
+        $paginate = $finished ? '&paginate=9&page=' . $page : '&paginate=9999';
+
         $response = Http::withToken(env('MIX_OURANOS_KEY'))
-            ->get(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'provider/' . $id . '/order/' . $status);
+            ->get(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'provider/' . $id . '/order' . '?status=' . $status . $paginate);
 
         self::sendLogs($response, __FUNCTION__);
 
@@ -136,7 +138,7 @@ class Pressing
     public static function updateLocker(int $companyId, array $data): ?array
     {
         $response = Http::withToken(env('MIX_OURANOS_KEY'))
-            ->put(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'company/'. $companyId .'/oldLocker', [
+            ->put(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'company/' . $companyId . '/oldLocker', [
                 'orderId' => $data['orderId'],
                 'code' => $data['lockerCode'],
                 'number' => $data['number'],

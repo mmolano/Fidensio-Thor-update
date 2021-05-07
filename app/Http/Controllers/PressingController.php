@@ -83,7 +83,7 @@ class PressingController extends Controller
                     'Class' => class_basename(self::class),
                     'Code' => $this->error,
                     'OrderId' => $infos,
-                    'Comment' => '3DS pay required'
+                    'Comment' => 'paiement 3ds nécessaire'
                 ]);
                 break;
             case 10:
@@ -130,7 +130,7 @@ class PressingController extends Controller
                     'Class' => class_basename(self::class),
                     'Code' => $this->error,
                     'OrderId' => $infos,
-                    'Comment' => 'Could not send email to customer'
+                    'Comment' => 'Erreur lors de l\'envoie du mail au client'
                 ]);
                 break;
             case 16:
@@ -138,7 +138,7 @@ class PressingController extends Controller
                 Log::error('MyError', [
                     'Class' => class_basename(self::class),
                     'Code' => $this->error,
-                    'Comment' => 'Could not get products'
+                    'Comment' => 'Erreur lors de la récupération des produits'
                 ]);
                 break;
             case 17:
@@ -146,7 +146,7 @@ class PressingController extends Controller
                 Log::error('MyError', [
                     'Class' => class_basename(self::class),
                     'Code' => $this->error,
-                    'Comment' => 'Could not get locker'
+                    'Comment' => 'Impossible de mettre à jour le locker du produit'
                 ]);
                 break;
             default:
@@ -233,7 +233,7 @@ class PressingController extends Controller
         ]);
     }
 
-    public function pay(array $order, array $user, int $finalPrice = 0, bool $changeStatus = false): JsonResponse
+    public function pay(array $order, array $user, bool $changeStatus = false): JsonResponse
     {
         $userData = ['email' => $user['email'], 'name' => $user['data']['firstName']];
 
@@ -281,7 +281,7 @@ class PressingController extends Controller
                         } elseif (!Mailjet::sendWithTemplate($userData, 'payment_confirmed', 'Le paiement pour votre commande n°' . $order['id'] . ' a été validé', $params)) {
                             return $this->error(15, $order['id'], 'warning');
                         }
-
+                        $hasBeenSent = true;
                         break;
                     case 2:
                         if (!Pressing::updatePayment($order['id'], [
@@ -308,6 +308,10 @@ class PressingController extends Controller
         if ($changeStatus) {
             if (!Pressing::changeStatus($order['id'], $this->status['processing'])) {
                 return $this->error(4);
+            } elseif (!isset($hasBeenSent)) {
+                if (!Mailjet::sendWithTemplate($userData, 'payment_confirmed', 'Le paiement pour votre commande n°' . $order['id'] . ' a été validé', $params)) {
+                    return $this->error(15, $order['id'], 'warning');
+                }
             }
         } else {
             if (!Pressing::changeStatus($order['id'], $this->status['finished'])) {
@@ -333,13 +337,13 @@ class PressingController extends Controller
         if (isset($request->type)) {
             switch ($request->type) {
                 case $type = 'finished':
+                    $order = Pressing::getProviderOrder($providerId, $this->status[$type], $request->page, true);
+                    break;
                 case $type = 'pickupDone':
                     $order = Pressing::getProviderOrder($providerId, $this->status[$type]);
                     break;
                 case $type = 'processing':
-                    $orderProcess = Pressing::getProviderOrder($providerId, $this->status[$type]);
-                    $orderWaiting = Pressing::getProviderOrder($providerId, $this->status['waitingForPayment']);
-                    $order = array_merge($orderProcess, $orderWaiting);
+                    $order = Pressing::getProviderOrder($providerId, $this->status['waitingForPayment'] . ',' . $this->status[$type]);
                     break;
                 default:
                     $order = Pressing::getProviderOrder($providerId, $this->status['default']);
@@ -367,7 +371,7 @@ class PressingController extends Controller
             return $this->error(10);
         }
 
-        return self::pay($order, $user);
+        return self::pay($order, $user, true);
     }
 
     public function processPayment(Request $request): JsonResponse
@@ -418,6 +422,6 @@ class PressingController extends Controller
             return $this->error(5);
         }
 
-        return self::pay($order, $user, $request->finalPrice, true);
+        return self::pay($order, $user, true);
     }
 }
