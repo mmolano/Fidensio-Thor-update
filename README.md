@@ -93,6 +93,8 @@ https://www.notion.so/fidensio/Cr-e-une-nouvelle-entreprise-dans-Edgar-6b2472b2b
 * [Laravel](https://laravel.com/docs/5.8) - The web framework used
 * [Stripe Stripe-php](https://stripe.com/docs) - Use for payments
 * [Mailjet Mailjet-apiv3-php](https://dev.mailjet.com/email/guides/?php#getting-started) - Use send transactional email and sms
+* [VueJS](https://vuejs.org/v2/guide) - Used as front template
+  
 
 ## Authors
 

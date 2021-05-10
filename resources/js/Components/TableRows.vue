@@ -119,20 +119,17 @@
                                 @click="sendPay(order.id)">
                             Ré-encaisser
                         </button>
-
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
-
         <div class="search_result" v-if="filteredOrder.length === 0">Aucune commande trouvée
         </div>
         <div class="rows_number">
             <span v-if="search">Affichage de {{ filteredOrder.length }} résultats</span>
             <span v-if="!search">Affichage de {{ filteredOrder.length }} résultats sur {{ orders.totalItems }}</span>
         </div>
-
         <div class="pagination_container" v-if="!search && updateDynamic">
             <Pagination v-if="orders.data" :pageSize="pageSize" :number-of-items="orders.totalItems"
                         :first-page-of-items="pageId"
@@ -141,16 +138,12 @@
                         :previous-page-of-items="orders.previousPage"
                         :last-page-of-items="orders.lastPage"></Pagination>
         </div>
-
         <div class="pagination_container" v-else-if="!search">
             <jw-pagination v-if="orders.data" :pageSize="pageSize" :items="orders.data"
                            @changePage="onChangePage"
                            :labels="customLabels"></jw-pagination>
         </div>
-
-
     </section>
-
 </template>
 
 <script>
