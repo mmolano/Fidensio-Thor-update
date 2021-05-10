@@ -306,7 +306,7 @@ class PressingController extends Controller
                         } elseif (!Mailjet::sendWithTemplate($userData, 'payment_3DSecure', 'Le paiement pour votre commande n°' . $order['id'] . ' nécessite votre intervention')) {
                             return $this->error(15, $order['id'], 'warning');
                         }
-                        return $this->error(9, $order['id'], 'warning');
+                        return $this->error(9, $order['id'], 'warning', 200);
                     default:
                         return response()->json([
                             'status' => 'warning',

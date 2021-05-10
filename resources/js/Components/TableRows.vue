@@ -236,6 +236,7 @@ export default {
             if (type && type !== 'Bring me' && pass !== true) {
                 this.selection = [orderId, status]
                 this.showLockers = true
+                this.lockerCode = Math.floor(Math.random() * (9999 - 1111 + 1) + 1111);
             } else {
                 axios.post('/update', {
                     'orderId': orderId,
@@ -318,9 +319,11 @@ export default {
                         this.orders = res.data;
                     }
                     this.updateDynamic = newUrl === '?type=finished';
+                    this.search = '';
                 })
                 .catch(err => {
                     this.updateDynamic = newUrl === '?type=finished';
+                    this.search = '';
                     this.$parent.$data.message = err.response.data;
                 });
         }
@@ -481,7 +484,7 @@ thead {
 
         &.disabled {
             cursor: not-allowed !important;
-            background-color: #dbf0ff !important;
+            background-color: unset !important;
         }
     }
 }

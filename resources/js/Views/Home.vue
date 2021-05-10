@@ -2,7 +2,7 @@
     <section>
         <Loader v-if="isLoading"></Loader>
         <FlashPopup :my-message="message"></FlashPopup>
-        <Popup v-if="isDisplay" :order-data="orderData"></Popup>
+        <Popup v-if="isDisplay" :order-data="orderData" :type-of-status="typeOfStatus"></Popup>
         <div class="container-global">
             <input type="checkbox" id="nav-toggle">
             <SideBar :active-url="typeOfStatus"></SideBar>

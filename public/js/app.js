@@ -2614,10 +2614,38 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Popup",
   props: {
-    orderData: Object
+    orderData: Object,
+    typeOfStatus: String
   },
   methods: {
     hidePopup: function hidePopup() {
@@ -2931,13 +2959,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -3027,6 +3048,7 @@ var customLabels = {
       if (type && type !== 'Bring me' && pass !== true) {
         this.selection = [orderId, status];
         this.showLockers = true;
+        this.lockerCode = Math.floor(Math.random() * (9999 - 1111 + 1) + 1111);
       } else {
         axios__WEBPACK_IMPORTED_MODULE_5___default().post('/update', {
           'orderId': orderId,
@@ -3115,8 +3137,10 @@ var customLabels = {
         }
 
         _this5.updateDynamic = newUrl === '?type=finished';
+        _this5.search = '';
       })["catch"](function (err) {
         _this5.updateDynamic = newUrl === '?type=finished';
+        _this5.search = '';
         _this5.$parent.$data.message = err.response.data;
       });
     }
@@ -3493,7 +3517,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "section[data-v-8d3c311e] {\n  height: initial !important;\n}\n#popup-container[data-v-8d3c311e] {\n  z-index: 9999;\n  display: flex;\n  position: fixed;\n  height: 100%;\n  width: 100%;\n  flex-flow: column;\n  align-items: center;\n  justify-content: center;\n  background-color: #80808047;\n}\n#popup[data-v-8d3c311e] {\n  position: fixed;\n  margin: 0 auto;\n  z-index: 1000;\n  width: 100%;\n  max-width: 340px;\n  max-height: 80%;\n  border-radius: 20px;\n  background-color: white;\n  padding: 29px;\n}\n#popup-commande[data-v-8d3c311e] {\n  width: 100%;\n}\n#popup-commande button[data-v-8d3c311e] {\n  width: 100%;\n  border-radius: 20px;\n  height: 45px;\n  border: unset;\n  background-color: #ef7ca6;\n  color: white;\n  cursor: pointer;\n}\n#popup-commentaire[data-v-8d3c311e] {\n  overflow-y: auto;\n  padding: 10px;\n  height: 90px;\n}\n#popup-commentaire-div[data-v-8d3c311e] {\n  background-color: #F6F6F6;\n  border-radius: 2px;\n}\n.popup-row[data-v-8d3c311e] {\n  margin: 5px;\n  padding-right: 5px;\n  padding-left: 10px;\n  border-radius: 5px;\n  background-color: #F6F6F6;\n  font-size: 16px;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  flex-wrap: wrap;\n}\n.popup-commentaire-title[data-v-8d3c311e] {\n  margin-top: 5px;\n}\n.popup-contenu[data-v-8d3c311e] {\n  font-weight: bold;\n  color: grey;\n  background-color: white;\n  border-radius: 5px;\n  padding: 3px;\n  margin: 5px;\n}\n.popup-contenu-comment[data-v-8d3c311e] {\n  font-weight: bold;\n  color: grey;\n}\n@media screen and (max-width: 900px) {\n#popup[data-v-8d3c311e] {\n    max-width: 80%;\n}\n}\n@media screen and (max-width: 500px) {\n#popup[data-v-8d3c311e] {\n    max-width: 100%;\n}\n}\n@media screen and (max-height: 500px) {\n#popup[data-v-8d3c311e] {\n    max-width: 90%;\n    max-height: 95%;\n}\n#popup-container[data-v-8d3c311e] {\n    width: 100%;\n}\n.popup-tables-container[data-v-8d3c311e] {\n    display: flex;\n}\n#popup-div-one[data-v-8d3c311e],\n#popup-div-two[data-v-8d3c311e] {\n    flex: 1;\n}\n#popup-commentaire[data-v-8d3c311e] {\n    height: 70px;\n}\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "section[data-v-8d3c311e] {\n  height: initial !important;\n}\n#popup-container[data-v-8d3c311e] {\n  z-index: 9999;\n  display: flex;\n  position: fixed;\n  height: 100%;\n  width: 100%;\n  flex-flow: column;\n  align-items: center;\n  justify-content: center;\n  background-color: #80808047;\n}\n#popup[data-v-8d3c311e] {\n  position: fixed;\n  margin: 0 auto;\n  z-index: 1000;\n  width: 100%;\n  max-width: 340px;\n  max-height: 80%;\n  border-radius: 20px;\n  background-color: white;\n  padding: 29px;\n  overflow-y: scroll;\n}\n#popup-commande[data-v-8d3c311e] {\n  width: 100%;\n}\n#popup-commande button[data-v-8d3c311e] {\n  width: 100%;\n  border-radius: 20px;\n  height: 45px;\n  border: unset;\n  background-color: #ef7ca6;\n  color: white;\n  cursor: pointer;\n}\n#popup-commentaire[data-v-8d3c311e] {\n  overflow-y: auto;\n  padding: 10px;\n  height: 90px;\n}\n#popup-details[data-v-8d3c311e] {\n  max-height: 138px;\n  overflow-y: scroll;\n  width: 100%;\n}\n#popup-commentaire-div[data-v-8d3c311e] {\n  background-color: #F6F6F6;\n  border-radius: 2px;\n}\n.popup-row[data-v-8d3c311e] {\n  margin: 5px;\n  padding-right: 5px;\n  padding-left: 10px;\n  border-radius: 5px;\n  background-color: #F6F6F6;\n  font-size: 16px;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  flex-wrap: wrap;\n}\n.popup-row .details-row[data-v-8d3c311e]:not(:last-of-type) {\n  border-bottom: 2px solid gray;\n}\n.popup-commentaire-title[data-v-8d3c311e] {\n  margin-top: 5px;\n}\n.popup-contenu[data-v-8d3c311e] {\n  font-weight: bold;\n  color: grey;\n  background-color: white;\n  border-radius: 5px;\n  padding: 3px;\n  margin: 5px;\n}\n.popup-contenu-comment[data-v-8d3c311e] {\n  font-weight: bold;\n  color: grey;\n}\n@media screen and (max-width: 900px) {\n#popup[data-v-8d3c311e] {\n    max-width: 80%;\n}\n}\n@media screen and (max-width: 500px) {\n#popup[data-v-8d3c311e] {\n    max-width: 100%;\n    max-height: 100%;\n}\n}\n@media screen and (max-height: 500px) {\n#popup[data-v-8d3c311e] {\n    max-width: 90%;\n    max-height: 95%;\n}\n#popup-container[data-v-8d3c311e] {\n    width: 100%;\n}\n.popup-tables-container[data-v-8d3c311e] {\n    display: flex;\n}\n#popup-div-one[data-v-8d3c311e],\n#popup-div-two[data-v-8d3c311e] {\n    flex: 1;\n}\n#popup-commentaire[data-v-8d3c311e] {\n    height: 70px;\n}\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -3565,7 +3589,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "html[data-v-4040ad8c],\nbody[data-v-4040ad8c] {\n  height: 100%;\n  width: 100%;\n  display: flex;\n  flex-flow: column;\n}\nsection[data-v-4040ad8c] {\n  padding: 2rem 1.5rem;\n  background: #F0F0F0;\n}\ntbody tr td[data-v-4040ad8c] {\n  padding: 20px;\n  border-bottom: none;\n  text-align: center;\n}\ntbody tr td span[data-v-4040ad8c] {\n  padding: 9px;\n  border-radius: 6px;\n  font-weight: bold;\n}\nthead[data-v-4040ad8c] {\n  box-shadow: 0 2px 31px 0 rgba(123, 123, 123, 0.2);\n}\nthead tr[data-v-4040ad8c] {\n  color: #232222;\n  height: 50px;\n}\nthead tr th[data-v-4040ad8c] {\n  top: 0;\n  z-index: 2;\n  position: sticky;\n  background-color: white;\n  padding: 20px;\n  box-shadow: 20px 9px 31px 0 rgba(123, 123, 123, 0.2);\n}\n.responsive-table[data-v-4040ad8c] {\n  display: block;\n  background-color: white;\n  border-radius: 20px;\n  max-height: 858px;\n  height: 100%;\n  width: 90%;\n  margin: auto;\n  overflow: scroll;\n}\n.pastille-info[data-v-4040ad8c] {\n  display: none;\n}\n#main-table[data-v-4040ad8c] {\n  border-collapse: collapse;\n  border-radius: 20px;\n  overflow-y: scroll;\n  width: 100%;\n  height: 100%;\n  margin: auto;\n  box-shadow: 0 14px 38px 6px rgba(123, 123, 123, 0.13);\n}\n#main-table tbody tr[data-v-4040ad8c] {\n  width: 100%;\n}\n#main-table tbody tr[data-v-4040ad8c]:nth-child(even) {\n  background-color: #f5f5f5;\n}\n#main-table tbody tr[data-v-4040ad8c]:hover {\n  background-color: #ffe4e4;\n}\n#main-table .btn[data-v-4040ad8c] {\n  cursor: pointer;\n  width: 100%;\n  background-color: #a4c3e8;\n  color: #fff;\n  border: unset;\n  padding: 6px;\n  border-radius: 10px;\n}\n.search_result[data-v-4040ad8c] {\n  text-align: center;\n  font-size: 18px;\n  color: #ff5b5b;\n  background-color: white;\n  padding: 20px;\n  border-radius: 20px;\n  width: 90%;\n  margin: auto auto 20px;\n}\n.rows_number[data-v-4040ad8c] {\n  margin: 10px;\n  text-align: center;\n  opacity: 0.6;\n}\n.refSearch[data-v-4040ad8c] {\n  height: 70px;\n  min-height: 100%;\n}\n.btn[data-v-4040ad8c] {\n  margin-top: 0;\n  margin-bottom: 0;\n}\n.infos-buttons[data-v-4040ad8c] {\n  font-size: 24px;\n}\n.Commande button[data-v-4040ad8c] {\n  text-transform: uppercase;\n  font-weight: bold;\n}\n.Commande button.pay-warning[data-v-4040ad8c] {\n  background-color: #4ab4ff !important;\n  color: #193c8e !important;\n}\n.Commande button.disabled[data-v-4040ad8c] {\n  cursor: not-allowed !important;\n  background-color: #dbf0ff !important;\n}\n#popup-container[data-v-4040ad8c] {\n  top: 0;\n  left: 0;\n  z-index: 9999;\n  display: flex;\n  position: fixed;\n  height: 100%;\n  width: 100%;\n  flex-flow: column;\n  align-items: center;\n  justify-content: center;\n  background-color: #80808047;\n}\n#popup-container .hideBtn[data-v-4040ad8c] {\n  text-align: center;\n  margin: 10px auto;\n  width: 100%;\n  border-radius: 20px;\n  height: 45px;\n  border: unset;\n  background-color: #ff5a5a;\n  color: white;\n  cursor: pointer;\n}\n#popup[data-v-4040ad8c] {\n  position: fixed;\n  margin: 0 auto;\n  z-index: 1000;\n  width: 100%;\n  max-width: 340px;\n  max-height: 80%;\n  border-radius: 20px;\n  background-color: white;\n  padding: 29px;\n}\n.popup-row label[data-v-4040ad8c] {\n  padding: 12px 0;\n}\n.popup-row input[data-v-4040ad8c] {\n  width: 100%;\n  padding: 8px;\n  height: 30px;\n}\n#popup-commande[data-v-4040ad8c] {\n  width: 100%;\n}\n#popup-commande button[data-v-4040ad8c] {\n  width: 100%;\n  border-radius: 20px;\n  height: 45px;\n  border: unset;\n  background-color: #ef7ca6;\n  color: white;\n  cursor: pointer;\n  margin: 10px auto;\n}\n#popup-commentaire[data-v-4040ad8c] {\n  overflow-y: auto;\n  padding: 10px;\n  height: 90px;\n}\n#popup-commentaire-div[data-v-4040ad8c] {\n  background-color: #F6F6F6;\n  border-radius: 2px;\n}\n.popup-row[data-v-4040ad8c] {\n  margin: 5px;\n  padding-right: 5px;\n  padding-left: 10px;\n  border-radius: 5px;\n  background-color: #F6F6F6;\n  font-size: 16px;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  flex-wrap: wrap;\n}\n.popup-commentaire-title[data-v-4040ad8c] {\n  margin-top: 5px;\n}\n.popup-contenu[data-v-4040ad8c] {\n  font-weight: bold;\n  color: grey;\n  background-color: white;\n  border-radius: 5px;\n  padding: 3px;\n  margin: 5px;\n}\n.popup-contenu-comment[data-v-4040ad8c] {\n  font-weight: bold;\n  color: grey;\n}\n@media screen and (max-width: 900px) {\n#popup[data-v-4040ad8c] {\n    max-width: 80%;\n}\n}\n@media screen and (max-width: 500px) {\n#popup[data-v-4040ad8c] {\n    max-width: 100%;\n}\n}\n@media screen and (max-height: 500px) {\n#popup[data-v-4040ad8c] {\n    max-width: 90%;\n    max-height: 95%;\n}\n#popup-container[data-v-4040ad8c] {\n    width: 100%;\n}\n.popup-tables-container[data-v-4040ad8c] {\n    display: flex;\n}\n#popup-div-one[data-v-4040ad8c],\n#popup-div-two[data-v-4040ad8c] {\n    flex: 1;\n}\n#popup-commentaire[data-v-4040ad8c] {\n    height: 70px;\n}\n}\n@media only screen and (min-width: 900px) {\n.Debut[data-v-4040ad8c], .Retour[data-v-4040ad8c] {\n    min-width: 150px;\n}\n}\n@media screen and (max-width: 900px) {\n.Debut[data-v-4040ad8c],\n.Retour[data-v-4040ad8c],\n.Service[data-v-4040ad8c], .Consigne[data-v-4040ad8c] {\n    display: none;\n}\n}\n@media screen and (max-width: 500px) {\nbody[data-v-4040ad8c] {\n    font-size: 12px;\n}\ntable[data-v-4040ad8c] {\n    height: unset !important;\n    margin-left: 10px;\n}\n.refSearch[data-v-4040ad8c] {\n    height: unset;\n}\n#main-table tbody tr[data-v-4040ad8c] {\n    display: flex;\n    flex-direction: column;\n}\n.Infos[data-v-4040ad8c] {\n    width: 30%;\n    margin: auto;\n}\n.Commande a[data-v-4040ad8c] {\n    position: relative;\n}\n.pastille-info[data-v-4040ad8c] {\n    display: block;\n    height: 25px;\n    width: 25px;\n    margin: auto auto 10px;\n    border-radius: 50px;\n}\ntbody tr td a[data-v-4040ad8c] {\n    width: 20px;\n}\n.Emplacement[data-v-4040ad8c]::before {\n    content: \"Emplacement: \";\n    color: grey;\n    font-weight: bold;\n}\n.Nom[data-v-4040ad8c]::before {\n    content: \"Nom: \";\n    color: grey;\n    font-weight: bold;\n}\n.Consigne[data-v-4040ad8c]::before {\n    content: \"Consigne: \";\n    color: grey;\n    font-weight: bold;\n}\n#main-table thead[data-v-4040ad8c] {\n    display: none;\n}\n}\n@media only screen and (max-width: 380px) {\nsection[data-v-4040ad8c] {\n    padding: 5px !important;\n}\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "html[data-v-4040ad8c],\nbody[data-v-4040ad8c] {\n  height: 100%;\n  width: 100%;\n  display: flex;\n  flex-flow: column;\n}\nsection[data-v-4040ad8c] {\n  padding: 2rem 1.5rem;\n  background: #F0F0F0;\n}\ntbody tr td[data-v-4040ad8c] {\n  padding: 20px;\n  border-bottom: none;\n  text-align: center;\n}\ntbody tr td span[data-v-4040ad8c] {\n  padding: 9px;\n  border-radius: 6px;\n  font-weight: bold;\n}\nthead[data-v-4040ad8c] {\n  box-shadow: 0 2px 31px 0 rgba(123, 123, 123, 0.2);\n}\nthead tr[data-v-4040ad8c] {\n  color: #232222;\n  height: 50px;\n}\nthead tr th[data-v-4040ad8c] {\n  top: 0;\n  z-index: 2;\n  position: sticky;\n  background-color: white;\n  padding: 20px;\n  box-shadow: 20px 9px 31px 0 rgba(123, 123, 123, 0.2);\n}\n.responsive-table[data-v-4040ad8c] {\n  display: block;\n  background-color: white;\n  border-radius: 20px;\n  max-height: 858px;\n  height: 100%;\n  width: 90%;\n  margin: auto;\n  overflow: scroll;\n}\n.pastille-info[data-v-4040ad8c] {\n  display: none;\n}\n#main-table[data-v-4040ad8c] {\n  border-collapse: collapse;\n  border-radius: 20px;\n  overflow-y: scroll;\n  width: 100%;\n  height: 100%;\n  margin: auto;\n  box-shadow: 0 14px 38px 6px rgba(123, 123, 123, 0.13);\n}\n#main-table tbody tr[data-v-4040ad8c] {\n  width: 100%;\n}\n#main-table tbody tr[data-v-4040ad8c]:nth-child(even) {\n  background-color: #f5f5f5;\n}\n#main-table tbody tr[data-v-4040ad8c]:hover {\n  background-color: #ffe4e4;\n}\n#main-table .btn[data-v-4040ad8c] {\n  cursor: pointer;\n  width: 100%;\n  background-color: #a4c3e8;\n  color: #fff;\n  border: unset;\n  padding: 6px;\n  border-radius: 10px;\n}\n.search_result[data-v-4040ad8c] {\n  text-align: center;\n  font-size: 18px;\n  color: #ff5b5b;\n  background-color: white;\n  padding: 20px;\n  border-radius: 20px;\n  width: 90%;\n  margin: auto auto 20px;\n}\n.rows_number[data-v-4040ad8c] {\n  margin: 10px;\n  text-align: center;\n  opacity: 0.6;\n}\n.refSearch[data-v-4040ad8c] {\n  height: 70px;\n  min-height: 100%;\n}\n.btn[data-v-4040ad8c] {\n  margin-top: 0;\n  margin-bottom: 0;\n}\n.infos-buttons[data-v-4040ad8c] {\n  font-size: 24px;\n}\n.Commande button[data-v-4040ad8c] {\n  text-transform: uppercase;\n  font-weight: bold;\n}\n.Commande button.pay-warning[data-v-4040ad8c] {\n  background-color: #4ab4ff !important;\n  color: #193c8e !important;\n}\n.Commande button.disabled[data-v-4040ad8c] {\n  cursor: not-allowed !important;\n  background-color: unset !important;\n}\n#popup-container[data-v-4040ad8c] {\n  top: 0;\n  left: 0;\n  z-index: 9999;\n  display: flex;\n  position: fixed;\n  height: 100%;\n  width: 100%;\n  flex-flow: column;\n  align-items: center;\n  justify-content: center;\n  background-color: #80808047;\n}\n#popup-container .hideBtn[data-v-4040ad8c] {\n  text-align: center;\n  margin: 10px auto;\n  width: 100%;\n  border-radius: 20px;\n  height: 45px;\n  border: unset;\n  background-color: #ff5a5a;\n  color: white;\n  cursor: pointer;\n}\n#popup[data-v-4040ad8c] {\n  position: fixed;\n  margin: 0 auto;\n  z-index: 1000;\n  width: 100%;\n  max-width: 340px;\n  max-height: 80%;\n  border-radius: 20px;\n  background-color: white;\n  padding: 29px;\n}\n.popup-row label[data-v-4040ad8c] {\n  padding: 12px 0;\n}\n.popup-row input[data-v-4040ad8c] {\n  width: 100%;\n  padding: 8px;\n  height: 30px;\n}\n#popup-commande[data-v-4040ad8c] {\n  width: 100%;\n}\n#popup-commande button[data-v-4040ad8c] {\n  width: 100%;\n  border-radius: 20px;\n  height: 45px;\n  border: unset;\n  background-color: #ef7ca6;\n  color: white;\n  cursor: pointer;\n  margin: 10px auto;\n}\n#popup-commentaire[data-v-4040ad8c] {\n  overflow-y: auto;\n  padding: 10px;\n  height: 90px;\n}\n#popup-commentaire-div[data-v-4040ad8c] {\n  background-color: #F6F6F6;\n  border-radius: 2px;\n}\n.popup-row[data-v-4040ad8c] {\n  margin: 5px;\n  padding-right: 5px;\n  padding-left: 10px;\n  border-radius: 5px;\n  background-color: #F6F6F6;\n  font-size: 16px;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  flex-wrap: wrap;\n}\n.popup-commentaire-title[data-v-4040ad8c] {\n  margin-top: 5px;\n}\n.popup-contenu[data-v-4040ad8c] {\n  font-weight: bold;\n  color: grey;\n  background-color: white;\n  border-radius: 5px;\n  padding: 3px;\n  margin: 5px;\n}\n.popup-contenu-comment[data-v-4040ad8c] {\n  font-weight: bold;\n  color: grey;\n}\n@media screen and (max-width: 900px) {\n#popup[data-v-4040ad8c] {\n    max-width: 80%;\n}\n}\n@media screen and (max-width: 500px) {\n#popup[data-v-4040ad8c] {\n    max-width: 100%;\n}\n}\n@media screen and (max-height: 500px) {\n#popup[data-v-4040ad8c] {\n    max-width: 90%;\n    max-height: 95%;\n}\n#popup-container[data-v-4040ad8c] {\n    width: 100%;\n}\n.popup-tables-container[data-v-4040ad8c] {\n    display: flex;\n}\n#popup-div-one[data-v-4040ad8c],\n#popup-div-two[data-v-4040ad8c] {\n    flex: 1;\n}\n#popup-commentaire[data-v-4040ad8c] {\n    height: 70px;\n}\n}\n@media only screen and (min-width: 900px) {\n.Debut[data-v-4040ad8c], .Retour[data-v-4040ad8c] {\n    min-width: 150px;\n}\n}\n@media screen and (max-width: 900px) {\n.Debut[data-v-4040ad8c],\n.Retour[data-v-4040ad8c],\n.Service[data-v-4040ad8c], .Consigne[data-v-4040ad8c] {\n    display: none;\n}\n}\n@media screen and (max-width: 500px) {\nbody[data-v-4040ad8c] {\n    font-size: 12px;\n}\ntable[data-v-4040ad8c] {\n    height: unset !important;\n    margin-left: 10px;\n}\n.refSearch[data-v-4040ad8c] {\n    height: unset;\n}\n#main-table tbody tr[data-v-4040ad8c] {\n    display: flex;\n    flex-direction: column;\n}\n.Infos[data-v-4040ad8c] {\n    width: 30%;\n    margin: auto;\n}\n.Commande a[data-v-4040ad8c] {\n    position: relative;\n}\n.pastille-info[data-v-4040ad8c] {\n    display: block;\n    height: 25px;\n    width: 25px;\n    margin: auto auto 10px;\n    border-radius: 50px;\n}\ntbody tr td a[data-v-4040ad8c] {\n    width: 20px;\n}\n.Emplacement[data-v-4040ad8c]::before {\n    content: \"Emplacement: \";\n    color: grey;\n    font-weight: bold;\n}\n.Nom[data-v-4040ad8c]::before {\n    content: \"Nom: \";\n    color: grey;\n    font-weight: bold;\n}\n.Consigne[data-v-4040ad8c]::before {\n    content: \"Consigne: \";\n    color: grey;\n    font-weight: bold;\n}\n#main-table thead[data-v-4040ad8c] {\n    display: none;\n}\n}\n@media only screen and (max-width: 380px) {\nsection[data-v-4040ad8c] {\n    padding: 5px !important;\n}\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -44535,7 +44559,8 @@ var render = function() {
                     _vm._v(
                       "+" +
                         _vm._s(_vm.orderData.user.indicMobile) +
-                        _vm._s(_vm.orderData.user.mobile)
+                        _vm._s(_vm.orderData.user.mobile) +
+                        "\n                            "
                     )
                   ]
                 )
@@ -44589,9 +44614,59 @@ var render = function() {
                     staticClass: "popup-contenu",
                     attrs: { id: "popup-emplacement_aller" }
                   },
-                  [_vm._v(_vm._s(_vm.orderData.company.name))]
+                  [
+                    _vm._v(
+                      _vm._s(_vm.orderData.company.name) +
+                        "\n                            "
+                    )
+                  ]
                 )
-              ])
+              ]),
+              _vm._v(" "),
+              _vm.typeOfStatus === "?type=finished" ||
+              _vm.typeOfStatus === "?type=processing"
+                ? _c("div", [
+                    _c("div", { staticClass: "popup-row" }, [
+                      _c("div", [_vm._v("Détails")]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "popup-contenu" }, [
+                        _vm._v(
+                          "Total: " + _vm._s(_vm.orderData.amount / 100) + " €"
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "popup-contenu",
+                          attrs: { id: "popup-details" }
+                        },
+                        _vm._l(_vm.orderData.details, function(orderDetails) {
+                          return _c("div", { staticClass: "details-row" }, [
+                            _c("div", [
+                              _vm._v(
+                                "\n                                            Nom: " +
+                                  _vm._s(orderDetails.name) +
+                                  " x " +
+                                  _vm._s(orderDetails.quantity / 100) +
+                                  "\n                                        "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", [
+                              _vm._v(
+                                "\n                                            Prix: " +
+                                  _vm._s(orderDetails.total / 100) +
+                                  " €\n                                        "
+                              )
+                            ])
+                          ])
+                        }),
+                        0
+                      )
+                    ])
+                  ])
+                : _vm._e()
             ]),
             _vm._v(" "),
             _c("div", { attrs: { id: "popup-div-two" } }, [
@@ -44606,11 +44681,13 @@ var render = function() {
                   },
                   [
                     _vm._v(
-                      _vm._s(
-                        _vm.orderData.locker.length === 0
-                          ? "Bring me"
-                          : "Classic"
-                      )
+                      "\n                                " +
+                        _vm._s(
+                          _vm.orderData.locker.length === 0
+                            ? "Bring me"
+                            : "Classic"
+                        ) +
+                        "\n                            "
                     )
                   ]
                 )
@@ -44639,7 +44716,12 @@ var render = function() {
                         staticClass: "popup-contenu-comment",
                         attrs: { id: "popup-commentaire" }
                       },
-                      [_vm._v(_vm._s(_vm.orderData.userComment))]
+                      [
+                        _vm._v(
+                          _vm._s(_vm.orderData.userComment) +
+                            "\n                                "
+                        )
+                      ]
                     )
                   ])
                 ]
@@ -45477,7 +45559,12 @@ var render = function() {
       _c("FlashPopup", { attrs: { "my-message": _vm.message } }),
       _vm._v(" "),
       _vm.isDisplay
-        ? _c("Popup", { attrs: { "order-data": _vm.orderData } })
+        ? _c("Popup", {
+            attrs: {
+              "order-data": _vm.orderData,
+              "type-of-status": _vm.typeOfStatus
+            }
+          })
         : _vm._e(),
       _vm._v(" "),
       _c(

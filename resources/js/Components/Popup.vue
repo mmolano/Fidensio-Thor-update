@@ -7,7 +7,10 @@
                         <div id="popup-div-one">
                             <div class="popup-row">
                                 <div>N de téléphone :</div>
-                                <div class="popup-contenu" id="popup-tel">+{{ orderData.user.indicMobile }}{{ orderData.user.mobile }}</div>
+                                <div class="popup-contenu" id="popup-tel">+{{
+                                        orderData.user.indicMobile
+                                    }}{{ orderData.user.mobile }}
+                                </div>
                             </div>
                             <div class="popup-row">
                                 <div>Email :</div>
@@ -23,18 +26,42 @@
                             </div>
                             <div class="popup-row">
                                 <div>Emplacement</div>
-                                <div class="popup-contenu" id="popup-emplacement_aller">{{ orderData.company.name }}</div>
+                                <div class="popup-contenu" id="popup-emplacement_aller">{{
+                                        orderData.company.name
+                                    }}
+                                </div>
+                            </div>
+                            <div v-if="typeOfStatus === '?type=finished' || typeOfStatus === '?type=processing'">
+                                <div class="popup-row">
+                                    <div>Détails</div>
+                                    <div class="popup-contenu">Total: {{ orderData.amount / 100 }} €</div>
+                                    <div class="popup-contenu" id="popup-details">
+                                        <div class="details-row" v-for="orderDetails in orderData.details">
+                                            <div>
+                                                Nom: {{ orderDetails.name }} x {{ orderDetails.quantity / 100 }}
+                                            </div>
+                                            <div>
+                                                Prix: {{ orderDetails.total / 100 }} €
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div id="popup-div-two">
                             <div class="popup-row">
                                 <div>N° de consigne :</div>
-                                <div class="popup-contenu" id="popup-consigne">{{ orderData.locker.length === 0 ? 'Bring me' : 'Classic' }}</div>
+                                <div class="popup-contenu" id="popup-consigne">
+                                    {{ orderData.locker.length === 0 ? 'Bring me' : 'Classic' }}
+                                </div>
                             </div>
                             <div class="popup-commentaire-title" style="text-align:center">Commentaire :</div>
                             <div class="popup-row" style="margin-top: 0;">
                                 <div id="popup-commentaire-div">
-                                    <div class="popup-contenu-comment" id="popup-commentaire">{{ orderData.userComment }}</div>
+                                    <div class="popup-contenu-comment" id="popup-commentaire">{{
+                                            orderData.userComment
+                                        }}
+                                    </div>
                                 </div>
                             </div>
                             <div id="popup-commande-div" v-on:click="hidePopup">
@@ -56,7 +83,8 @@
 export default {
     name: "Popup",
     props: {
-      orderData: Object
+        orderData: Object,
+        typeOfStatus: String,
     },
     methods: {
         hidePopup: function () {
@@ -95,6 +123,7 @@ section {
     border-radius: 20px;
     background-color: white;
     padding: 29px;
+    overflow-y: scroll;
 }
 
 #popup-commande {
@@ -117,6 +146,12 @@ section {
     height: 90px;
 }
 
+#popup-details {
+    max-height: 138px;
+    overflow-y: scroll;
+    width: 100%;
+}
+
 #popup-commentaire-div {
     background-color: #F6F6F6;
     border-radius: 2px;
@@ -133,13 +168,17 @@ section {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
+
+    & .details-row:not(:last-of-type) {
+        border-bottom: 2px solid gray;
+    }
 }
 
 .popup-commentaire-title {
     margin-top: 5px;
 }
 
-.popup-contenu {
+.popup-contenu{
     font-weight: bold;
     color: grey;
     background-color: white;
@@ -162,6 +201,7 @@ section {
 @media screen and (max-width: 500px) {
     #popup {
         max-width: 100%;
+        max-height: 100%;
     }
 }
 
