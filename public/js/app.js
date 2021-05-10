@@ -3064,7 +3064,7 @@ var customLabels = {
         });
       }
     },
-    sendPay: function sendPay(orderId, status) {
+    sendPay: function sendPay(orderId) {
       var _this4 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_5___default().post('/rePay/order', {
@@ -3421,7 +3421,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".loader-container[data-v-0ddc26c4] {\n  z-index: 9999999;\n  position: fixed;\n  display: flex;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  justify-content: center;\n  flex-direction: column;\n  height: 100%;\n  background-color: #d4d0d073;\n}\n.loader-container .lds-ring[data-v-0ddc26c4], .loader-container .load-text[data-v-0ddc26c4] {\n  margin: 5px auto;\n}\n.loader-container .lds-ring[data-v-0ddc26c4] {\n  display: inline-block;\n  position: relative;\n  width: 80px;\n  height: 80px;\n}\n.loader-container .lds-ring div[data-v-0ddc26c4] {\n  box-sizing: border-box;\n  display: block;\n  position: absolute;\n  width: 64px;\n  height: 64px;\n  margin: 8px;\n  border: 8px solid #1a202e;\n  border-radius: 50%;\n  -webkit-animation: lds-ring-data-v-0ddc26c4 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;\n          animation: lds-ring-data-v-0ddc26c4 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;\n  border-color: #ef7ca6 transparent transparent transparent;\n}\n.loader-container .lds-ring div[data-v-0ddc26c4]:nth-child(1) {\n  -webkit-animation-delay: -0.45s;\n          animation-delay: -0.45s;\n}\n.loader-container .lds-ring div[data-v-0ddc26c4]:nth-child(2) {\n  -webkit-animation-delay: -0.3s;\n          animation-delay: -0.3s;\n}\n.loader-container .lds-ring div[data-v-0ddc26c4]:nth-child(3) {\n  -webkit-animation-delay: -0.15s;\n          animation-delay: -0.15s;\n}\n@-webkit-keyframes lds-ring-data-v-0ddc26c4 {\n0% {\n    transform: rotate(0deg);\n}\n100% {\n    transform: rotate(360deg);\n}\n}\n@keyframes lds-ring-data-v-0ddc26c4 {\n0% {\n    transform: rotate(0deg);\n}\n100% {\n    transform: rotate(360deg);\n}\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".loader-container[data-v-0ddc26c4] {\n  z-index: 9999999;\n  position: fixed;\n  display: flex;\n  top: 0;\n  right: 0;\n  bottom: 0;\n  left: 0;\n  margin: auto;\n  justify-content: center;\n  flex-direction: column;\n  height: 100%;\n  background-color: #d4d0d0cc;\n}\n.loader-container .lds-ring[data-v-0ddc26c4], .loader-container .load-text[data-v-0ddc26c4] {\n  margin: 5px auto;\n}\n.loader-container .lds-ring[data-v-0ddc26c4] {\n  display: inline-block;\n  position: relative;\n  width: 80px;\n  height: 80px;\n}\n.loader-container .lds-ring div[data-v-0ddc26c4] {\n  box-sizing: border-box;\n  display: block;\n  position: absolute;\n  width: 64px;\n  height: 64px;\n  margin: 8px;\n  border: 8px solid #1a202e;\n  border-radius: 50%;\n  -webkit-animation: lds-ring-data-v-0ddc26c4 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;\n          animation: lds-ring-data-v-0ddc26c4 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;\n  border-color: #ef7ca6 transparent transparent transparent;\n}\n.loader-container .lds-ring div[data-v-0ddc26c4]:nth-child(1) {\n  -webkit-animation-delay: -0.45s;\n          animation-delay: -0.45s;\n}\n.loader-container .lds-ring div[data-v-0ddc26c4]:nth-child(2) {\n  -webkit-animation-delay: -0.3s;\n          animation-delay: -0.3s;\n}\n.loader-container .lds-ring div[data-v-0ddc26c4]:nth-child(3) {\n  -webkit-animation-delay: -0.15s;\n          animation-delay: -0.15s;\n}\n@-webkit-keyframes lds-ring-data-v-0ddc26c4 {\n0% {\n    transform: rotate(0deg);\n}\n100% {\n    transform: rotate(360deg);\n}\n}\n@keyframes lds-ring-data-v-0ddc26c4 {\n0% {\n    transform: rotate(0deg);\n}\n100% {\n    transform: rotate(360deg);\n}\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -45349,7 +45349,7 @@ var render = function() {
                                     },
                                     on: {
                                       click: function($event) {
-                                        return _vm.sendPay(order.id, 3)
+                                        return _vm.sendPay(order.id)
                                       }
                                     }
                                   },

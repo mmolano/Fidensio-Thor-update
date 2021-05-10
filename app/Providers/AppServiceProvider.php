@@ -8,6 +8,7 @@ use App\Services\Pressing\Pressing;
 use App\Services\Pressing\PressingFake;
 use App\Services\Stripe\Stripe;
 use App\Services\Stripe\StripeFake;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        if (env('APP_ENV') === 'testing') {
+        if (App::environment('testing')) {
             $this->app->singleton(StripeFake::class);
             $this->app->alias(StripeFake::class, 'stripe');
 

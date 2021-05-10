@@ -53,6 +53,19 @@ php artisan serv
 sudo php artisan serv --port=80
 ```
 
+**Update component modifications**
+```
+npm run watch OR npm run dev
+```
+
+## Quality Test
+
+**Php Code Sniffer:** In order to check if the code respect Coding standards (pipeline will fail if not)
+```
+npm run codeCheck
+```
+
+
 ## Deployment
 
 **Warning:** Npm production mode

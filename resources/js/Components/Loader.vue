@@ -31,7 +31,7 @@ export default {
     justify-content: center;
     flex-direction: column;
     height: 100%;
-    background-color: #d4d0d073;
+    background-color: #d4d0d0cc;
 
     & .lds-ring, .load-text {
         margin: 5px auto;
