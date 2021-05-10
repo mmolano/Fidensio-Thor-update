@@ -183,6 +183,17 @@ class PressingController extends Controller
         $userData = ['email' => $user['email'], 'name' => $user['data']['firstName']];
 
         switch ($request->status) {
+            case 2:
+                if (!empty($order['locker'])) {
+                    if (!Pressing::updateLocker($order['companyId'], [
+                        'orderId' => null,
+                        'lockerCode' => null,
+                        'number' => $order['locker']['number']
+                    ])) {
+                        return $this->error(17);
+                    }
+                }
+                break;
             case 5:
                 if ($order['payment']['pay'] === 0) {
                     self::pay($order, $user);
