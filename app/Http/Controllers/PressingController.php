@@ -146,6 +146,7 @@ class PressingController extends Controller
                 Log::error('MyError', [
                     'Class' => class_basename(self::class),
                     'Code' => $this->error,
+                    'infos' => $infos,
                     'Comment' => 'Impossible de mettre à jour le locker du produit'
                 ]);
                 break;
@@ -198,13 +199,13 @@ class PressingController extends Controller
                 if ($order['payment']['pay'] === 0) {
                     self::pay($order, $user);
                 }
-                if (!empty($order['locker'])) {
+                if ($order['company']['lockersType'] === 1) {
                     if (!$locker = Pressing::updateLocker($order['companyId'], [
                         'orderId' => $order['id'],
                         'lockerCode' => $request->lockerCode,
                         'number' => $request->number
                     ])) {
-                        return $this->error(17);
+                        return $this->error(17, json_encode($locker));
                     }
 
                     $subject = 'Votre commande Fidensio n°' . $order['id'] . ' est disponible dans le casier ' .

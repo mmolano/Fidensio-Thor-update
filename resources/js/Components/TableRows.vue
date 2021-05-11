@@ -47,7 +47,8 @@
                     <th class="Retour">Retour</th>
                     <th class="Emplacement">Emplacement</th>
                     <th class="Nom">Prénom / Nom</th>
-                    <th class="Consigne">N° consigne</th>
+                    <th v-if="typeOfStatus !== '?type=pickupDone' && typeOfStatus === '?type=processing' || typeOfStatus !== '?type=pickupDone' && typeOfStatus === '?type=finished'" class="Consigne">N° pressing</th>
+                    <th v-else-if="typeOfStatus !=='?type=pickupDone'" class="Consigne">N° consigne</th>
                     <th class="Service">Service(s)</th>
                     <th class="Commande" v-if="typeOfStatus !== '?type=finished'">Commande</th>
                 </tr>
@@ -84,8 +85,11 @@
                     <td data-label="Nom/Prénom" class="Nom"
                         :inner-html.prop="order.userData.firstName + ' ' + order.userData.lastName | highlight(search)">
                     </td>
-                    <td data-label="N consigne" class="Consigne"
-                        :inner-html.prop="order.locker.length === 0 ? 'Bring me' : 'Classic'">
+                    <td v-if="typeOfStatus === ''" data-label="N consigne" class="Consigne"
+                        :inner-html.prop="order.company.lockersType === 0 ? 'Bring me' : order.locker.number">
+                    </td>
+                    <td v-else-if="typeOfStatus !== '?type=pickupDone'" data-label="N consigne" class="Consigne"
+                        :inner-html.prop="order.attributes.providerOrderNumber">
                     </td>
                     <td data-label="Service(s)" class="Service" :inner-html.prop="order.service.name"></td>
                     <td data-label="Commande" class="Commande" v-if="typeOfStatus !== '?type=finished'">
@@ -103,7 +107,7 @@
 
                         <button
                             v-else-if="typeOfStatus === '?type=processing' && order.payment.pay === 1 || order.amount === 0"
-                            @click="sendProcessing(order.id, 5, order.locker.length === 0 ? 'Bring me' : 'Classic', false)"
+                            @click="sendProcessing(order.id, 5, order.company.lockersType === 0 ? 'Bring me' : 'Classic', false)"
                             v-bind:style="{'background-color': getDateDiff(order.deliveryDate)[0], 'color': getDateDiff(order.deliveryDate)[1]}"
                             class="btn waves-effect waves-light">Compléter
                         </button>

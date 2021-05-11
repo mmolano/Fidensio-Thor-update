@@ -2641,6 +2641,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Popup",
   props: {
@@ -2811,6 +2817,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_5__);
+//
+//
+//
+//
 //
 //
 //
@@ -44670,28 +44680,42 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { attrs: { id: "popup-div-two" } }, [
-              _c("div", { staticClass: "popup-row" }, [
-                _c("div", [_vm._v("N° de consigne :")]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "popup-contenu",
-                    attrs: { id: "popup-consigne" }
-                  },
-                  [
-                    _vm._v(
-                      "\n                                " +
-                        _vm._s(
-                          _vm.orderData.locker.length === 0
-                            ? "Bring me"
-                            : "Classic"
-                        ) +
-                        "\n                            "
+              _vm.typeOfStatus === ""
+                ? _c("div", { staticClass: "popup-row" }, [
+                    _c("div", [_vm._v("N° de consigne :")]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass: "popup-contenu",
+                        attrs: { id: "popup-consigne" }
+                      },
+                      [
+                        _vm._v(
+                          "\n                                " +
+                            _vm._s(
+                              _vm.orderData.company.lockersType === 0
+                                ? "Bring me"
+                                : _vm.orderData.locker.number
+                            ) +
+                            "\n                            "
+                        )
+                      ]
                     )
-                  ]
-                )
-              ]),
+                  ])
+                : _vm.typeOfStatus !== "?type=pickupDone"
+                ? _c("div", { staticClass: "popup-row" }, [
+                    _c("div", [_vm._v("N° de consigne :")]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "popup-contenu" }, [
+                      _vm._v(
+                        "\n                                " +
+                          _vm._s(_vm.orderData.attributes.providerOrderNumber) +
+                          "\n                            "
+                      )
+                    ])
+                  ])
+                : _vm._e(),
               _vm._v(" "),
               _c(
                 "div",
@@ -45125,9 +45149,18 @@ var render = function() {
                   _vm._v(" "),
                   _c("th", { staticClass: "Nom" }, [_vm._v("Prénom / Nom")]),
                   _vm._v(" "),
-                  _c("th", { staticClass: "Consigne" }, [
-                    _vm._v("N° consigne")
-                  ]),
+                  (_vm.typeOfStatus !== "?type=pickupDone" &&
+                    _vm.typeOfStatus === "?type=processing") ||
+                  (_vm.typeOfStatus !== "?type=pickupDone" &&
+                    _vm.typeOfStatus === "?type=finished")
+                    ? _c("th", { staticClass: "Consigne" }, [
+                        _vm._v("N° pressing")
+                      ])
+                    : _vm.typeOfStatus !== "?type=pickupDone"
+                    ? _c("th", { staticClass: "Consigne" }, [
+                        _vm._v("N° consigne")
+                      ])
+                    : _vm._e(),
                   _vm._v(" "),
                   _c("th", { staticClass: "Service" }, [_vm._v("Service(s)")]),
                   _vm._v(" "),
@@ -45284,14 +45317,26 @@ var render = function() {
                       }
                     }),
                     _vm._v(" "),
-                    _c("td", {
-                      staticClass: "Consigne",
-                      attrs: { "data-label": "N consigne" },
-                      domProps: {
-                        innerHTML:
-                          order.locker.length === 0 ? "Bring me" : "Classic"
-                      }
-                    }),
+                    _vm.typeOfStatus === ""
+                      ? _c("td", {
+                          staticClass: "Consigne",
+                          attrs: { "data-label": "N consigne" },
+                          domProps: {
+                            innerHTML:
+                              order.company.lockersType === 0
+                                ? "Bring me"
+                                : order.locker.number
+                          }
+                        })
+                      : _vm.typeOfStatus !== "?type=pickupDone"
+                      ? _c("td", {
+                          staticClass: "Consigne",
+                          attrs: { "data-label": "N consigne" },
+                          domProps: {
+                            innerHTML: order.attributes.providerOrderNumber
+                          }
+                        })
+                      : _vm._e(),
                     _vm._v(" "),
                     _c("td", {
                       staticClass: "Service",
@@ -45379,7 +45424,7 @@ var render = function() {
                                         return _vm.sendProcessing(
                                           order.id,
                                           5,
-                                          order.locker.length === 0
+                                          order.company.lockersType === 0
                                             ? "Bring me"
                                             : "Classic",
                                           false

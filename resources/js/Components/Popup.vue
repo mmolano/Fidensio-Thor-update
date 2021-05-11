@@ -49,10 +49,16 @@
                             </div>
                         </div>
                         <div id="popup-div-two">
-                            <div class="popup-row">
+                            <div class="popup-row" v-if="typeOfStatus === ''">
                                 <div>N° de consigne :</div>
                                 <div class="popup-contenu" id="popup-consigne">
-                                    {{ orderData.locker.length === 0 ? 'Bring me' : 'Classic' }}
+                                    {{ orderData.company.lockersType === 0 ? 'Bring me' : orderData.locker.number }}
+                                </div>
+                            </div>
+                            <div class="popup-row" v-else-if="typeOfStatus !== '?type=pickupDone'">
+                                <div>N° de consigne :</div>
+                                <div class="popup-contenu">
+                                    {{ orderData.attributes.providerOrderNumber }}
                                 </div>
                             </div>
                             <div class="popup-commentaire-title" style="text-align:center">Commentaire :</div>
