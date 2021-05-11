@@ -21,7 +21,18 @@
 
 @yield('body')
 
-<script type="text/javascript">window.$crisp=[];window.CRISP_WEBSITE_ID="{{ env('CRISP_APP_ID') }}";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();</script>
+<script type="text/javascript">window.$crisp = [];
+    window.CRISP_WEBSITE_ID = "{{ env('CRISP_APP_ID') }}";
+    (function () {
+        d = document;
+        s = d.createElement("script");
+        s.src = "https://client.crisp.chat/l.js";
+        s.async = 1;
+        d.getElementsByTagName("head")[0].appendChild(s);
+    })();</script>
+<script>
+    $crisp.push(["set", "user:email", "{{ session('authMail') }}"]);
+</script>
 <script src="{{ mix('js/app.js') }}"></script>
 <script>
     if (document.getElementById('flashData')) {

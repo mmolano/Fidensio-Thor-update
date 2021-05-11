@@ -22,7 +22,7 @@
                             </div>
                             <div class="popup-row">
                                 <div>Service :</div>
-                                <div class="popup-contenu" id="popup-service">{{ orderData.service.name }}</div>
+                                <div class="popup-contenu" id="popup-service" :inner-html.prop="getServices(orderData.attributes)"></div>
                             </div>
                             <div class="popup-row">
                                 <div>Emplacement</div>
@@ -38,10 +38,16 @@
                                     <div class="popup-contenu" id="popup-details">
                                         <div class="details-row" v-for="orderDetails in orderData.details">
                                             <div>
-                                                Nom: {{ orderDetails.name }} x {{ orderDetails.quantity / 100 }}
+                                                Nom: {{ orderDetails.name }}
                                             </div>
                                             <div>
-                                                Prix: {{ orderDetails.total / 100 }} €
+                                                Quantité: {{ orderDetails.quantity / 100 }}
+                                            </div>
+                                            <div>
+                                                Prix unitaire: {{ orderDetails.price / 100 }} €
+                                            </div>
+                                            <div>
+                                                Prix total: {{ orderDetails.total / 100 }} €
                                             </div>
                                         </div>
                                     </div>
@@ -56,7 +62,7 @@
                                 </div>
                             </div>
                             <div class="popup-row" v-else-if="typeOfStatus !== '?type=pickupDone'">
-                                <div>N° de consigne :</div>
+                                <div>N° de pressing :</div>
                                 <div class="popup-contenu">
                                     {{ orderData.attributes.providerOrderNumber }}
                                 </div>
@@ -67,6 +73,14 @@
                                     <div class="popup-contenu-comment" id="popup-commentaire">{{
                                             orderData.userComment
                                         }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-if="typeOfStatus === '?type=processing' || typeOfStatus === '?type=finished'" class="popup-commentaire-title" style="text-align:center">Commentaire préstataire :</div>
+                            <div v-if="typeOfStatus === '?type=processing' || typeOfStatus === '?type=finished'" class="popup-row" style="margin-top: 0;">
+                                <div id="popup-commentaire-presta-div">
+                                    <div class="popup-contenu-comment" id="popup-commentaire-presta">
+                                        {{ orderData.attributes.providerComment }}
                                     </div>
                                 </div>
                             </div>
@@ -95,6 +109,24 @@ export default {
     methods: {
         hidePopup: function () {
             this.$parent.$data.isDisplay = false;
+        },
+        getServices(order) {
+            let services = '';
+
+            switch (1) {
+                case order.pressing:
+                    services += 'Pressing';
+                case order.laundry:
+                    services += 'Blanchisserie';
+                case order.retouch:
+                    services += 'Retouche';
+                case order.shoeRepair:
+                    services += 'Cordonnerie';
+            }
+
+            let addComma = services.replace(/([A-Z])/g, ', $1').trim();
+
+            return addComma.replace(/^,/, '');
         }
     }
 }
@@ -146,7 +178,7 @@ section {
     }
 }
 
-#popup-commentaire {
+#popup-commentaire, #popup-commentaire-presta {
     overflow-y: auto;
     padding: 10px;
     height: 90px;
@@ -158,7 +190,7 @@ section {
     width: 100%;
 }
 
-#popup-commentaire-div {
+#popup-commentaire-div, #popup-commentaire-presta {
     background-color: #F6F6F6;
     border-radius: 2px;
 }
@@ -230,7 +262,7 @@ section {
         flex: 1;
     }
 
-    #popup-commentaire {
+    #popup-commentaire, #popup-commentaire-presta{
         height: 70px;
     }
 }

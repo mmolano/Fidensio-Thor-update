@@ -45,7 +45,8 @@ class AuthController extends Controller
         session()->put([
             'authenticated' => time(),
             'authId' => $user['id'],
-            'authName' => $user['name']
+            'authName' => $user['name'],
+            'authMail' => $user['email']
         ]);
 
         session()->save();
@@ -56,7 +57,8 @@ class AuthController extends Controller
         session()->forget([
             'authenticated',
             'authName',
-            'authId'
+            'authId',
+            'authMail'
         ]);
 
         flash('Vous avez été déconnecté')->error();

@@ -47,7 +47,9 @@
                     <th class="Retour">Retour</th>
                     <th class="Emplacement">Emplacement</th>
                     <th class="Nom">Prénom / Nom</th>
-                    <th v-if="typeOfStatus !== '?type=pickupDone' && typeOfStatus === '?type=processing' || typeOfStatus !== '?type=pickupDone' && typeOfStatus === '?type=finished'" class="Consigne">N° pressing</th>
+                    <th v-if="typeOfStatus !== '?type=pickupDone' && typeOfStatus === '?type=processing' || typeOfStatus !== '?type=pickupDone' && typeOfStatus === '?type=finished'"
+                        class="Consigne">N° pressing
+                    </th>
                     <th v-else-if="typeOfStatus !=='?type=pickupDone'" class="Consigne">N° consigne</th>
                     <th class="Service">Service(s)</th>
                     <th class="Commande" v-if="typeOfStatus !== '?type=finished'">Commande</th>
@@ -91,7 +93,8 @@
                     <td v-else-if="typeOfStatus !== '?type=pickupDone'" data-label="N consigne" class="Consigne"
                         :inner-html.prop="order.attributes.providerOrderNumber">
                     </td>
-                    <td data-label="Service(s)" class="Service" :inner-html.prop="order.service.name"></td>
+                    <td data-label="Service(s)" class="Service" :inner-html.prop="getServices(order.attributes)">
+                    </td>
                     <td data-label="Commande" class="Commande" v-if="typeOfStatus !== '?type=finished'">
                         <span
                             class="pastille-info"
@@ -290,6 +293,24 @@ export default {
                 this.$parent.$data.refCount--;
                 this.$parent.$data.isLoading = (this.$parent.$data.refCount > 0);
             }
+        },
+        getServices(order) {
+            let services = '';
+
+            switch (1) {
+                case order.pressing:
+                    services += 'Pressing';
+                case order.laundry:
+                    services += 'Blanchisserie';
+                case order.retouch:
+                    services += 'Retouche';
+                case order.shoeRepair:
+                    services += 'Cordonnerie';
+            }
+
+            let addComma = services.replace(/([A-Z])/g, ', $1').trim();
+
+            return addComma.replace(/^,/, '');
         }
     },
     computed: {

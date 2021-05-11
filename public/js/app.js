@@ -2647,6 +2647,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Popup",
   props: {
@@ -2656,6 +2670,26 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     hidePopup: function hidePopup() {
       this.$parent.$data.isDisplay = false;
+    },
+    getServices: function getServices(order) {
+      var services = '';
+
+      switch (1) {
+        case order.pressing:
+          services += 'Pressing';
+
+        case order.laundry:
+          services += 'Blanchisserie';
+
+        case order.retouch:
+          services += 'Retouche';
+
+        case order.shoeRepair:
+          services += 'Cordonnerie';
+      }
+
+      var addComma = services.replace(/([A-Z])/g, ', $1').trim();
+      return addComma.replace(/^,/, '');
     }
   }
 });
@@ -2969,6 +3003,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -3117,6 +3154,26 @@ var customLabels = {
         this.$parent.$data.refCount--;
         this.$parent.$data.isLoading = this.$parent.$data.refCount > 0;
       }
+    },
+    getServices: function getServices(order) {
+      var services = '';
+
+      switch (1) {
+        case order.pressing:
+          services += 'Pressing';
+
+        case order.laundry:
+          services += 'Blanchisserie';
+
+        case order.retouch:
+          services += 'Retouche';
+
+        case order.shoeRepair:
+          services += 'Cordonnerie';
+      }
+
+      var addComma = services.replace(/([A-Z])/g, ', $1').trim();
+      return addComma.replace(/^,/, '');
     }
   },
   computed: {
@@ -3527,7 +3584,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "section[data-v-8d3c311e] {\n  height: initial !important;\n}\n#popup-container[data-v-8d3c311e] {\n  z-index: 9999;\n  display: flex;\n  position: fixed;\n  height: 100%;\n  width: 100%;\n  flex-flow: column;\n  align-items: center;\n  justify-content: center;\n  background-color: #80808047;\n}\n#popup[data-v-8d3c311e] {\n  position: fixed;\n  margin: 0 auto;\n  z-index: 1000;\n  width: 100%;\n  max-width: 340px;\n  max-height: 80%;\n  border-radius: 20px;\n  background-color: white;\n  padding: 29px;\n  overflow-y: scroll;\n}\n#popup-commande[data-v-8d3c311e] {\n  width: 100%;\n}\n#popup-commande button[data-v-8d3c311e] {\n  width: 100%;\n  border-radius: 20px;\n  height: 45px;\n  border: unset;\n  background-color: #ef7ca6;\n  color: white;\n  cursor: pointer;\n}\n#popup-commentaire[data-v-8d3c311e] {\n  overflow-y: auto;\n  padding: 10px;\n  height: 90px;\n}\n#popup-details[data-v-8d3c311e] {\n  max-height: 138px;\n  overflow-y: scroll;\n  width: 100%;\n}\n#popup-commentaire-div[data-v-8d3c311e] {\n  background-color: #F6F6F6;\n  border-radius: 2px;\n}\n.popup-row[data-v-8d3c311e] {\n  margin: 5px;\n  padding-right: 5px;\n  padding-left: 10px;\n  border-radius: 5px;\n  background-color: #F6F6F6;\n  font-size: 16px;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  flex-wrap: wrap;\n}\n.popup-row .details-row[data-v-8d3c311e]:not(:last-of-type) {\n  border-bottom: 2px solid gray;\n}\n.popup-commentaire-title[data-v-8d3c311e] {\n  margin-top: 5px;\n}\n.popup-contenu[data-v-8d3c311e] {\n  font-weight: bold;\n  color: grey;\n  background-color: white;\n  border-radius: 5px;\n  padding: 3px;\n  margin: 5px;\n}\n.popup-contenu-comment[data-v-8d3c311e] {\n  font-weight: bold;\n  color: grey;\n}\n@media screen and (max-width: 900px) {\n#popup[data-v-8d3c311e] {\n    max-width: 80%;\n}\n}\n@media screen and (max-width: 500px) {\n#popup[data-v-8d3c311e] {\n    max-width: 100%;\n    max-height: 100%;\n}\n}\n@media screen and (max-height: 500px) {\n#popup[data-v-8d3c311e] {\n    max-width: 90%;\n    max-height: 95%;\n}\n#popup-container[data-v-8d3c311e] {\n    width: 100%;\n}\n.popup-tables-container[data-v-8d3c311e] {\n    display: flex;\n}\n#popup-div-one[data-v-8d3c311e],\n#popup-div-two[data-v-8d3c311e] {\n    flex: 1;\n}\n#popup-commentaire[data-v-8d3c311e] {\n    height: 70px;\n}\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "section[data-v-8d3c311e] {\n  height: initial !important;\n}\n#popup-container[data-v-8d3c311e] {\n  z-index: 9999;\n  display: flex;\n  position: fixed;\n  height: 100%;\n  width: 100%;\n  flex-flow: column;\n  align-items: center;\n  justify-content: center;\n  background-color: #80808047;\n}\n#popup[data-v-8d3c311e] {\n  position: fixed;\n  margin: 0 auto;\n  z-index: 1000;\n  width: 100%;\n  max-width: 340px;\n  max-height: 80%;\n  border-radius: 20px;\n  background-color: white;\n  padding: 29px;\n  overflow-y: scroll;\n}\n#popup-commande[data-v-8d3c311e] {\n  width: 100%;\n}\n#popup-commande button[data-v-8d3c311e] {\n  width: 100%;\n  border-radius: 20px;\n  height: 45px;\n  border: unset;\n  background-color: #ef7ca6;\n  color: white;\n  cursor: pointer;\n}\n#popup-commentaire[data-v-8d3c311e], #popup-commentaire-presta[data-v-8d3c311e] {\n  overflow-y: auto;\n  padding: 10px;\n  height: 90px;\n}\n#popup-details[data-v-8d3c311e] {\n  max-height: 138px;\n  overflow-y: scroll;\n  width: 100%;\n}\n#popup-commentaire-div[data-v-8d3c311e], #popup-commentaire-presta[data-v-8d3c311e] {\n  background-color: #F6F6F6;\n  border-radius: 2px;\n}\n.popup-row[data-v-8d3c311e] {\n  margin: 5px;\n  padding-right: 5px;\n  padding-left: 10px;\n  border-radius: 5px;\n  background-color: #F6F6F6;\n  font-size: 16px;\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  flex-wrap: wrap;\n}\n.popup-row .details-row[data-v-8d3c311e]:not(:last-of-type) {\n  border-bottom: 2px solid gray;\n}\n.popup-commentaire-title[data-v-8d3c311e] {\n  margin-top: 5px;\n}\n.popup-contenu[data-v-8d3c311e] {\n  font-weight: bold;\n  color: grey;\n  background-color: white;\n  border-radius: 5px;\n  padding: 3px;\n  margin: 5px;\n}\n.popup-contenu-comment[data-v-8d3c311e] {\n  font-weight: bold;\n  color: grey;\n}\n@media screen and (max-width: 900px) {\n#popup[data-v-8d3c311e] {\n    max-width: 80%;\n}\n}\n@media screen and (max-width: 500px) {\n#popup[data-v-8d3c311e] {\n    max-width: 100%;\n    max-height: 100%;\n}\n}\n@media screen and (max-height: 500px) {\n#popup[data-v-8d3c311e] {\n    max-width: 90%;\n    max-height: 95%;\n}\n#popup-container[data-v-8d3c311e] {\n    width: 100%;\n}\n.popup-tables-container[data-v-8d3c311e] {\n    display: flex;\n}\n#popup-div-one[data-v-8d3c311e],\n#popup-div-two[data-v-8d3c311e] {\n    flex: 1;\n}\n#popup-commentaire[data-v-8d3c311e], #popup-commentaire-presta[data-v-8d3c311e] {\n    height: 70px;\n}\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -44605,14 +44662,13 @@ var render = function() {
               _c("div", { staticClass: "popup-row" }, [
                 _c("div", [_vm._v("Service :")]),
                 _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "popup-contenu",
-                    attrs: { id: "popup-service" }
-                  },
-                  [_vm._v(_vm._s(_vm.orderData.service.name))]
-                )
+                _c("div", {
+                  staticClass: "popup-contenu",
+                  attrs: { id: "popup-service" },
+                  domProps: {
+                    innerHTML: _vm.getServices(_vm.orderData.attributes)
+                  }
+                })
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "popup-row" }, [
@@ -44657,7 +44713,13 @@ var render = function() {
                               _vm._v(
                                 "\n                                            Nom: " +
                                   _vm._s(orderDetails.name) +
-                                  " x " +
+                                  "\n                                        "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", [
+                              _vm._v(
+                                "\n                                            Quantité: " +
                                   _vm._s(orderDetails.quantity / 100) +
                                   "\n                                        "
                               )
@@ -44665,7 +44727,15 @@ var render = function() {
                             _vm._v(" "),
                             _c("div", [
                               _vm._v(
-                                "\n                                            Prix: " +
+                                "\n                                            Prix unitaire: " +
+                                  _vm._s(orderDetails.price / 100) +
+                                  " €\n                                        "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", [
+                              _vm._v(
+                                "\n                                            Prix total: " +
                                   _vm._s(orderDetails.total / 100) +
                                   " €\n                                        "
                               )
@@ -44705,7 +44775,7 @@ var render = function() {
                   ])
                 : _vm.typeOfStatus !== "?type=pickupDone"
                 ? _c("div", { staticClass: "popup-row" }, [
-                    _c("div", [_vm._v("N° de consigne :")]),
+                    _c("div", [_vm._v("N° de pressing :")]),
                     _vm._v(" "),
                     _c("div", { staticClass: "popup-contenu" }, [
                       _vm._v(
@@ -44750,6 +44820,53 @@ var render = function() {
                   ])
                 ]
               ),
+              _vm._v(" "),
+              _vm.typeOfStatus === "?type=processing" ||
+              _vm.typeOfStatus === "?type=finished"
+                ? _c(
+                    "div",
+                    {
+                      staticClass: "popup-commentaire-title",
+                      staticStyle: { "text-align": "center" }
+                    },
+                    [_vm._v("Commentaire préstataire :")]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.typeOfStatus === "?type=processing" ||
+              _vm.typeOfStatus === "?type=finished"
+                ? _c(
+                    "div",
+                    {
+                      staticClass: "popup-row",
+                      staticStyle: { "margin-top": "0" }
+                    },
+                    [
+                      _c(
+                        "div",
+                        { attrs: { id: "popup-commentaire-presta-div" } },
+                        [
+                          _c(
+                            "div",
+                            {
+                              staticClass: "popup-contenu-comment",
+                              attrs: { id: "popup-commentaire-presta" }
+                            },
+                            [
+                              _vm._v(
+                                "\n                                    " +
+                                  _vm._s(
+                                    _vm.orderData.attributes.providerComment
+                                  ) +
+                                  "\n                                "
+                              )
+                            ]
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                : _vm._e(),
               _vm._v(" "),
               _c(
                 "div",
@@ -45154,7 +45271,7 @@ var render = function() {
                   (_vm.typeOfStatus !== "?type=pickupDone" &&
                     _vm.typeOfStatus === "?type=finished")
                     ? _c("th", { staticClass: "Consigne" }, [
-                        _vm._v("N° pressing")
+                        _vm._v("N° pressing\n                ")
                       ])
                     : _vm.typeOfStatus !== "?type=pickupDone"
                     ? _c("th", { staticClass: "Consigne" }, [
@@ -45341,7 +45458,7 @@ var render = function() {
                     _c("td", {
                       staticClass: "Service",
                       attrs: { "data-label": "Service(s)" },
-                      domProps: { innerHTML: order.service.name }
+                      domProps: { innerHTML: _vm.getServices(order.attributes) }
                     }),
                     _vm._v(" "),
                     _vm.typeOfStatus !== "?type=finished"

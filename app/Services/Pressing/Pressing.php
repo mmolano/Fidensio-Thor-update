@@ -29,6 +29,7 @@ class Pressing
                 return [
                     'id' => $provider['id'],
                     'name' => $provider['name'],
+                    'email' => $provider['email']
                 ];
             }
         }
