@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Service;
 
 use App\Facades\Mailjet;
-use App\Facades\Stripe;
+use App\Http\Controllers\Controller;
 use App\Services\Pressing\Pressing;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -318,6 +318,13 @@ class PressingController extends Controller
             if (!Pressing::changeStatus($order['id'], $this->status['finished'])) {
                 return $this->error(4);
             }
+        }
+
+        if ($order['amount'] === 0) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'La commande a été offerte',
+            ]);
         }
 
         return response()->json([

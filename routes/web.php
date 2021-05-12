@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\PressingController;
+use App\Http\Controllers\Service\PressingController;
 use App\Http\Middleware\SessionAuth;
 use Illuminate\Support\Facades\Route;
 
