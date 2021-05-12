@@ -274,45 +274,34 @@ class PressingController extends Controller
 
         if ($order['amount'] > 0) {
             if ($order['payment']['pay'] !== 1) {
-                if (!$payment = Stripe::pay($order, $user)) {
+                if (!$payment = Pressing::pay($order['id'])) {
                     if (!Pressing::changeStatus($order['id'], $this->status['processing'])) {
                         return $this->error(4);
                     } elseif (!Mailjet::sendWithTemplate($userData, 'payment_refused', 'Le paiement pour votre commande n°' . $order['id'] . ' a été refusé')) {
                         return $this->error(15, $order['id'], 'warning');
                     }
                     return $this->error(8, $order['id'], 'warning', 200);
-                }
-
-                switch ($payment['status']) {
-                    case 1:
-                        if (!Pressing::updatePayment($order['id'], [
-                            'status' => $payment['status'],
-                            'intentId' => $payment['intentId']
-                        ])) {
-                            return $this->error(13, $order['id'], 'warning');
-                        } elseif (!Mailjet::sendWithTemplate($userData, 'payment_confirmed', 'Le paiement pour votre commande n°' . $order['id'] . ' a été validé', $params)) {
-                            return $this->error(15, $order['id'], 'warning');
-                        }
-                        $hasBeenSent = true;
-                        break;
-                    case 2:
-                        if (!Pressing::updatePayment($order['id'], [
-                            'status' => $payment['status'],
-                            'intentId' => $payment['intentId'],
-                            'paymentToken' => $payment['paymentToken'],
-                        ])) {
-                            return $this->error(9, $order['id'], 'warning');
-                        } elseif (!Pressing::changeStatus($order['id'], $this->status['waitingForPayment'])) {
-                            return $this->error(4);
-                        } elseif (!Mailjet::sendWithTemplate($userData, 'payment_3DSecure', 'Le paiement pour votre commande n°' . $order['id'] . ' nécessite votre intervention')) {
-                            return $this->error(15, $order['id'], 'warning');
-                        }
-                        return $this->error(9, $order['id'], 'warning', 200);
-                    default:
-                        return response()->json([
-                            'status' => 'warning',
-                            'message' => 'Le paiement a déjà été effectué',
-                        ]);
+                } else {
+                    switch ($payment['payment']['pay']) {
+                        case 1:
+                            if (!Mailjet::sendWithTemplate($userData, 'payment_confirmed', 'Le paiement pour votre commande n°' . $order['id'] . ' a été validé', $params)) {
+                                return $this->error(15, $order['id'], 'warning');
+                            }
+                            $hasBeenSent = true;
+                            break;
+                        case 0 && ($payment['payment']['paymentToken3ds'] !== null):
+                            if (!Pressing::changeStatus($order['id'], $this->status['waitingForPayment'])) {
+                                return $this->error(4);
+                            } elseif (!Mailjet::sendWithTemplate($userData, 'payment_3DSecure', 'Le paiement pour votre commande n°' . $order['id'] . ' nécessite votre intervention')) {
+                                return $this->error(15, $order['id'], 'warning');
+                            }
+                            return $this->error(9, $order['id'], 'warning', 200);
+                        default:
+                            return response()->json([
+                                'status' => 'warning',
+                                'message' => 'Le paiement a déjà été effectué',
+                            ]);
+                    }
                 }
             }
         }

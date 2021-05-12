@@ -21,18 +21,12 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         if (App::environment('testing')) {
-            $this->app->singleton(StripeFake::class);
-            $this->app->alias(StripeFake::class, 'stripe');
-
             $this->app->singleton(MailJetFake::class);
             $this->app->alias(MailJetFake::class, 'mailjet');
 
             $this->app->singleton(PressingFake::class);
             $this->app->alias(PressingFake::class, 'pressing');
         } else {
-            $this->app->singleton(Stripe::class);
-            $this->app->alias(Stripe::class, 'stripe');
-
             $this->app->singleton(MailJet::class);
             $this->app->alias(MailJet::class, 'mailjet');
 

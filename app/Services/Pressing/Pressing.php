@@ -122,16 +122,16 @@ class Pressing
         return $response->json();
     }
 
-    public static function updatePayment(int $orderId, array $data): ?array
+    public static function pay(int $orderId): ?array
     {
         $response = Http::withToken(env('MIX_OURANOS_KEY'))
-            ->put(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'order/' . $orderId . '/payment', [
-                'status' => $data['status'],
-                'intentId' => $data['intentId'],
-                'paymentToken' => isset($data['paymentToken']) ? $data['paymentToken'] : 'NULL',
-            ]);
+            ->post(env('MIX_OURANOS_PRESSING_ORDER_URL') . 'order/' . $orderId . '/payment');
 
         self::sendLogs($response, __FUNCTION__);
+
+        if ($response->status() !== 200) {
+            return null;
+        }
 
         return $response->json();
     }
