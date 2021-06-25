@@ -2523,6 +2523,9 @@ var defaultStyles = {
       var _this = this;
 
       axios__WEBPACK_IMPORTED_MODULE_1___default().get('getData' + this.typeOfStatus + '&page=' + page).then(function (res) {
+        res.data.data.forEach(function (order) {
+          delete order.user.password;
+        });
         _this.$parent.orders = res.data;
         var pageSize = _this.pageSize,
             maxPages = _this.maxPages,
@@ -3048,10 +3051,12 @@ var customLabels = {
   },
   methods: {
     showPopup: function showPopup(value) {
+      delete value.user.password;
       this.$parent.$data.orderData = value;
       this.$parent.$data.isDisplay = true;
     },
     viewOrder: function viewOrder(order) {
+      delete order.user.password;
       this.$parent.$data.orderData = order;
       this.$parent.$data.viewOrderProfile = true;
     },
@@ -3082,6 +3087,9 @@ var customLabels = {
       if (this.typeOfStatus !== '?type=finished') {
         axios__WEBPACK_IMPORTED_MODULE_5___default().get(this.searchOrderUrl + this.typeOfStatus).then(function (res) {
           if (res.status === 200) {
+            res.data.data.forEach(function (order) {
+              delete order.user.password;
+            });
             _this.orders = res.data;
           }
         })["catch"](function (err) {
@@ -3200,6 +3208,9 @@ var customLabels = {
 
       axios__WEBPACK_IMPORTED_MODULE_5___default().get(this.searchOrderUrl + newUrl).then(function (res) {
         if (res.status === 200) {
+          res.data.data.forEach(function (order) {
+            delete order.user.password;
+          });
           _this5.orders = res.data;
         }
 

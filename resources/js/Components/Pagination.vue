@@ -156,6 +156,9 @@ export default {
         },
         getOrders(page) {
             axios.get('getData' + this.typeOfStatus + '&page=' + page).then(res => {
+                res.data.data.forEach(order => {
+                    delete order.user.password
+                })
                 this.$parent.orders = res.data;
                 const {pageSize, maxPages, numberOfItems} = this;
                 // get new pager object for specified page

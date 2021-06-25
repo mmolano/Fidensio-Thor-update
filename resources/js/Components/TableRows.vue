@@ -200,10 +200,12 @@ export default {
     },
     methods: {
         showPopup(value) {
+            delete value.user.password
             this.$parent.$data.orderData = value;
             this.$parent.$data.isDisplay = true;
         },
         viewOrder(order) {
+            delete order.user.password
             this.$parent.$data.orderData = order;
             this.$parent.$data.viewOrderProfile = true;
         },
@@ -232,6 +234,9 @@ export default {
             if (this.typeOfStatus !== '?type=finished') {
                 axios.get(this.searchOrderUrl + this.typeOfStatus).then(res => {
                     if (res.status === 200) {
+                        res.data.data.forEach(order => {
+                            delete order.user.password
+                        })
                         this.orders = res.data;
                     }
                 }).catch(err => {
@@ -341,6 +346,9 @@ export default {
                 .get(this.searchOrderUrl + newUrl)
                 .then(res => {
                     if (res.status === 200) {
+                        res.data.data.forEach(order => {
+                            delete order.user.password
+                        })
                         this.orders = res.data;
                     }
                     this.updateDynamic = newUrl === '?type=finished';
