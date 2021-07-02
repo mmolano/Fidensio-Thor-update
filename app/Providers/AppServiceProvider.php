@@ -23,11 +23,9 @@ class AppServiceProvider extends ServiceProvider
         if (App::environment('testing')) {
             $this->app->singleton(MailJetFake::class);
             $this->app->alias(MailJetFake::class, 'mailjet');
-
         } else {
             $this->app->singleton(MailJet::class);
             $this->app->alias(MailJet::class, 'mailjet');
-
         }
 
         $this->app->singleton(Pressing::class);
