@@ -24,15 +24,14 @@ class AppServiceProvider extends ServiceProvider
             $this->app->singleton(MailJetFake::class);
             $this->app->alias(MailJetFake::class, 'mailjet');
 
-            $this->app->singleton(PressingFake::class);
-            $this->app->alias(PressingFake::class, 'pressing');
         } else {
             $this->app->singleton(MailJet::class);
             $this->app->alias(MailJet::class, 'mailjet');
 
-            $this->app->singleton(Pressing::class);
-            $this->app->alias(Pressing::class, 'pressing');
         }
+
+        $this->app->singleton(Pressing::class);
+        $this->app->alias(Pressing::class, 'pressing');
     }
 
     /**

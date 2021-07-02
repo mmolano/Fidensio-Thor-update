@@ -419,8 +419,8 @@ class PressingController extends Controller
 
         if ($request->comment || $request->numberPress) {
             if (!Pressing::updateOrderAttributes($request->id, [
-                'providerOrderNumber' => isset($request->numberPress) ? $request->numberPress : '',
-                'providerComment' => isset($request->comment) ? $request->comment : '',
+                'providerOrderNumber' => $request->numberPress ?? '',
+                'providerComment' => $request->comment ?? '',
             ])) {
                 return $this->error(14, json_encode('code: ' . $request->numberPress . ', comment:' . $request->comment . ', orderId: ' . $request->id));
             }
