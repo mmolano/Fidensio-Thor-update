@@ -4,6 +4,7 @@
 namespace App\Services\Pressing;
 
 use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -23,7 +24,7 @@ class Pressing
     private static function checkIfExist(array $providers, string $email, string $password): ?array
     {
         foreach ($providers as $provider) {
-            if ($provider['email'] === $email && $provider['password'] === $password) {
+            if ($provider['email'] === $email && Hash::check($password, $provider['password'])) {
                 return [
                     'id' => $provider['id'],
                     'name' => $provider['name'],
