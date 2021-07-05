@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 class Pressing
 {
-    private static function sendLogs(Response $response, string $function)
+    private static function sendLogs(Response $response, string $function): void
     {
         if (!$response->successful()) {
             Log::error($response->status() === 404 ? 'Route url not found' : $response->body(), [
@@ -17,8 +17,6 @@ class Pressing
                 'functionName' => $function,
                 'codeStatus' => $response->status(),
             ]);
-
-            return null;
         }
     }
 

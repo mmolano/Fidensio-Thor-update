@@ -343,32 +343,24 @@ class PressingController extends Controller
         $providerId = session('authId');
 
         if (isset($request->type)) {
-            switch ($request->type) {
-                case $type = 'finished':
-                    $order = Pressing::getProviderOrder($providerId, $this->status[$type], $request->page, true);
-                    break;
-                case $type = 'pickupDone':
-                    $order = Pressing::getProviderOrder($providerId, $this->status[$type]);
-                    break;
-                case $type = 'processing':
-                    $order = Pressing::getProviderOrder($providerId, $this->status['waitingForPayment'] . ',' . $this->status[$type]);
-                    break;
-                default:
-                    $order = Pressing::getProviderOrder($providerId, $this->status['default']);
-                    break;
-            }
+            $order = match ($request->type) {
+                $type = 'finished' => Pressing::getProviderOrder($providerId, $this->status[$type], $request->page, true),
+                $type = 'pickupDone' => Pressing::getProviderOrder($providerId, $this->status[$type]),
+                $type = 'processing' => Pressing::getProviderOrder($providerId, $this->status['waitingForPayment'] . ',' . $this->status[$type]),
+                default => Pressing::getProviderOrder($providerId, $this->status['default']),
+            };
         } else {
             $order = Pressing::getProviderOrder($providerId, $this->status['default']);
         }
 
-        return isset($order) ? $order : [];
+        return $order ?? [];
     }
 
-    public function getProducts(Request $request)
+    public function getProducts(Request $request): JsonResponse|array
     {
         $products = Pressing::getProviderProduct($request->id);
 
-        return isset($products) ? $products : $this->error(16);
+        return $products ?? $this->error(16);
     }
 
     public function reHandlePayment(Request $request): JsonResponse
