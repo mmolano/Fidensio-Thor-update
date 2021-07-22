@@ -290,9 +290,12 @@ class PressingController extends Controller
                             $hasBeenSent = true;
                             break;
                         case 0 && ($payment['payment']['paymentToken3ds'] !== null):
+                            $detailMail = [
+                              'link' => 'https://www.' . $order['company']['url'] . '.com/orders/' . $order['id'] . '?payToken=' . $payment['payment']['paymentToken3ds']
+                            ];
                             if (!Pressing::changeStatus($order['id'], $this->status['waitingForPayment'])) {
                                 return $this->error(4);
-                            } elseif (!Mailjet::sendWithTemplate($userData, 'payment_3DSecure', 'Le paiement pour votre commande n°' . $order['id'] . ' nécessite votre intervention')) {
+                            } elseif (!Mailjet::sendWithTemplate($userData, 'payment_3DSecure', 'Le paiement pour votre commande n°' . $order['id'] . ' nécessite votre intervention', $detailMail)) {
                                 return $this->error(15, $order['id'], 'warning');
                             }
                             return $this->error(9, $order['id'], 'warning', 200);
